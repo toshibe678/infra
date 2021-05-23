@@ -1,0 +1,15 @@
+# サブモジュールを更新する場合にはこれを有効にする
+variables:
+  GIT_SUBMODULE_STRATEGY: recursive
+
+include:
+  - local: '/cicd/.gitlab-ci-lint-template.yml'
+
+stages:
+  - lint
+
+.except_default: &except_default
+  except:
+    - develop
+    - master
+    - hotfix

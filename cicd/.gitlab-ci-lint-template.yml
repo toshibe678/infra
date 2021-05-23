@@ -1,0 +1,13 @@
+.lint_default: &lint_default
+  stage: lint
+
+cfn-lint:
+  <<: *lint_default
+  image:
+    name: python:3.8
+  script:
+    - pip install cfn-lint
+    - cfn-lint --version
+    - cfn-lint -t ./cloudformation/*.yml
+  changes:
+    - "cloudformation/**/*"
