@@ -1,0 +1,106 @@
+---
+# stack名: terraform-state
+AWSTemplateFormatVersion: "2010-09-09"
+Description: "terraform-state"
+Parameters:
+  ProjectName:
+    Type: String
+    Default: toshi-terraform
+
+Resources:
+  TerraformIamUser:
+    Type: AWS::IAM::User
+    Properties:
+      UserName: terraform-iam-user
+  TerraformIamGroup:
+    Type: AWS::IAM::Group
+    Properties:
+      GroupName: terraform-iam-group
+
+  DenyIPIamPolicy:
+    Type: AWS::IAM::Policy
+    Properties:
+      PolicyName: deny-ip-iam-policy
+      PolicyDocument:
+        Version: 2012-10-17
+        Statement:
+          - Effect: Deny
+            Action:
+              - "*"
+            Resource:
+              - "*"
+            Condition:
+              NotIpAddress:
+                aws:SourceIp:
+                  - 61.213.68.235/32
+      Users:
+        - !Ref TerraformIamUser
+      Groups:
+        - !Ref TerraformIamGroup
+
+  TerraformIamPolicy:
+    Type: AWS::IAM::Policy
+    Properties:
+      PolicyName: terraform-iam-policy
+      PolicyDocument:
+        Version: 2012-10-17
+        Statement:
+          - Effect: Allow
+            Action:
+              - "*"
+            Resource:
+              - "*"
+            Condition:
+              IpAddress:
+                aws:SourceIp:
+                  - 61.213.68.235/32
+      Users:
+        - !Ref TerraformIamUser
+      Groups:
+        - !Ref TerraformIamGroup
+
+  TerraformS3Bucket:
+    Type: AWS::S3::Bucket
+    Properties:
+      BucketName: !Join ["-", [!Ref ProjectName, state]]
+      # パブリックアクセスブロックを明示的に設定
+      PublicAccessBlockConfiguration:
+        BlockPublicAcls: True
+        BlockPublicPolicy: True
+        IgnorePublicAcls: True
+        RestrictPublicBuckets: True
+      # バージョニングを有効にしてtfstateを巻き戻せるようにする
+      VersioningConfiguration:
+        Status: Enabled
+      # 過去バージョン保持期間
+      LifecycleConfiguration:
+        Rules:
+          - Id: NoncurrentVersionExpiration
+            Status: Enabled
+            NoncurrentVersionExpirationInDays: 25
+      # バケット保存時のデータ暗号化
+      BucketEncryption:
+        ServerSideEncryptionConfiguration:
+          - ServerSideEncryptionByDefault:
+              SSEAlgorithm: AES256
+
+  TerraformDynamoDB:
+    Type: AWS::DynamoDB::Table
+    Properties:
+      TableName: !Join ["-", [!Ref ProjectName, dynamodb]]
+      BillingMode: PAY_PER_REQUEST
+      AttributeDefinitions:
+        - AttributeName: LockID
+          AttributeType: S
+      KeySchema:
+        - AttributeName: LockID
+          KeyType: HASH
+      # ProvisionedThroughput:
+      #   ReadCapacityUnits: 1
+      #   WriteCapacityUnits: 1
+
+Outputs:
+  ProjectName:
+    Value: !Ref ProjectName
+    Export:
+      Name: ProjectName
