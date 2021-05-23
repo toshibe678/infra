@@ -12,6 +12,7 @@ Resources:
     Type: AWS::IAM::User
     Properties:
       UserName: terraform-iam-user
+
   TerraformIamGroup:
     Type: AWS::IAM::Group
     Properties:
