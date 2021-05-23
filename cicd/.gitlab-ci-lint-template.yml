@@ -9,5 +9,6 @@ cfn-lint:
     - pip install cfn-lint
     - cfn-lint --version
     - cfn-lint -t ./cloudformation/*.yml
-  changes:
-    - "cloudformation/**/*"
+  only:
+    changes:
+      - "cloudformation/**/*"
