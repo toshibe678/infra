@@ -25,7 +25,7 @@ terraform-lint:
     entrypoint: [""]
   before_script:
     - wget https://github.com/terraform-linters/tflint/releases/download/v${TFLINT_VERSION}/tflint_linux_amd64.zip -O tflint.zip
-    - unzip tflint.zip -d $HOME
+    - unzip tflint.zip -d /bin
     - rm tflint.zip
   script:
     - >-
@@ -34,7 +34,7 @@ terraform-lint:
       | while read line; do
           cd $line;
           echo "processing $PWD ..."
-          terraform init -backend=false && $HOME/tflint --config $CI_PROJECT_DIR/lint/.tflint.hcl;
+          terraform init -backend=false && tflint --config $CI_PROJECT_DIR/lint/.tflint.hcl;
           cd -;
         done
   only:

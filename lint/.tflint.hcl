@@ -1,9 +1,8 @@
 config {
   module     = true
-  deep_check = false
 }
 
-rule "terraform_dash_in_resource_name" {
+rule "terraform_naming_convention" {
   enabled = true
 }
 
