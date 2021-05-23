@@ -1,6 +1,11 @@
 .lint_default: &lint_default
   stage: lint
 
+variables:
+  TERRAFORM_VERSION: 0.15.4
+  # https://github.com/terraform-linters/tflint/releases/
+  TFLINT_VERSION: 0.28.1
+
 cfn-lint:
   <<: *lint_default
   image:
@@ -12,3 +17,26 @@ cfn-lint:
   only:
     changes:
       - "cloudformation/**/*"
+
+terraform-lint:
+  <<: *lint_default
+  image:
+    name: hashicorp/terraform:${TERRAFORM_VERSION}
+    entrypoint: [""]
+  before_script:
+    - wget https://github.com/terraform-linters/tflint/releases/download/v${TFLINT_VERSION}/tflint_linux_amd64.zip -O tflint.zip
+    - unzip tflint.zip -d $HOME
+    - rm tflint.zip
+  script:
+    - >-
+      find . -type f -name "*.tf" -exec dirname {} \;
+      | sort -u
+      | while read line; do
+          cd $line;
+          echo "processing $PWD ..."
+          terraform init -backend=false && $HOME/tflint --config $CI_PROJECT_DIR/lint/.tflint.hcl;
+          cd -;
+        done
+  only:
+    changes:
+      - "terraform/**/*"
