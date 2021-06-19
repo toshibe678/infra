@@ -31,11 +31,25 @@ docker run -e AWS_ACCESS_KEY_ID=$AWS_ACCESS_KEY_ID -e AWS_SECRET_ACCESS_KEY=$AWS
 # terraformの実行を事前準備のDockerfileを使用して行う場合
 ```bash
 docker build -t terraform ./
-docker run -e AWS_ACCESS_KEY_ID=$AWS_ACCESS_KEY_ID -e AWS_SECRET_ACCESS_KEY=$AWS_SECRET_ACCESS_KEY -e AWS_DEFAULT_REGION=$AWS_DEFAULT_REGION -v $(pwd):/terraform -w /terraform -it terraform:latest
+docker run -e AWS_ACCESS_KEY_ID=$AWS_ACCESS_KEY_ID -e AWS_SECRET_ACCESS_KEY=$AWS_SECRET_ACCESS_KEY -e AWS_DEFAULT_REGION=$AWS_DEFAULT_REGION -v $(pwd)/terraform:/terraform -w /terraform -it terraform:latest
 
 # tflintのローカル実行
 tflint --config ./lint/.tflint.hcl;
 ```
 
+# プロジェクトの初期化
+terraform init -var "access_key=${AWS_ACCESS_KEY_ID}" -var "secret_key=$AWS_SECRET_ACCESS_KEY"
+
 # terraformのフォーマット
 terraform fmt -recursive
+
+# terraform syntax check
+terraform validate
+
+# terraform 実行計画の確認
+terraform plan
+
+terraformer import aws --resources=cloudwatch,codebuild,dynamodb,ec2_instance,ebs,ecs,ecr,elb,eni,iam,lambda,logs,nat,organization,s3,sg,sns,subnet,vpc
+
+terraformer import aws --resources=organization
+
