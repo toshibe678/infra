@@ -47,9 +47,13 @@ terraform fmt -recursive
 terraform validate
 
 # terraform 実行計画の確認
-terraform plan
+terraform plan -var "access_key=${AWS_ACCESS_KEY_ID}" -var "secret_key=$AWS_SECRET_ACCESS_KEY"
 
-terraformer import aws --resources=cloudwatch,codebuild,dynamodb,ec2_instance,ebs,ecs,ecr,elb,eni,iam,lambda,logs,nat,organization,s3,sg,sns,subnet,vpc
+# terraformの適用
+terraform apply -var "access_key=${AWS_ACCESS_KEY_ID}" -var "secret_key=$AWS_SECRET_ACCESS_KEY"
+terraform apply -refresh-only -var "access_key=${AWS_ACCESS_KEY_ID}" -var "secret_key=$AWS_SECRET_ACCESS_KEY"
 
-terraformer import aws --resources=organization
+terraform import  -var "access_key=${AWS_ACCESS_KEY_ID}" -var "secret_key=$AWS_SECRET_ACCESS_KEY" aws_vpc.toshi-root-default-vpc vpc-d7658fb3
 
+
+terraform import -var "access_key=${AWS_ACCESS_KEY_ID}" -var "secret_key=$AWS_SECRET_ACCESS_KEY"
