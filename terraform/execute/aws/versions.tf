@@ -1,10 +1,7 @@
 terraform {
   required_version = ">= 0.15.0"
-    backend "s3" {
-        bucket = "toshi-terraform-state"
-        region = "ap-northeast-1"
-        key = "terraform.tfstate"
-        encrypt = true
-        dynamodb_table = "toshi-terraform-dynamodb"
+  required_providers {
+    # https://registry.terraform.io/providers/hashicorp/aws/latest
+    aws = ">= 3.35.0"
   }
 }
