@@ -40,6 +40,10 @@ tflint --config ./lint/.tflint.hcl;
 # プロジェクトの初期化
 terraform init -var "access_key=${AWS_ACCESS_KEY_ID}" -var "secret_key=$AWS_SECRET_ACCESS_KEY"
 
+# terraformerで既存設定インポート
+terraformer import aws --resources=*
+terraformer import aws --resources=organization
+
 # terraformのフォーマット
 terraform fmt -recursive
 
