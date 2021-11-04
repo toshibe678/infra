@@ -8,4 +8,10 @@ module "common" {
   source = "../../modules/common"
 }
 
+module "organization" {
+  source = "../../modules/organization"
+}
+
+module "network" {
+  source = "../../modules/network"
 }

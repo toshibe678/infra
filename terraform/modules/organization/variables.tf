@@ -2,7 +2,7 @@
 data "terraform_remote_state" "organization" {
   backend = "s3"
 
-  config {
+  config = {
     bucket = "toshi-terraform-state"
     key    = "terraform.tfstate"
     region = "ap-northeast-1"
