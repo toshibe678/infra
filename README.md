@@ -46,9 +46,18 @@ terraformer import aws --resources=organization
 
 # terraformのフォーマット
 terraform fmt -recursive
+# フォーマット済みかチェック
+terraform fmt -recursive -check
 
 # terraform syntax check
 terraform validate
+find . -type f -name '*. tf' -exec dirname {} \; | sort -u | xargs -I {} terraform validate {}
+
+# オートコンプリートのインストール
+terraform -install-autocomplete
+
+# lint
+tflint
 
 # terraform 実行計画の確認
 terraform plan -var "access_key=${AWS_ACCESS_KEY_ID}" -var "secret_key=$AWS_SECRET_ACCESS_KEY"
