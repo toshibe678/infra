@@ -20,3 +20,8 @@ RUN wget https://github.com/gruntwork-io/terragrunt/releases/download/v${TERRAGR
   && chmod +x ./terragrunt_linux_amd64 \
   && mv ./terragrunt_linux_amd64 /usr/local/bin/terragrunt
 
+COPY .terraformrc /root/.terraformrc
+COPY entrypoint.sh /usr/local/bin/entrypoint.sh
+RUN chmod +x /usr/local/bin/entrypoint.sh
+
+ENTRYPOINT ["entrypoint.sh"]
