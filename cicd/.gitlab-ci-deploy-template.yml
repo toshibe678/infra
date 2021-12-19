@@ -1,0 +1,78 @@
+.deploy_default: &deploy_default
+  #  stage: deploy
+  image: toshiclick/ci-ansible
+  before_script:
+    # リモートの最新に追従
+    - git submodule foreach git pull origin master
+    - cd ansible
+    - ansible-galaxy install -r requirements.yml -p roles --force
+    - bash ./ci.sh
+  after_script:
+    - rm -f ~/.ssh/id_rsa
+    - rm -f ~/.ssh/.ansible_vault_pass
+
+# 変数によって実行するサーバへデプロイ
+# CIスケジュール画面でDINAMIC_DEPLOY_TARGETに適切なhostsを指定する必要あり
+all_raspi_ansible:
+  stage: deploy
+  <<: *deploy_default
+  script:
+    # サーバへプレイブックを実行
+    - ansible-playbook -D -l raspi -i hosts_all.yml all.yml --vault-password-file ~/.ssh/.ansible_vault_pass
+  only:
+    # 実行されるブランチを指定
+    refs:
+      - main
+      - triggers
+    variables:
+      # 環境変数DINAMIC_RELEASE_FLAGがあるときだけ実行(スケジュールCI経由時だけ実行されるように)
+      - $ALL_RASPI_RELEASE_FLAG
+
+all_vm_ansible:
+  stage: deploy
+  <<: *deploy_default
+  script:
+    # サーバへプレイブックを実行
+    - ansible-playbook -D -l dns -i hosts_all.yml all.yml --vault-password-file ~/.ssh/.ansible_vault_pass
+  only:
+    # 実行されるブランチを指定
+    refs:
+      - main
+      - triggers
+    variables:
+      # 環境変数DINAMIC_RELEASE_FLAGがあるときだけ実行(スケジュールCI経由時だけ実行されるように)
+      - $ALL_VM_RELEASE_FLAG
+
+# サブCIサーバーに対してansible実行
+ansible_execute_main_ci:
+  <<: *deploy_default
+  stage: deploy
+  script:
+    - ansible-playbook -D -l mayu -i inventory/default.yml all.yml --vault-password-file ~/.ssh/.ansible_vault_pass
+  only:
+    # 実行されるブランチを指定
+    refs:
+      - main
+    variables:
+      # 環境変数RELEASE_FLAGがあるときだけ実行(スケジュールCIのスタートボタンを押したときだけ実行されるように)
+      - $RELEASE_MAIN_FLAG
+  tags:
+    # ここで指定したタグが付いているRunnerでのみ動く
+    - mainCI
+
+# メインCIサーバーに対してansible実行
+ansible_excute_sub_ci:
+  <<: *deploy_default
+  stage: deploy
+  script:
+    - ansible-playbook -D -l shigure -i inventory/default.yml all.yml --vault-password-file ~/.ssh/.ansible_vault_pass -C
+  only:
+    # 実行されるブランチを指定
+    refs:
+      - main
+    variables:
+      # 環境変数RELEASE_FLAGがあるときだけ実行(スケジュールCIのスタートボタンを押したときだけ実行されるように)
+      - $RELEASE_SUB_FLAG
+  tags:
+    # ここで指定したタグが付いているRunnerでのみ動く
+    - subCI

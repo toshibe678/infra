@@ -2,14 +2,14 @@
   stage: lint
 
 variables:
-  TERRAFORM_VERSION: 0.15.4
+  TERRAFORM_VERSION: 1.1.2
   # https://github.com/terraform-linters/tflint/releases/
-  TFLINT_VERSION: 0.28.1
+  TFLINT_VERSION: 0.34.0
 
 cfn-lint:
   <<: *lint_default
   image:
-    name: python:3.8
+    name: python:3.10
   script:
     - pip install cfn-lint
     - cfn-lint --version
@@ -17,6 +17,7 @@ cfn-lint:
   only:
     changes:
       - "cloudformation/**/*"
+      - ".gitlab-ci.yml"
 
 terraform-lint:
   <<: *lint_default
@@ -40,3 +41,30 @@ terraform-lint:
   only:
     changes:
       - "terraform/**/*"
+      - ".gitlab-ci.yml"
+
+ansiblelint:
+  <<: *lint_default
+  image: toshiclick/ci-ansible
+  script:
+    - ansible-lint all.yml -c .ansible-lint
+  except:
+    - schedules
+  only:
+    changes:
+      - "ansible/**/*"
+      - ".gitlab-ci.yml"
+
+ansible_syntax:
+  <<: *lint_default
+  script:
+    - ansible-playbook -i hosts_all.yml all.yml --syntax-check --vault-password-file ~/.ssh/.ansible_vault_pass -C
+  only:
+    # 実行されるブランチを指定(vault passはプロテクトブランチでしか取れないようにしているので。)
+    refs:
+      - main
+    changes:
+      - "ansible/**/*"
+      - ".gitlab-ci.yml"
+  except:
+    - schedules
