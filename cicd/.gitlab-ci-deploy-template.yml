@@ -1,9 +1,7 @@
-.deploy_default: &deploy_default
+.ansible_deploy_default: &ansible_deploy_default
   #  stage: deploy
   image: toshiclick/ci-ansible
   before_script:
-    # リモートの最新に追従
-    - git submodule foreach git pull origin master
     - cd ansible
     - ansible-galaxy install -r requirements.yml -p roles --force
     - bash ./ci.sh
@@ -11,11 +9,26 @@
     - rm -f ~/.ssh/id_rsa
     - rm -f ~/.ssh/.ansible_vault_pass
 
+ansible_syntax:
+  stage: lint
+  <<: *ansible_deploy_default
+  script:
+    - ansible-playbook -i hosts_all.yml all.yml --syntax-check --vault-password-file ~/.ssh/.ansible_vault_pass -C
+  only:
+    # 実行されるブランチを指定(vault passはプロテクトブランチでしか取れないようにしているので。)
+    refs:
+      - main
+    changes:
+      - "ansible/**/*"
+      - ".gitlab-ci.yml"
+  except:
+    - schedules
+
 # 変数によって実行するサーバへデプロイ
 # CIスケジュール画面でDINAMIC_DEPLOY_TARGETに適切なhostsを指定する必要あり
 all_raspi_ansible:
   stage: deploy
-  <<: *deploy_default
+  <<: *ansible_deploy_default
   script:
     # サーバへプレイブックを実行
     - ansible-playbook -D -l raspi -i hosts_all.yml all.yml --vault-password-file ~/.ssh/.ansible_vault_pass
@@ -30,7 +43,7 @@ all_raspi_ansible:
 
 all_vm_ansible:
   stage: deploy
-  <<: *deploy_default
+  <<: *ansible_deploy_default
   script:
     # サーバへプレイブックを実行
     - ansible-playbook -D -l dns -i hosts_all.yml all.yml --vault-password-file ~/.ssh/.ansible_vault_pass
@@ -45,7 +58,7 @@ all_vm_ansible:
 
 # サブCIサーバーに対してansible実行
 ansible_execute_main_ci:
-  <<: *deploy_default
+  <<: *ansible_deploy_default
   stage: deploy
   script:
     - ansible-playbook -D -l mayu -i inventory/default.yml all.yml --vault-password-file ~/.ssh/.ansible_vault_pass
@@ -62,7 +75,7 @@ ansible_execute_main_ci:
 
 # メインCIサーバーに対してansible実行
 ansible_excute_sub_ci:
-  <<: *deploy_default
+  <<: *ansible_deploy_default
   stage: deploy
   script:
     - ansible-playbook -D -l shigure -i inventory/default.yml all.yml --vault-password-file ~/.ssh/.ansible_vault_pass -C

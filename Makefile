@@ -1,4 +1,4 @@
-.PHONY: build plan apply destroy init check exec
+.PHONY: build plan apply destroy init check exec lint
 
 init:
 	@docker-compose run --rm terraform terraform init
@@ -24,3 +24,8 @@ build:
 
 exec:
 	@docker-compose run --rm terraform bash
+
+lint:
+	@docker-compose run --rm ansible ansible-lint all.yml -c .ansible-lint
+	@docker-compose run --rm terraform ./tflint.sh
+	@docker-compose run --rm cloudformation cfn-lint -t ./**/*.yml

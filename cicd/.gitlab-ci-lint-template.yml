@@ -24,20 +24,11 @@ terraform-lint:
   image:
     name: hashicorp/terraform:${TERRAFORM_VERSION}
     entrypoint: [""]
-  before_script:
+  script:
+    - cd terraform
     - wget https://github.com/terraform-linters/tflint/releases/download/v${TFLINT_VERSION}/tflint_linux_amd64.zip -O tflint.zip
     - unzip tflint.zip -d /bin
-    - rm tflint.zip
-  script:
-    - >-
-      find . -type f -name "*.tf" -exec dirname {} \;
-      | sort -u
-      | while read line; do
-          cd $line;
-          echo "processing $PWD ..."
-          terraform init -backend=false && tflint --config $CI_PROJECT_DIR/lint/.tflint.hcl;
-          cd -;
-        done
+    - ./tflint.sh
   only:
     changes:
       - "terraform/**/*"
@@ -47,6 +38,7 @@ ansiblelint:
   <<: *lint_default
   image: toshiclick/ci-ansible
   script:
+    - cd ansible
     - ansible-lint all.yml -c .ansible-lint
   except:
     - schedules
@@ -55,16 +47,3 @@ ansiblelint:
       - "ansible/**/*"
       - ".gitlab-ci.yml"
 
-ansible_syntax:
-  <<: *lint_default
-  script:
-    - ansible-playbook -i hosts_all.yml all.yml --syntax-check --vault-password-file ~/.ssh/.ansible_vault_pass -C
-  only:
-    # 実行されるブランチを指定(vault passはプロテクトブランチでしか取れないようにしているので。)
-    refs:
-      - main
-    changes:
-      - "ansible/**/*"
-      - ".gitlab-ci.yml"
-  except:
-    - schedules

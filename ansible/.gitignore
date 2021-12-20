@@ -1,0 +1,8 @@
+### Ansible ###
+*.retry
+.ansible_vault_pass
+roles/
+
+# software
+named/named.run
+
