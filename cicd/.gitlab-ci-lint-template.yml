@@ -28,6 +28,7 @@ terraform-lint:
     - cd terraform
     - wget https://github.com/terraform-linters/tflint/releases/download/v${TFLINT_VERSION}/tflint_linux_amd64.zip -O tflint.zip
     - unzip tflint.zip -d /bin
+    - chmod 755 ./tflint.sh
     - ./tflint.sh
   only:
     changes:
