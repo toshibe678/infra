@@ -44,25 +44,26 @@ all:
       children:
         dns: { }
     network_switch:
-      # YAMAHA RTX1210
-      router:
-        children:
-          hosts:
-            172.16.1.1: {}
-      cisco:
-        vars:
-          ansible_connection: network_cli
-          ansible_network_os: ios
-          ansible_ssh_user: admin
-          ansible_become: yes
-          ansible_become_method: enable
-        children:
-          # Cisco WS-C3560CG-8PC-S
-          l3switch:
+      children:
+        # YAMAHA RTX1210
+        router:
+          children:
             hosts:
-              172.28.1.1: {}
-          # Cisco WS-C2960CG-8TC-L
-          l2switch:
-            hosts:
-              172.28.1.2: { }
+              172.16.1.1: {}
+        cisco:
+          vars:
+            ansible_connection: network_cli
+            ansible_network_os: ios
+            ansible_ssh_user: admin
+            ansible_become: yes
+            ansible_become_method: enable
+          children:
+            # Cisco WS-C3560CG-8PC-S
+            l3switch:
+              hosts:
+                172.28.1.1: {}
+            # Cisco WS-C2960CG-8TC-L
+            l2switch:
+              hosts:
+                172.28.1.2: { }
 

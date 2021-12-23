@@ -26,6 +26,15 @@ services:
       - ./ansible:/ansible
     tty: true
 
+  nw-ansible:
+    container_name: "nw-ansible"
+    image: toshiclick/home_network_ansible_image:latest
+    env_file: ./.env
+    working_dir: /ansible
+    volumes:
+      - ./ansible:/ansible
+    tty: true
+
   cloudformation:
     container_name: "cloudformation"
     build:
