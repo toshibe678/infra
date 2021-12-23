@@ -1,7 +1,7 @@
 ---
 # ciscoL2機器の処理を行う
 - hosts:
-    - l2
+    - l2switch
   gather_facts: no
   tasks:
     - name: setting vlan interface vlan1

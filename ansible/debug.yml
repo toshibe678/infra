@@ -1,0 +1,14 @@
+- hosts: all
+  become: true
+  become_user: root
+  gather_facts: yes
+  ignore_unreachable: yes
+  tasks:
+    - name: Magic | group_names
+      debug: var=group_names
+
+    - name: Magic | groups
+      debug: var=groups
+
+    - name: Magic | inventory_hostname
+      debug: var=inventory_hostname
