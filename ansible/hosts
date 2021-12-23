@@ -1,0 +1,16 @@
+# bare metal
+172.28.177.100 shigure.test
+172.28.177.200 mayu.test
+172.28.100.64 ranko.test
+
+# vm
+172.28.100.53 dns.test
+172.28.100.135 vm-ecs-1.test
+172.28.100.136 vm-ecs-2.test
+
+# raspi
+172.16.100.254 raspi.test
+172.16.100.131 raspi-master.test
+172.16.100.132 raspi-worker1.test
+172.16.100.133 raspi-worker2.test
+172.16.100.134 raspi-worker3.test

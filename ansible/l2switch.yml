@@ -1,0 +1,76 @@
+---
+# ciscoL2機器の処理を行う
+- hosts:
+    - l2
+  gather_facts: no
+  tasks:
+    - name: setting vlan interface vlan1
+      ios_config:
+        lines:
+          - 'no ip address'
+        parents: interface Vlan1
+
+    - name: setting vlan interface vlan99
+      ios_config:
+        lines:
+          - 'ip address 172.28.1.2 255.255.255.0'
+          - 'no shutdown'
+        parents: interface Vlan99
+
+    - name: setting vlan interface vlan77
+      ios_config:
+        lines:
+          - 'ip address 172.28.77.2 255.255.255.0'
+        parents: interface Vlan77
+
+    - name: setting vlan interface vlan177
+      ios_config:
+        lines:
+          - 'ip address 172.28.177.2 255.255.255.0'
+        parents: interface Vlan177
+
+    - name: Configure interfaces - Status and Descriptions
+      ios_interfaces:
+        config:
+          - name: "{{ item.ios_if }}"
+            description: "{{ item.desc }}"
+            enabled: "{{ item.enabled }}"
+      loop: "{{ interfaces }}"
+
+    - name: Configure interfaces - L2 switchport
+      cisco.ios.ios_l2_interfaces:
+        config:
+          - name: "{{ item.ios_if }}"
+            mode:  "{{ item.mode }}"
+            access:
+              vlan: "{{ item.vlan_id }}"
+        state: merged
+      when:
+        - item.mode is defined
+        - item.mode == "access"
+      loop: "{{ interfaces }}"
+
+    - name: Configure interfaces - L2 switchport port fast
+      cisco.ios.ios_command:
+        commands:
+          - conf t
+          - "interface {{ item.ios_if }}"
+          - spanning-tree portfast
+      when:
+        - item.mode is defined
+        - item.mode == "access"
+      loop: "{{ interfaces }}"
+
+    - name: Configure interfaces - L3 trunk
+      cisco.ios.ios_l2_interfaces:
+        config:
+          - name: "{{ item.ios_if }}"
+            mode: "{{ item.mode }}"
+            trunk:
+              allowed_vlans: "{{ item.allowed_vlans }}"
+              native_vlan: "{{ item.native_vlan }}"
+        state: merged
+      when:
+        - item.mode is defined
+        - item.mode == "trunk"
+      loop: "{{ interfaces }}"

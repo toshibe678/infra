@@ -3,10 +3,20 @@
   image: toshiclick/ci-ansible
   before_script:
     - cd ansible
+    - pip3 install paramiko
     - ansible-galaxy install -r requirements.yml -p roles --force
     - bash ./ci.sh
   after_script:
     - rm -f ~/.ssh/id_rsa
+    - rm -f ~/.ssh/.ansible_vault_pass
+
+.ansible_network_deploy_default: &ansible_network_deploy_default
+  image: toshiclick/home_network_ansible_image:latest
+  before_script:
+    - mkdir ~/.ssh && chmod 600 ~/.ssh
+    - echo -e "$VAULT_PASS" > ~/.ssh/.ansible_vault_pass
+    - chmod 644 ~/.ssh/.ansible_vault_pass
+  after_script:
     - rm -f ~/.ssh/.ansible_vault_pass
 
 ansible_syntax:
@@ -89,3 +99,18 @@ ansible_excute_sub_ci:
   tags:
     # ここで指定したタグが付いているRunnerでのみ動く
     - subCI
+
+excute_ansible_to_network:
+  stage: deploy
+  <<: *ansible_network_deploy_default
+  script:
+    # 機器へプレイブックを実行
+    - ansible-playbook -D -l cisco -i hosts_all.yml all.yml --vault-password-file ~/.ssh/.ansible_vault_pass
+  only:
+    # 実行されるブランチを指定
+    refs:
+      - main
+      - triggers
+    variables:
+      # 環境変数RELEASE_FLAGがあるときだけ実行(スケジュールCI経由時だけ実行されるように)
+      - $RELEASE_FLAG

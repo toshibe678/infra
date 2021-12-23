@@ -47,4 +47,3 @@ ansiblelint:
     changes:
       - "ansible/**/*"
       - ".gitlab-ci.yml"
-

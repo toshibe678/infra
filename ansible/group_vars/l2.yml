@@ -1,0 +1,53 @@
+---
+hostname: L2Switch
+domain_name: l2switch.test
+interfaces:
+  - ios_if: "GigabitEthernet0/1"
+    desc: "access port"
+    enabled: true
+    mode: access
+    vlan_id: 77
+  - ios_if: "GigabitEthernet0/2"
+    desc: "access port"
+    enabled: true
+    mode: access
+    vlan_id: 77
+  - ios_if: "GigabitEthernet0/3"
+    desc: "access port"
+    enabled: true
+    mode: access
+    vlan_id: 77
+  - ios_if: "GigabitEthernet0/4"
+    desc: "access port"
+    enabled: true
+    mode: access
+    vlan_id: 177
+  - ios_if: "GigabitEthernet0/5"
+    desc: "access port"
+    enabled: true
+    mode: access
+    vlan_id: 177
+  - ios_if: "GigabitEthernet0/6"
+    desc: "trunk port"
+    enabled: true
+    mode: trunk
+    native_vlan: 99
+    allowed_vlans: 1,99,77,100,177
+  - ios_if: "GigabitEthernet0/7"
+    desc: "trunk port"
+    enabled: true
+    mode: trunk
+    native_vlan: 177
+    allowed_vlans: 1,99,77,100,177
+  - ios_if: "GigabitEthernet0/8"
+    desc: "trunk port"
+    enabled: true
+    mode: trunk
+    native_vlan: 99
+    allowed_vlans: 1,99,77,100,177
+  - ios_if: "GigabitEthernet0/9"
+    desc: "To L3SW VLAN Bridge"
+    enabled: true
+    mode: trunk
+    native_vlan: 99
+    allowed_vlans: 1,99,77,100,177
