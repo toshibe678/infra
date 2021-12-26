@@ -40,6 +40,7 @@ ansiblelint:
   image: toshiclick/ci-ansible
   script:
     - cd ansible
+    - ansible-lint --version
     - ansible-lint all.yml -c .ansible-lint
   except:
     - schedules

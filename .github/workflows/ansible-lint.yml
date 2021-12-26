@@ -1,0 +1,23 @@
+name: Lint Ansible Templates
+
+on:
+  push:
+    paths:
+      - "ansible/**"
+
+jobs:
+  ansible-lint:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+
+      - name: Setup Ansible Linter with Latest Version
+        uses: ansible/ansible-lint-action@master
+
+      - name: Print the ansible lint Linter Version & run Linter.
+        run: |
+          cd ansible
+          ansible-lint --version
+          ansible-lint all.yml -c .ansible-lint
