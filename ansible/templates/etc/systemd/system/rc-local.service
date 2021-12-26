@@ -1,0 +1,10 @@
+[Unit]
+Description=/etc/rc.local
+
+[Service]
+ExecStart=/etc/rc.local
+Restart=always
+Type=simple
+
+[Install]
+WantedBy=multi-user.target

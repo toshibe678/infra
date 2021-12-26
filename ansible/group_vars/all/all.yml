@@ -1,62 +1,62 @@
 ---
 ansible_ssh_pass: "{{ crypt_ansible_ssh_pass }}"
 ansible_become_pass: "{{ crypt_ansible_become_pass }}"
+ansible_sudo_pass: "{{ crypt_ansible_sudo_pass }}"
 
-vlans:
-  - name: "Vlan1"
-    id: 1
-    state: active
-    shutdown: disabled
-    mtu: 1500
-  - name: "Vlan99"
-    id: 99
-    state: active
-    shutdown: disabled
-    mtu: 1500
-  - name: "Vlan77"
-    id: 77
-    state: active
-    shutdown: disabled
-    mtu: 1500
-  - name: "Vlan100"
-    id: 100
-    state: active
-    shutdown: disabled
-    mtu: 1500
-  - name: "Vlan177"
-    id: 177
-    state: active
-    shutdown: disabled
-    mtu: 1500
+hostname: "{{ inventory_hostname }}"
+# ubuntuの日本語Remix入れるかどうかのフラグ
+japanease: false
+hosts:
+  # /etc/hostsに設定するホスト情報
+  etc_hosts_setting:
+    - { name: "{{ hostname }}", ip: 127.0.0.1 }
+    - { name: "raspi.test", ip: 172.16.100.254 }
+    - { name: "raspi-master1.test", ip: 172.16.100.131 }
+    - { name: "raspi-worker1.test", ip: 172.16.100.132 }
+    - { name: "raspi-worker2.test", ip: 172.16.100.133 }
+    - { name: "raspi-worker3.test", ip: 172.16.100.134 }
 
-dhcps:
-  - name: "toshipc01"
-    host: 172.28.77.10
-    subnet: 255.255.255.0
-    address: 00d8.61a1.519b
-    identifier: 0100.d861.a151.9b
-  - name: "lenovo-p14s"
-    host: 172.28.77.21
-    subnet: 255.255.255.0
-    address: b0a4.60c2.ce05
-    identifier: 01b0.a460.c2ce.05
-  - name: "shigure.test"
-    host: 172.28.177.100
-    subnet: 255.255.255.0
-    address: 7085.c240.d20b
-    identifier: 0170.85c2.40d2.0b
-  - name: "mayu.test"
-    host: 172.28.177.200
-    subnet: 255.255.255.0
-    address: 0025.22a0.b04c
-    identifier: 0100.2522.a0b0.4c
-  - name: "ranko.test"
-    host: 172.28.100.64
-    subnet: 255.255.255.0
-    address: 0024.a584.a9fc
-    identifier: 0100.24a5.84a9.fc
-  - name: "qnap-ts231p.test"
-    host: 172.28.100.241
-    subnet: 255.255.255.0
-    address: 245E.BE1F.34C8
-    identifier: 0124.5ebe.1f34.c8
+# 各ミドルウェアのインストール・設定フラグ
+# docker
+docker_install: true
+docker_remote_api_enable: "no"
+# firewall
+firewall: true
+package_control_auto_reboot: "true"
+# rkhunter
+rkhunter_install: false
+# mackerel
+mackerel_install: false
+
+# SSHログイン時にメール送付しないグローバルIP
+# IPは正規表現でマッチ。接続元IPがここで定義したip正規表現と一致すればメールが送られない
+ssh_mail_send: "true"
+script_dir: "/usr/local/script"
+ssh_mail_send_trust_list_file: /usr/local/ssh_mail_send_trust_list
+ssh_mail_send_no_send_ip_list:
+  - { ip: 127.0.0.1 }
+  - { ip: 192.168. }
+  - { ip: 172.16. }
+  - { ip: 172.17. }
+  - { ip: 172.18. }
+  - { ip: 172.19. }
+  - { ip: 172.20. }
+  - { ip: 172.28. }
+  - { ip: 10.0.2. }
+  # 自宅IP
+  - { ip: 61.213.68.235 }
+
+# ユーザ関連
+manage_user_name: toshi
+manage_user_group: toshi
+manage_user_password: "{{ crypt_manage_user_pass }}"
+# manageユーザのsudo NOパスワードを許容するか
+sudo_nopassword: "yes"
+root_user_password: "{{ crypt_root_user_pass }}"
+ansible_user_password: "{{ crypt_ansible_user_password }}"
+
+# モニタリング
+mackerel_Api_Key: "{{ crypt_mackerel_api_Key }}"
+mail_transfer_address: "{{ crypt_mail_transfer_address }}"
+slack_web_hook_url: "{{ crypt_slack_web_hook_url }}"
+

@@ -1,0 +1,15 @@
+dns_server: 8.8.8.8 1.1.1.1
+ufw_reset: yes
+ufw_rules:
+  - { from_ip: '127.0.0.0/8', comment: 'Allow localhost' }
+  - { port: 22, rule: limit, comment: 'Allow Limit SSH' }
+  - { port: 25, rule: allow, comment: 'Allow Mail' }
+  - { port: 80, rule: allow, comment: 'Allow HTTP' }
+  - { port: 443, rule: allow, comment: 'Allow HTTPS' }
+  - { port: 53, rule: allow, comment: 'Allow DNS' }
+  - { port: 953, rule: allow, comment: 'Allow crypt DNS' }
+  - { port: 9100, rule: allow, comment: 'Allow Node Exporter' }
+ufw_default_forward_policy: ACCEPT
+ufw_logging: low
+ufw_applications:
+  - { name: "Postfix" }

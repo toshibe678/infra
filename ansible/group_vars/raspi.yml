@@ -1,0 +1,8 @@
+# Slackチャンネルの情報
+slack_channel: "home_server"
+slack_icon: ":mayu2:"
+
+# 無線LANの省電力化無効
+wifi_setting: true
+
+monitoring_ansible_architecture: "arm64"

@@ -1,0 +1,40 @@
+- hosts: linux
+  become: true
+  become_user: root
+  ignore_unreachable: yes
+  tasks:
+    - name: "create {{ manage_user_name }} .ssh/ dicrectory"
+      file:
+        path: "/home/{{ manage_user_name }}/.ssh"
+        state: directory
+        mode: 0700
+        owner: "{{ manage_user_name }}"
+        group: "{{ manage_user_group }}"
+
+    - name: put sec gitkey
+      become: yes
+      become_user: root
+      copy:
+        src: gitkey
+        dest: "/home/{{ manage_user_name }}/.ssh/gitkey"
+        owner: "{{ manage_user_name }}"
+        group: "{{ manage_user_group }}"
+        mode: 0600
+
+    - name: put sec sshkey
+      become: yes
+      become_user: root
+      copy:
+        src: toshi_sshkey
+        dest: "/home/{{ manage_user_name }}/.ssh/id_rsa"
+        owner: "{{ manage_user_name }}"
+        group: "{{ manage_user_group }}"
+        mode: 0600
+
+    - name: "put /home/{{ manage_user_name }}/.ssh/config"
+      template:
+        src: "home/{{ manage_user_name }}/.ssh/config.j2"
+        dest: "/home/toshi/.ssh/config"
+        owner: "{{ manage_user_name }}"
+        group: "{{ manage_user_group }}"
+        mode: 0600

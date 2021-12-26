@@ -1,0 +1,15 @@
+#!/bin/sh
+# HDDの停止
+{% if spin_out_hdd_list is defined %}
+{% if spin_out_hdd_list != '' %}
+{% for item in spin_out_hdd_list %}
+/sbin/hdparm -S 120 {{ item.name }}
+{% endfor %}
+{% endif %}
+{% endif %}
+
+# wifiの省電力無効
+{% if wifi_setting is defined %}
+/usr/sbin/iwconfig wlan0 power off
+/usr/sbin/pm-powersave false
+{% endif %}

@@ -1,0 +1,58 @@
+vlans:
+  - name: "Vlan1"
+    id: 1
+    state: active
+    shutdown: disabled
+    mtu: 1500
+  - name: "Vlan99"
+    id: 99
+    state: active
+    shutdown: disabled
+    mtu: 1500
+  - name: "Vlan77"
+    id: 77
+    state: active
+    shutdown: disabled
+    mtu: 1500
+  - name: "Vlan100"
+    id: 100
+    state: active
+    shutdown: disabled
+    mtu: 1500
+  - name: "Vlan177"
+    id: 177
+    state: active
+    shutdown: disabled
+    mtu: 1500
+
+dhcps:
+  - name: "toshipc01"
+    host: 172.28.77.10
+    subnet: 255.255.255.0
+    address: 00d8.61a1.519b
+    identifier: 0100.d861.a151.9b
+  - name: "lenovo-p14s"
+    host: 172.28.77.21
+    subnet: 255.255.255.0
+    address: b0a4.60c2.ce05
+    identifier: 01b0.a460.c2ce.05
+  - name: "shigure.test"
+    host: 172.28.177.100
+    subnet: 255.255.255.0
+    address: 7085.c240.d20b
+    identifier: 0170.85c2.40d2.0b
+  - name: "mayu.test"
+    host: 172.28.177.200
+    subnet: 255.255.255.0
+    address: 0025.22a0.b04c
+    identifier: 0100.2522.a0b0.4c
+  - name: "ranko.test"
+    host: 172.28.100.64
+    subnet: 255.255.255.0
+    address: 0024.a584.a9fc
+    identifier: 0100.24a5.84a9.fc
+  - name: "qnap-ts231p.test"
+    host: 172.28.100.241
+    subnet: 255.255.255.0
+    address: 245E.BE1F.34C8
+    identifier: 0124.5ebe.1f34.c8

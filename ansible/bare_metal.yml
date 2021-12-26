@@ -1,0 +1,22 @@
+- hosts:
+    - bare_metal
+  become: true
+  become_user: root
+  ignore_unreachable: yes
+  tasks:
+    # HDDのスピンアウトを設定して省電力化のためのsmartツールをインストールする
+    # https://www.systemworks.co.jp/ex_spindown.php
+    - name: install smartmontoolssmartd.conf
+      apt:
+        pkg: smartmontools
+        state: present
+        update_cache: yes
+        cache_valid_time: 3600
+
+    - name: /etc/smartd.conf set
+      template:
+        src: "etc/smartd.conf"
+        dest: "/etc/smartd.conf"
+        owner: root
+        group: root
+        mode: 0644

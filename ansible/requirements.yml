@@ -1,8 +1,59 @@
 ---
 # ansible-galaxy install -r requirements.yml -p roles --force
-#- src: https://github.com/toshi-click/roles_ansible.git
-#  name: ansible
-#  scm: git
-#  version: "master"
+- src: https://github.com/toshi-click/roles_ansible.git
+  name: ansible
+  scm: git
+  version: "master"
+
+- src: https://github.com/toshi-click/roles_common.git
+  name: common
+  scm: git
+  version: "master"
+
+- src: https://github.com/toshi-click/roles_dev_tool_install.git
+  name: dev_tool_install
+  scm: git
+  version: "master"
+
+- src: https://github.com/toshi-click/roles_docker.git
+  name: docker
+  scm: git
+  version: "master"
+
+- src: https://github.com/toshi-click/roles_firewall.git
+  name: firewall
+  scm: git
+  version: "master"
+
+- src: https://github.com/toshi-click/roles_package_control
+  name: package_control
+  scm: git
+  version: "master"
+
+- src: https://github.com/toshi-click/roles_rootkit_hunter
+  name: rootkit_hunter
+  scm: git
+  version: "master"
+
+- src: https://github.com/toshi-click/roles_monitoring
+  name: monitoring
+  scm: git
+  version: "master"
+
+- src: https://github.com/toshi-click/roles_sshd.git
+  name: sshd
+  scm: git
+  version: "master"
+
+- src: https://github.com/toshi-click/roles_sudo.git
+  name: sudo
+  scm: git
+  version: "master"
+
+- src: https://github.com/toshi-click/roles_toshi_tools.git
+  name: toshi_tools
+  scm: git
+  version: "master"
+
 collections:
   - cisco.ios

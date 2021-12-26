@@ -1,48 +1,50 @@
 all:
-  vars:
-    ansible_ssh_user: toshi
-    ansible_ssh_port: 22
-    ansible_python_interpreter: /usr/bin/python3
-    ansible_ssh_private_key_file: ~/.ssh/id_rsa
     ignore_unreachable: yes
   children:
-    toshi:
-      hosts:
-        toshi.click: { }
-    shigure:
-      hosts:
-        shigure.test: { }
-    mayu:
-      hosts:
-        mayu.test: { }
-    ranko:
-      hosts:
-        ranko.test: { }
-    dns:
-      hosts:
-        dns.test: { }
-    raspi:
-      hosts:
-        raspi.test: { }
-#      children:
-#        raspi_master: { }
-#        raspi_worker: { }
-#    raspi_master:
-#      hosts:
-#        raspi-master.test: { }
-#    raspi_worker:
-#      hosts:
-#        raspi-worker1.test: { }
-#        raspi-worker2.test: { }
-#        raspi-worker3.test: { }
-    bare_metal:
+    vars:
+      ansible_ssh_user: toshi
+      ansible_ssh_port: 22
+      ansible_python_interpreter: /usr/bin/python3
+      ansible_ssh_private_key_file: ~/.ssh/id_rsa
+    linux:
       children:
-        shigure: { }
-        mayu: { }
-        ranko: { }
-    vm:
-      children:
-        dns: { }
+        toshi:
+          hosts:
+            toshi.click: { }
+        shigure:
+          hosts:
+            shigure.test: { }
+        mayu:
+          hosts:
+            mayu.test: { }
+#        ranko:
+#          hosts:
+#            ranko.test: { }
+        dns:
+          hosts:
+            dns.test: { }
+        raspi:
+          hosts:
+            raspi.test: { }
+#          children:
+#            raspi_master: { }
+#            raspi_worker: { }
+#        raspi_master:
+#          hosts:
+#            raspi-master.test: { }
+#        raspi_worker:
+#          hosts:
+#            raspi-worker1.test: { }
+#            raspi-worker2.test: { }
+#            raspi-worker3.test: { }
+        bare_metal:
+          children:
+            shigure: { }
+            mayu: { }
+#            ranko: { }
+        vm:
+          children:
+            dns: { }
     network_switch:
       children:
         # YAMAHA RTX1210

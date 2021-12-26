@@ -1,0 +1,40 @@
+- hosts:
+    - linux
+  become: true
+  become_user: root
+  ignore_unreachable: yes
+  tasks:
+    - name: install power pkg
+      apt:
+        name: "{{ packages }}"
+        update_cache: yes
+        cache_valid_time: 3600
+        state: present
+      vars:
+        packages:
+          - wireless-tools
+          - pm-utils
+      when: "ansible_os_family == 'Debian'"
+
+    - name: rc-local.service set
+      template:
+        src: "etc/systemd/system/rc-local.service"
+        dest: "/etc/systemd/system/rc-local.service"
+        owner: root
+        group: root
+        mode: 0644
+
+    - name: rc.local set
+      template:
+        src: "etc/rc-local"
+        dest: "/etc/rc.local"
+        owner: root
+        group: root
+        mode: 0755
+
+    - name: systemd set state rc-local.service
+      systemd:
+        name: rc-local
+        state: restarted
+        enabled: yes
+        daemon_reload: yes

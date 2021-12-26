@@ -1,2 +1,60 @@
 ---
+- hosts: linux
+  become: true
+  become_user: root
+  gather_facts: yes
+  ignore_unreachable: yes
+  roles:
+    - { role: "sudo" }
+    - { role: "common" }
+    - { role: "ansible" }
+    - { role: "dev_tool_install" }
+    - { role: "package_control" }
+    - { role: "toshi_tools" }
+    - { role: "sshd" }
+    - { role: "monitoring" }
+    - { role: "docker", when: docker_install, tags: docker }
+    - { role: "firewall", when: firewall, tags: firewall }
+  tasks:
+    # postfix関連の設定を行う
+    - name: main.cf set
+      template:
+        src: "etc/postfix/main.cf"
+        dest: /etc/postfix/main.cf
+        owner: root
+        group: root
+        mode: 0644
+
+    - name: aliases set
+      template:
+        src: "etc/aliases"
+        dest: /etc/aliases
+        owner: root
+        group: root
+        mode: 0644
+
+    - name: "postalias"
+      shell: bash -lc "postalias /etc/aliases"
+    - name: "newaliases"
+      shell: bash -lc "newaliases"
+
+    - name: systemd set state postfix
+      service:
+        name: postfix
+        state: restarted
+        enabled: yes
+
+# 物理サーバーだけにやる定義
+- import_playbook: ./bare_metal.yml
+
+- import_playbook: ./automatic_boot.yml
+
+- import_playbook: ./dns.yml
+
+- import_playbook: ./monitoring.yml
+
+- import_playbook: ./toshi.yml
+
+- import_playbook: ./rkhunter.yml
+
 - import_playbook: ./cisco.yml
