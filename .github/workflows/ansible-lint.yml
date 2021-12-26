@@ -19,5 +19,6 @@ jobs:
       - name: Print the ansible lint Linter Version & run Linter.
         run: |
           cd ansible
+          
           ansible-lint --version
           ansible-lint all.yml -c .ansible-lint

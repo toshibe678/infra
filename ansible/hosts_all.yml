@@ -1,12 +1,12 @@
 all:
-    ignore_unreachable: yes
+  ignore_unreachable: yes
   children:
-    vars:
-      ansible_ssh_user: toshi
-      ansible_ssh_port: 22
-      ansible_python_interpreter: /usr/bin/python3
-      ansible_ssh_private_key_file: ~/.ssh/id_rsa
     linux:
+      vars:
+        ansible_ssh_user: toshi
+        ansible_ssh_port: 22
+        ansible_python_interpreter: /usr/bin/python3
+        ansible_ssh_private_key_file: ~/.ssh/id_rsa
       children:
         toshi:
           hosts:
@@ -49,9 +49,8 @@ all:
       children:
         # YAMAHA RTX1210
         router:
-          children:
-            hosts:
-              172.16.1.1: {}
+          hosts:
+            172.16.1.1: {}
         cisco:
           vars:
             ansible_connection: network_cli

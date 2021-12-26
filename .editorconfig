@@ -26,3 +26,8 @@ trim_trailing_whitespace = false
 [{Makefile,**.mk}]
 # Use tabs for indentation (Makefiles require tabs)
 indent_style = tab
+
+# td-agent.conf
+[td-agent.conf]
+indent_style = space
+indent_size = 2
