@@ -2,7 +2,7 @@
 
 init:
 # 	@docker-compose run --rm terraform terraform init
-# 	@docker-compose run --rm ansible ansible-galaxy collection install cisco.ios
+ 	@docker-compose run --rm ansible ansible-galaxy collection install cisco.ios
 	@docker-compose run --rm ansible ansible-galaxy install -r requirements.yml
 
 plan:
@@ -14,7 +14,7 @@ apply:
 	@docker-compose run --rm terraform terraform apply
 
 deploy:
-	@cd ansible && ansible-playbook -D -i hosts_all.yml -l linux all.yml --ask-vault-pass -C
+	@docker-compose run --rm ansible bash -c './ci.sh && ansible-playbook -D -i hosts_all.yml -l linux all.yml --vault-password-file ~/.ssh/.ansible_vault_pass'
 
 nw-deploy:
 	@docker-compose run --rm nw-ansible ansible-playbook -D -i hosts_all.yml -l cisco all.yml --ask-vault-pass -C

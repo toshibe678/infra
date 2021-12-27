@@ -5,8 +5,6 @@
 
 # vm
 172.28.100.53 dns.test
-172.28.100.135 vm-ecs-1.test
-172.28.100.136 vm-ecs-2.test
 
 # raspi
 172.16.100.254 raspi.test
