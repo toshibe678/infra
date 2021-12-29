@@ -2,7 +2,7 @@
 
 init:
 # 	@docker-compose run --rm terraform terraform init
- 	@docker-compose run --rm ansible ansible-galaxy collection install cisco.ios
+	@docker-compose run --rm ansible ansible-galaxy collection install cisco.ios
 	@docker-compose run --rm ansible ansible-galaxy install -r requirements.yml
 
 plan:
