@@ -1,6 +1,13 @@
+project_name: "shigure"
+server_group: "shigure"
+
 # Slackチャンネルの情報
 slack_channel: "home_server"
 slack_icon: ":house:"
+
+docker_compose_deploy: true
+xrdp_install: true
+
 spin_out_hdd_list:
   - { name: /dev/sda }
   - { name: /dev/sdb }

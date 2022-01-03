@@ -1,6 +1,18 @@
+project_name: "mayu"
+server_group: "mayu"
+xrdp_install: true
 # Slackチャンネルの情報
 slack_channel: "home_server"
-slack_icon: ":ranko1:"
+slack_icon: ":mayu1:"
+spin_out_hdd_list:
+  - { name: /dev/sda }
+  - { name: /dev/sdb }
+  - { name: /dev/sdd }
+  - { name: /dev/sde }
+
+package_control_auto_reboot: false
+mackerel_install: true
+cron_setting: true
 
 rkhunter_install: true
 rkhunter_script_whitelist:
@@ -25,11 +37,10 @@ ufw_rules:
   - { from_ip: '172.16.0.0/12', port: 3389, rule: allow, comment: 'Allow XRDP' }
   - { from_ip: '172.16.0.0/12', port: 139, rule: allow, comment: 'Allow Samba' }
   - { from_ip: '172.16.0.0/12', port: 445, rule: allow, comment: 'Allow Samba' }
-#  # Kubernetes Master
-#  - { port: 6443, rule: allow, comment: 'Allow Kubelet' }
-#  - { from_ip: '172.16.0.0/16', port: "2379:2380", proto: tcp, rule: allow }
-#  - { from_ip: '172.16.0.0/16', port: "10250:10252", proto: tcp, rule: allow}
+#  - { from_ip: '172.16.0.0/16', port: 10250, rule: allow, comment: "Kubernetes Worker"  }
+#  - { from_ip: '172.16.0.0/16', port: "30000:32767", proto: tcp, rule: allow, comment: "Kubernetes Worker"  }
 ufw_default_forward_policy: ACCEPT
 ufw_logging: low
 ufw_applications:
   - { name: "Postfix" }
+

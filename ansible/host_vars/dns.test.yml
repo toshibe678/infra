@@ -1,3 +1,7 @@
+domain_name: "test"
+
+main_domain_name: "{{ project_name }}.{{domain_name}}"
+
 dns_server: 8.8.8.8 1.1.1.1
 ufw_reset: yes
 ufw_rules:

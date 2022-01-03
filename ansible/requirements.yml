@@ -58,3 +58,38 @@ roles:
     name: toshi_tools
     scm: git
     version: "master"
+
+  - src: https://github.com/toshi-click/roles_chrome.git
+    name: chrome
+    scm: git
+    version: "master"
+
+  - src: https://github.com/toshi-click/roles_fluentd.git
+    name: fluentd
+    scm: git
+    version: "master"
+
+  - src: https://github.com/toshi-click/roles_gitlab_runner.git
+    name: gitlab_runner
+    scm: git
+    version: "master"
+
+  - src: https://github.com/toshi-click/roles_google_cloud_sdk.git
+    name: google_cloud_sdk
+    scm: git
+    version: "master"
+
+  - src: https://github.com/toshi-click/roles_kvm.git
+    name: kvm
+    scm: git
+    version: "master"
+
+  - src: https://github.com/toshi-click/roles_samba.git
+    name: samba
+    scm: git
+    version: "master"
+
+  - src: https://github.com/toshi-click/roles_xrdp.git
+    name: xrdp
+    scm: git
+    version: "master"

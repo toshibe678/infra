@@ -1,0 +1,10 @@
+project_name: "toshi"
+server_group: "toshi"
+
+# Slackチャンネルの情報
+slack_channel: "toshi-click"
+slack_icon: ":mayu1:"
+
+docker_compose_deploy: true
+
+rkhunter_install: true

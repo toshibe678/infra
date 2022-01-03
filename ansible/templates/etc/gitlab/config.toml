@@ -1,0 +1,30 @@
+# gitlab-runner register
+# 同時実行ジョブ数制限
+concurrent = 3
+# 新しいビルドのGitLabをチェックする頻度を秒単位で定義
+# defines the interval length, in seconds, between new jobs check. The default value is 3;
+# if set to 0 or lower, the default value will be used.
+check_interval = 0
+
+[session_server]
+  session_timeout = 1800
+
+[[runners]]
+  name = "{{ inventory_hostname }}"
+  url = "https://gitlab.com/"
+  token = "{{ crypt_gitlab_ci_token }}"
+  executor = "docker"
+  environment = ["DOCKER_TLS_CERTDIR="]
+  [runners.custom_build_dir]
+  [runners.docker]
+    tls_verify = false
+    image = "docker:latest"
+    privileged = true
+    disable_entrypoint_overwrite = false
+    oom_kill_disable = false
+    disable_cache = false
+    volumes = ["/cache", "/sys/fs/cgroup:/sys/fs/cgroup:ro"]
+    shm_size = 0
+  [runners.cache]
+    [runners.cache.s3]
+    [runners.cache.gcs]

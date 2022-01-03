@@ -1,0 +1,106 @@
+$TTL 300
+;
+@ IN SOA nw.test. postmaster.test. (
+        2020061304      ; serial (d. adams)
+        1H              ; refresh
+        15M             ; retry
+        1W              ; expiry
+        1D              ; minimum
+)
+; 自分の帯域は172.16.77.0/24
+; 家族の帯域は172.16.100.0/24
+; 機器類・サーバー類は172.16.177.0/24
+;
+        IN NS       nw.test.
+        IN MX       10 mail
+nw      IN A        172.28.100.53
+@                   IN A        172.28.100.53
+mail                IN A        172.28.177.100
+www                 IN A        172.28.177.100
+
+; システム
+syslog              IN A        172.28.177.100
+snmp                IN A        172.28.177.100
+
+; ネットワークドライブ
+qnap                IN A        172.16.100.241
+qnap2               IN A        172.16.100.242
+qnap-bak1           IN A        172.16.100.243
+qnap-bak2           IN A        172.16.100.244
+
+; ネットワーク機器はVlan1で172.16.1.0/24に纏める
+rtx1210            IN A        172.16.1.1
+l3-3560            IN A        172.28.1.1
+l2-2960            IN A        172.28.1.2
+;メッシュwifi親       IN A        172.16.1.10
+;メッシュwifi子1      IN A        172.16.1.11
+;メッシュwifi子2      IN A        172.16.1.12
+;メッシュwifi子3      IN A        172.16.1.13
+;メッシュwifi子4      IN A        172.16.1.14
+router              IN A        172.16.1.1
+gs908m              IN A        172.16.0.4
+wifi                IN A        172.16.177.254
+printer             IN A        172.16.177.211
+ip-phone            IN A        172.16.177.210
+
+; 家族のデバイス
+fujie-pc            IN A        172.16.100.12
+yukari-pc           IN A        172.16.100.71
+p10lite             IN A        172.16.100.106
+yukari-zenfine5     IN A        172.16.100.107
+p20lite             IN A        172.16.100.108
+
+; toshi所有デバイス
+; メインPC
+toshipc01           IN A        172.16.77.11
+; lenovo-p14s
+lenovo-p14s         IN A        172.16.77.21
+toshipc02           IN A        172.16.77.21
+; モバイル端末
+pixel2              IN A        172.16.77.201
+nexus6              IN A        172.16.77.203
+pixel3a             IN A        172.16.77.205
+; 特殊端末
+vpnclient           IN A        172.16.77.201
+
+; win10home vm
+toshipc04           IN A        172.16.177.91
+
+; サーバー類は以下
+; メインサーバー
+shigure             IN A        172.28.177.100
+; サブサーバー
+mayu                IN A        172.28.177.200
+; リビング
+ranko               IN A        172.28.100.64
+; raspi vpn
+kaede               IN A        172.16.177.128
+; ファイルサーバー
+file                IN A        172.28.177.100
+toshi               IN A        172.28.177.100
+; Raspberry Piに搭載
+vpn                 IN A        172.16.77.131
+raspi               IN A        172.16.100.254
+raspi1              IN A        172.16.100.131
+raspi2              IN A        172.16.177.132
+raspi3              IN A        172.16.177.133
+raspi4              IN A        172.16.177.134
+; toshiba notepc (ubuntu)
+toshiba             IN A        172.16.177.201
+
+; VM類
+dns                 IN A        172.28.100.53
+monitoring          IN A        172.28.100.111
+alertmanager        IN A        172.28.100.111
+grafana             IN A        172.28.100.111
+prometheus          IN A        172.28.100.111
+
+; Kubernetes
+k8s-api             IN A        172.16.100.131
+rasproxy            IN A        172.16.100.131
+k8s-master1         IN A        172.16.177.132
+k8s-master2         IN A        172.16.177.133
+k8s-master3         IN A        172.16.177.134
+k8s-worker1         IN A        172.28.100.135
+k8s-worker2         IN A        172.28.100.136
+k8s-worker3         IN A        172.28.100.137

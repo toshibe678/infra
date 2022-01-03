@@ -1,0 +1,3 @@
+---
+domain_name: "test"
+main_domain_name: "{{ project_name }}.{{domain_name}}"

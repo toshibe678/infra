@@ -42,6 +42,7 @@ ssh_mail_send_no_send_ip_list:
   - { ip: 172.19. }
   - { ip: 172.20. }
   - { ip: 172.28. }
+  - { ip: 172.31. }
   - { ip: 10.0.2. }
   # 自宅IP
   - { ip: 61.213.68.235 }
@@ -60,3 +61,49 @@ mackerel_Api_Key: "{{ crypt_mackerel_api_Key }}"
 mail_transfer_address: "{{ crypt_mail_transfer_address }}"
 slack_web_hook_url: "{{ crypt_slack_web_hook_url }}"
 
+# fluentd 中継サーバーの情報
+fluentd_send_server_name: "{{ crypt_fluentd_send_server_name }}"
+fluentd_send_server_port: "{{ crypt_fluentd_send_server_port }}"
+fluentd_send_server_shared_key: "{{ crypt_fluentd_send_server_shared_key }}"
+fluentd_send_server_private_key_passphrase: "{{ crypt_fluentd_send_server_private_key_passphrase }}"
+
+# このプロジェクトが設置される親ディレクトリ
+project_root_dir: /app
+# 証明書ファイルの場所
+project_cert_dir: "{{ project_root_dir }}/certs"
+project_name: "{{ inventory_hostname }}"
+stage: "prd"
+project_dir: "{{ project_root_dir }}/{{ project_name }}"
+deploy_dir: "{{ project_dir }}"
+
+cron_setting: false
+
+docker_compose_deploy: false
+# xrdpをインストールするかどうかのフラグ デスクトップ環境がいる場合はtrueで
+xrdp_install: false
+# fluentdをインストールするか
+fluentd_install: false
+fluentd_user: root
+fluentd_group: root
+fluentd_gcp_flag: false
+fluentd_gcp_key_file: "/etc/td-agent/application_default_credentials.json"
+
+samba_allow_ip: "127. 172.28 172.16"
+samba_interfaces: "127.0.0.0/8 172.16.0.0/16 172.28.0.0/16 192.168.0.0/16"
+samba_users:
+  - name: toshi
+    password: "{{ crypt_toshi_samba_users_pass }}"
+  - name: seiri
+    password: "{{ crypt_seiri_samba_users_pass }}"
+samba_shares:
+  - name: share
+    comment: '/share/share'
+    path: /share/share
+    read_only: no
+    guest_ok: no
+    write_list: toshi
+    owner: toshi
+samba_only_users:
+  - seiri
+xrdp_users:
+  - {name: toshi}

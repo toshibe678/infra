@@ -1,3 +1,6 @@
+domain_name: "click"
+lets_encrypy_test: "false"
+main_domain_name: "{{ project_name }}.{{domain_name}}"
 dns_server: 8.8.8.8 1.1.1.1
 hosts:
   # /etc/hostsに設定するホスト情報

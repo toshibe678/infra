@@ -1,0 +1,8 @@
+project_name: "dns"
+server_group: "dns"
+
+# Slackチャンネルの情報
+slack_channel: "home_server"
+slack_icon: ":dns:"
+
+docker_compose_deploy: true

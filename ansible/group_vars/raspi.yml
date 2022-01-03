@@ -1,3 +1,8 @@
+# プロジェクト固有の識別名（リポジトリ名。サーバ上のファイル位置の指定などに使用。ドメインは別で定義する）
+project_name: "raspi"
+
+main_domain_name: "{{ project_name }}.test"
+
 # Slackチャンネルの情報
 slack_channel: "home_server"
 slack_icon: ":mayu2:"

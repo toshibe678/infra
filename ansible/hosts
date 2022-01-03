@@ -1,10 +1,11 @@
 # bare metal
-172.28.177.100 shigure.test
+172.28.177.100 shigure.click shigure.test
 172.28.177.200 mayu.test
 172.28.100.64 ranko.test
 
 # vm
 172.28.100.53 dns.test
+#172.28.100.111 monitoring.test
 
 # raspi
 172.16.100.254 raspi.test
