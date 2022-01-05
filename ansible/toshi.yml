@@ -38,3 +38,31 @@
         owner: "{{ manage_user_name }}"
         group: "{{ manage_user_group }}"
         mode: 0600
+
+    - name: set .bashrc
+      template:
+        src: home/.bashrc
+        dest: "/home/{{ manage_user_name }}/.bashrc"
+        owner: "{{ manage_user_name }}"
+        group: "{{ manage_user_name }}"
+
+    - name: set .bash_alias
+      template:
+        src: home/.bash_aliases.j2
+        dest: "/home/{{ manage_user_name }}/.bash_aliases"
+        owner: "{{ manage_user_name }}"
+        group: "{{ manage_user_name }}"
+
+    - name: set .profile
+      template:
+        src: home/.profile
+        dest: "/home/{{ manage_user_name }}/.profile"
+        owner: "{{ manage_user_name }}"
+        group: "{{ manage_user_name }}"
+
+    - name: set .bash_profile
+      template:
+        src: home/.bash_profile
+        dest: "/home/{{ manage_user_name }}/.bash_profile"
+        owner: "{{ manage_user_name }}"
+        group: "{{ manage_user_name }}"

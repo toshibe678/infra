@@ -1,9 +1,9 @@
 .PHONY: build plan apply destroy init check exec_tf exec_ansible lint deploy
 
 init:
-# 	@docker-compose run --rm terraform terraform init
+	@docker-compose run --rm terraform terraform init
 	@docker-compose run --rm ansible ansible-galaxy collection install cisco.ios
-	@docker-compose run --rm ansible ansible-galaxy install -r requirements.yml
+	@docker-compose run --rm ansible ansible-galaxy install -p roles -r requirements.yml --force
 
 plan:
 # 	@docker-compose run --rm terraform terragrund plan
@@ -14,10 +14,10 @@ apply:
 	@docker-compose run --rm terraform terraform apply
 
 deploy:
-	@docker-compose run --rm ansible bash -c './ci.sh && ansible-playbook -D -i hosts_all.yml -l linux all.yml --vault-password-file ~/.ssh/.ansible_vault_pass'
+	@docker-compose run --rm ansible bash -c './ci.sh && ansible-playbook -D -i hosts_all.yml -l linux all.yml --vault-password-file ~/.ssh/.ansible_vault_pass' -C
 
 nw-deploy:
-	@docker-compose run --rm nw-ansible ansible-playbook -D -i hosts_all.yml -l cisco all.yml --ask-vault-pass -C
+	@docker-compose run --rm nw-ansible bash -c './ci.sh && ansible-playbook -D -i hosts_all.yml -l cisco all.yml --vault-password-file ~/.ssh/.ansible_vault_pass' -C
 
 destroy: check
 # 	@docker-compose run --rm terraform terragrunt destroy

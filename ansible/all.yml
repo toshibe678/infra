@@ -15,8 +15,8 @@
     - { role: "monitoring" }
     - { role: "docker", when: docker_install, tags: docker }
     - { role: "firewall", when: firewall, tags: firewall }
-    - { role: "fluentd", when: fluentd_install}
-    - { role: "xrdp", when: xrdp_install}
+    - { role: "fluentd", when: fluentd_install }
+    - { role: "xrdp", when: xrdp_install }
   tasks:
     # postfix関連の設定を行う
     - name: main.cf set
@@ -59,4 +59,4 @@
 
 - import_playbook: ./rkhunter.yml
 
-#- import_playbook: ./cisco.yml
+- import_playbook: ./cisco.yml
