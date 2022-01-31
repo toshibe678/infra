@@ -1,0 +1,4 @@
+module "blog" {
+  source = "./blog"
+}
+

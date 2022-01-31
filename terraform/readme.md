@@ -62,3 +62,6 @@ terraform import  -var "access_key=${AWS_ACCESS_KEY_ID}" -var "secret_key=$AWS_S
 
 
 terraform import -var "access_key=${AWS_ACCESS_KEY_ID}" -var "secret_key=$AWS_SECRET_ACCESS_KEY"
+
+# workspaces作成
+terraform workspace new main
