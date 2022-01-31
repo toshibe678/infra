@@ -1,4 +1,5 @@
 module "blog" {
-  source = "./blog"
+  source = "./cloudfront_s3_acm"
+  
 }
 
