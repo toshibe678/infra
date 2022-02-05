@@ -5,7 +5,7 @@ ARG TERRAGRUNT_VERSION="0.35.16"
 ARG TFLINT_VERSION="0.34.0"
 
 # install command.
-RUN apt-get update && apt-get install -y less vim wget unzip jq cmake libssl-dev gcc
+RUN apt-get update && apt-get install -y --no-install-recommends less vim wget unzip jq cmake libssl-dev gcc
 
 # install aws-cli
 RUN python3 -m pip install --upgrade pip \
@@ -27,6 +27,9 @@ RUN wget https://github.com/gruntwork-io/terragrunt/releases/download/v${TERRAGR
 RUN wget https://github.com/terraform-linters/tflint/releases/download/v${TFLINT_VERSION}/tflint_linux_amd64.zip -O tflint.zip
 RUN unzip tflint.zip -d /usr/local/bin
 RUN rm tflint.zip
+
+# terraform graph
+RUN apt-get update && apt-get install -y --no-install-recommends graphviz graphviz-dev
 
 COPY .terraformrc /root/.terraformrc
 COPY entrypoint.sh /usr/local/bin/entrypoint.sh

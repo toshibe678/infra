@@ -8,3 +8,12 @@ terraform {
   }
 }
 
+data "terraform_remote_state" "main" {
+  backend = "remote"
+  config = {
+    organization = "toshibe-infra"
+    workspaces = {
+      name = "main"
+    }
+  }
+}
