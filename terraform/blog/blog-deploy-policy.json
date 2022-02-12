@@ -1,0 +1,57 @@
+{
+  "Version": "2012-10-17",
+  "Statement": [
+    {
+      "Effect": "Allow",
+      "Action": [
+        "cloudfront:CreateCloudFrontOriginAccessIdentity",
+        "cloudfront:CreateDistribution",
+        "cloudfront:CreateInvalidation",
+        "cloudfront:GetDistribution",
+        "cloudfront:GetDistributionConfig",
+        "cloudfront:ListCloudFrontOriginAccessIdentities",
+        "cloudfront:ListDistributions",
+        "cloudfront:ListDistributionsByLambdaFunction",
+        "cloudfront:ListDistributionsByWebACLId",
+        "cloudfront:ListFieldLevelEncryptionConfigs",
+        "cloudfront:ListFieldLevelEncryptionProfiles",
+        "cloudfront:ListInvalidations",
+        "cloudfront:ListPublicKeys",
+        "cloudfront:ListStreamingDistributions",
+        "cloudfront:UpdateDistribution",
+        "iam:AttachRolePolicy",
+        "iam:CreateRole",
+        "iam:CreateServiceLinkedRole",
+        "iam:GetRole",
+        "iam:PutRolePolicy",
+        "iam:PassRole",
+        "lambda:CreateFunction",
+        "lambda:EnableReplication",
+        "lambda:GetFunction",
+        "lambda:GetFunctionConfiguration",
+        "lambda:PublishVersion",
+        "lambda:UpdateFunctionCode",
+        "lambda:UpdateFunctionConfiguration",
+        "route53:ListHostedZonesByName",
+        "s3:CreateBucket",
+        "s3:GetAccelerateConfiguration",
+        "s3:GetObject",
+        "s3:ListBucket",
+        "s3:PutAccelerateConfiguration",
+        "s3:PutBucketPolicy",
+        "s3:PutObject",
+        "lambda:ListEventSourceMappings",
+        "lambda:CreateEventSourceMapping",
+        "iam:UpdateAssumeRolePolicy",
+        "iam:DeleteRolePolicy",
+        "sqs:DeleteQueue",
+        "sqs:GetQueueAttributes",
+        "sqs:SetQueueAttributes"
+      ],
+      "Resource": "*"
+    }
+  ]
+}
+
+
+
