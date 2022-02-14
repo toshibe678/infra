@@ -1,0 +1,36 @@
+# multi-account-common-setting
+AWSTemplateFormatVersion: "2010-09-09"
+Description: "multi account common setting"
+Resources:
+  AdminRole:
+    Type: AWS::IAM::Role
+    Properties:
+      RoleName: admin_role
+      AssumeRolePolicyDocument:
+        Version: 2012-10-17
+        Statement:
+          - Effect: Allow
+            Principal:
+              AWS: "arn:aws:iam::814229680634:root"
+            Action:
+              - sts:AssumeRole
+          - Effect: Deny
+            Principal:
+              AWS: "arn:aws:iam::814229680634:root"
+            Action:
+              - sts:AssumeRole
+            Condition:
+              NotIpAddress:
+                aws:SourceIp:
+                  - 61.213.68.235/32
+      Path: /
+      Policies:
+        - PolicyName: AdministratorAccess
+          PolicyDocument:
+            Version: 2012-10-17
+            Statement:
+              - Effect: Allow
+                Action:
+                  - "*"
+                Resource:
+                  - "*"
