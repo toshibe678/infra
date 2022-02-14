@@ -3,6 +3,7 @@
   image: toshiclick/ci-ansible
   before_script:
     - cd ansible
+    - apt-get update && apt-get install -y sshpass
     - pip3 install paramiko
     - ansible-galaxy collection install -r requirements.yml --force-with-deps
     - ansible-galaxy install -r requirements.yml -p roles --force
@@ -15,6 +16,7 @@
   image: toshiclick/home_network_ansible_image:latest
   before_script:
     - cd ansible
+    - apt-get update && apt-get install -y sshpass
     - pip3 install paramiko
     - ansible-galaxy collection install yamaha_network.rtx
     - ansible-galaxy install -r requirements.yml -p roles --force
