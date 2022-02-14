@@ -13,10 +13,12 @@
 .ansible_network_deploy_default: &ansible_network_deploy_default
   image: toshiclick/home_network_ansible_image:latest
   before_script:
-    - mkdir ~/.ssh && chmod 600 ~/.ssh
-    - echo -e "$VAULT_PASS" > ~/.ssh/.ansible_vault_pass
-    - chmod 644 ~/.ssh/.ansible_vault_pass
+    - cd ansible
+    - pip3 install paramiko
+    - ansible-galaxy install -r requirements.yml -p roles --force
+    - bash ./ci.sh
   after_script:
+    - rm -f ~/.ssh/id_rsa
     - rm -f ~/.ssh/.ansible_vault_pass
 
 ansible_syntax:

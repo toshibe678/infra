@@ -14,6 +14,8 @@ cfn-lint:
     - pip install cfn-lint
     - cfn-lint --version
     - cfn-lint -t ./cloudformation/*.yml
+  except:
+    - schedules
   only:
     changes:
       - "cloudformation/**/*"
@@ -30,6 +32,8 @@ terraform-lint:
     - unzip tflint.zip -d -d /usr/local/bin
     - chmod 755 ./tflint.sh
     - sh -x ./tflint.sh
+  except:
+    - schedules
   only:
     changes:
       - "terraform/**/*"
