@@ -73,7 +73,7 @@ ansible_execute_main_ci:
   <<: *ansible_deploy_default
   stage: deploy
   script:
-    - ansible-playbook -D -l mayu -i inventory/default.yml all.yml --vault-password-file ~/.ssh/.ansible_vault_pass
+    - ansible-playbook -D -l mayu -i hosts_all.yml all.yml --vault-password-file ~/.ssh/.ansible_vault_pass
   only:
     # 実行されるブランチを指定
     refs:
@@ -90,7 +90,7 @@ ansible_excute_sub_ci:
   <<: *ansible_deploy_default
   stage: deploy
   script:
-    - ansible-playbook -D -l shigure -i inventory/default.yml all.yml --vault-password-file ~/.ssh/.ansible_vault_pass -C
+    - ansible-playbook -D -l shigure -i hosts_all.yml all.yml --vault-password-file ~/.ssh/.ansible_vault_pass -C
   only:
     # 実行されるブランチを指定
     refs:
@@ -107,7 +107,7 @@ excute_ansible_to_network:
   <<: *ansible_network_deploy_default
   script:
     # 機器へプレイブックを実行
-    - ansible-playbook -D -l cisco -i hosts_all.yml all.yml --vault-password-file ~/.ssh/.ansible_vault_pass
+    - ansible-playbook -D -l network_switch -i hosts_all.yml all.yml --vault-password-file ~/.ssh/.ansible_vault_pass
   only:
     # 実行されるブランチを指定
     refs:
