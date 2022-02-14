@@ -4,6 +4,7 @@
   before_script:
     - cd ansible
     - pip3 install paramiko
+    - ansible-galaxy collection install -r requirements.yml --force-with-deps
     - ansible-galaxy install -r requirements.yml -p roles --force
     - bash ./ci.sh
   after_script:
