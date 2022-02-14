@@ -45,3 +45,13 @@ services:
     volumes:
       - ./cloudformation:/cloudformation
     tty: true
+
+  named:
+    restart: always
+    build: ./docker/named
+    container_name: named
+    volumes:
+      - ./tmp/log/named:/var/log/named
+    ports:
+      - "53:53"
+      - "53:53/udp"
