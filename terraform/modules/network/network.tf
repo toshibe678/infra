@@ -85,30 +85,3 @@ resource "aws_security_group" "staging_sg" {
 
   vpc_id = aws_vpc.toshi-root-default-vpc.id
 }
-
-//# terraform import aws_network_acl.nw_acl_1 acl-00c0f1c41cf5f41da
-//resource "aws_network_acl" "nw_acl_1" {
-//  egress {
-//    action     = "allow"
-//    cidr_block = "0.0.0.0/0"
-//    from_port  = "0"
-//    icmp_code  = "0"
-//    icmp_type  = "0"
-//    protocol   = "-1"
-//    rule_no    = "100"
-//    to_port    = "0"
-//  }
-//
-//  ingress {
-//    action     = "allow"
-//    cidr_block = "0.0.0.0/0"
-//    from_port  = "0"
-//    icmp_code  = "0"
-//    icmp_type  = "0"
-//    protocol   = "-1"
-//    rule_no    = "100"
-//    to_port    = "0"
-//  }
-//  subnet_ids = [aws_subnet.subnet-apne1-az1.id, aws_subnet.subnet-apne1-az2.id, aws_subnet.subnet-apne1-az4.id]
-//  vpc_id     = aws_vpc.toshi-root-default-vpc.id
-//}

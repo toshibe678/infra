@@ -13,3 +13,6 @@
 172.16.100.132 raspi-worker1.test
 172.16.100.133 raspi-worker2.test
 172.16.100.134 raspi-worker3.test
+
+# nw
+172.16.254.101 ZenWiFi_XD4
