@@ -15,6 +15,7 @@
   before_script:
     - cd ansible
     - pip3 install paramiko
+    - ansible-galaxy collection install yamaha_network.rtx
     - ansible-galaxy install -r requirements.yml -p roles --force
     - bash ./ci.sh
   after_script:
