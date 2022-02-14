@@ -1,0 +1,54 @@
+- hosts: router
+  vars:
+    ansible_network_os: yamaha_network.rtx.rtx
+    ansible_connection: network_cli
+    ansible_user: admin
+    ansible_become: true
+    ansible_become_method: enable
+  tasks:
+    # 文字化けするときは > console character ja.utf8
+    # 上やってもエンコードの問題で手元で動かないのでコメントアウト
+#    - name: get configuration
+#      yamaha_network.rtx.rtx_config:
+#        backup: yes
+#        backup_options:
+#          filename: backup.txt
+
+    - name: show environment
+      yamaha_network.rtx.rtx_command:
+        commands: show environment
+      register: environment_result
+
+    - name: show environment
+      debug:
+        msg: "{{ environment_result.stdout_lines[0] }}"
+
+    - name: get configuration
+      yamaha_network.rtx.rtx_command:
+        commands:
+          - show config
+      register: result
+
+    - name: show config
+      debug:
+        msg: "{{ result.stdout_lines[0] }}"
+
+#    - name: set description
+#      yamaha_network.rtx.rtx_config:
+#        lines:
+#          - description 1 yamaha
+
+#    - name: set lan2
+#      yamaha_network.rtx.rtx_config:
+#        lines:
+#          - ip lan2 address dhcp
+#
+#    - name: set lan3
+#      yamaha_network.rtx.rtx_config:
+#        lines:
+#          - pp always-on on
+#          - pppoe use lan3
+#        parents:
+#          - pp select 1
+#        match: strict
+#        save_when: changed
