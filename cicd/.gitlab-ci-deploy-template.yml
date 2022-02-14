@@ -113,4 +113,4 @@ excute_ansible_to_network:
       - triggers
     variables:
       # 環境変数RELEASE_FLAGがあるときだけ実行(スケジュールCI経由時だけ実行されるように)
-      - $RELEASE_FLAG
+      - $NETWORK_RELEASE_FLAG
