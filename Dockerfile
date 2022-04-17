@@ -28,7 +28,7 @@ RUN apt-get update && \
 
 # terraform
 # 最新バージョン確認：https://www.terraform.io/downloads.html
-ENV TERRAFORM_VERSION=0.15.5
+ENV TERRAFORM_VERSION=1.1.8
 RUN apt-get update \
     && apt-get -y install zip \
     && rm -rf /var/lib/apt/lists/* \
@@ -39,7 +39,7 @@ RUN apt-get update \
 
 # tflintを使えるようにする
 # 最新バージョン確認：https://github.com/terraform-linters/tflint/releases/
-ENV TFLINT_VERSION=0.28.1
+ENV TFLINT_VERSION=0.35.0
 RUN wget https://github.com/terraform-linters/tflint/releases/download/v${TFLINT_VERSION}/tflint_linux_amd64.zip -O tflint.zip \
     && unzip tflint.zip -d /bin \
     && rm tflint.zip
