@@ -1,7 +1,6 @@
-
 resource "aws_s3_bucket" "origin_bucket" {
-  bucket = "origin-bucket-${var.site_domain}"
-  acl    = "private"
+  bucket        = "origin-bucket-${var.site_domain}"
+  acl           = "private"
   force_destroy = true
 }
 
@@ -14,12 +13,13 @@ resource "aws_s3_bucket_public_access_block" "origin_bucket" {
 }
 
 resource "aws_s3_bucket" "logging_bucket" {
-  bucket = "cloudfront-logs.${var.site_domain}"
-  acl    = "log-delivery-write"
+  bucket        = "cloudfront-logs.${var.site_domain}"
+  acl           = "log-delivery-write"
   force_destroy = true
 
   lifecycle_rule {
     id      = "s3-cloudfront-logs-transitions"
+    tags    = {}
     enabled = true
 
     transition {

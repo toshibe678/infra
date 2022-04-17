@@ -1,9 +1,10 @@
 resource "aws_acm_certificate" "main_cert" {
-  provider                  = aws.us-east-1
-#  domain_name               = aws_route53_zone.main.name
-  domain_name               = var.site_domain
-#  subject_alternative_names = ["www.${aws_route53_zone.main.name}"]
-  validation_method         = "DNS"
+  provider          = aws.us-east-1
+  #  domain_name               = aws_route53_zone.main.name
+  domain_name       = var.site_domain
+  #  subject_alternative_names = ["www.${aws_route53_zone.main.name}"]
+  validation_method = "DNS"
+  tags              = {}
 }
 
 #resource "aws_route53_record" "main_cnames" {

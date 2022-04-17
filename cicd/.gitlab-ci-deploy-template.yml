@@ -111,7 +111,7 @@ excute_ansible_to_network:
   <<: *ansible_network_deploy_default
   script:
     # 機器へプレイブックを実行
-    - ansible-playbook -D -l network_switch -i hosts_all.yml all.yml --vault-password-file ~/.ssh/.ansible_vault_pass
+    - ansible-playbook -l network_switch -i hosts_all.yml all.yml --vault-password-file ~/.ssh/.ansible_vault_pass
   only:
     # 実行されるブランチを指定
     refs:

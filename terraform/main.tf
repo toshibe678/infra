@@ -3,6 +3,11 @@ module "blog" {
   source = "./blog"
   account_id = "073855610728"
 }
+module "cloudfront_s3_acm" {
+  source = "./cloudfront_s3_acm"
+  site_domain = "blog.toshi.click"
+  account_id = "073855610728"
+}
 
 #module "common" {
 #  source = "modules/common"
@@ -21,8 +26,4 @@ module "blog" {
 #}
 
 
-#module "cloudfront_s3_acm" {
-#  source = "./cloudfront_s3_acm"
-#  site_domain = "toshi.click"
-#  account_id = "073855610728"
-#}
+

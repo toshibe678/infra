@@ -9,8 +9,8 @@ resource "aws_cloudfront_function" "cloudfront_s3_acm_function" {
 
 # キャッシュポリシーの作成
 resource "aws_cloudfront_cache_policy" "this" {
-  name        = local.uppercase_domain_name
-  comment     = local.uppercase_domain_name
+  name    = local.uppercase_domain_name
+  comment = local.uppercase_domain_name
 
   default_ttl = 86400
   max_ttl     = 31536000
@@ -26,7 +26,7 @@ resource "aws_cloudfront_cache_policy" "this" {
       query_string_behavior = "none"
     }
     enable_accept_encoding_brotli = true
-    enable_accept_encoding_gzip = true
+    enable_accept_encoding_gzip   = true
   }
 }
 
@@ -46,9 +46,10 @@ resource "aws_cloudfront_origin_request_policy" "this" {
 }
 
 resource "aws_cloudfront_distribution" "cfd" {
-#  aliases = ["${var.site_domain}"]
-
+  #  aliases = ["${var.site_domain}"]
+  aliases             = []
   comment             = "${var.site_domain}"
+  tags                = {}
   enabled             = true
   is_ipv6_enabled     = true
   price_class         = "PriceClass_200"
@@ -69,17 +70,17 @@ resource "aws_cloudfront_distribution" "cfd" {
   }
 
   default_cache_behavior {
-    allowed_methods  = ["GET", "HEAD"]
-    cached_methods   = ["GET", "HEAD"]
-    target_origin_id = "${var.site_domain}"
+    allowed_methods          = ["GET", "HEAD"]
+    cached_methods           = ["GET", "HEAD"]
+    target_origin_id         = "${var.site_domain}"
     # httpでアクセスされた場合、httpsにリダイレクト
-    viewer_protocol_policy = "redirect-to-https"
-    compress               = true
-    cache_policy_id = aws_cloudfront_cache_policy.this.id
+    viewer_protocol_policy   = "redirect-to-https"
+    compress                 = true
+    cache_policy_id          = aws_cloudfront_cache_policy.this.id
     origin_request_policy_id = aws_cloudfront_origin_request_policy.this.id
 
     function_association {
-      event_type = "viewer-request"
+      event_type   = "viewer-request"
       function_arn = aws_cloudfront_function.cloudfront_s3_acm_function.arn
     }
   }
@@ -105,14 +106,14 @@ resource "aws_cloudfront_distribution" "cfd" {
       restriction_type = "none"
     }
   }
- #とりあえずCloudFrontドメインの証明書を利用する場合はこちら
+  #とりあえずCloudFrontドメインの証明書を利用する場合はこちら
   viewer_certificate {
     cloudfront_default_certificate = true
   }
 
-#  viewer_certificate {
-#    acm_certificate_arn      = aws_acm_certificate.main_cert.arn
-#    ssl_support_method       = "sni-only"
-#    minimum_protocol_version = "TLSv1.2_2019"
-#  }
+  #  viewer_certificate {
+  #    acm_certificate_arn      = aws_acm_certificate.main_cert.arn
+  #    ssl_support_method       = "sni-only"
+  #    minimum_protocol_version = "TLSv1.2_2019"
+  #  }
 }
