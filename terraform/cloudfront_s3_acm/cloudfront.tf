@@ -46,8 +46,8 @@ resource "aws_cloudfront_origin_request_policy" "this" {
 }
 
 resource "aws_cloudfront_distribution" "cfd" {
-  #  aliases = ["${var.site_domain}"]
-  aliases             = []
+  aliases             = ["${var.site_domain}"]
+  #  aliases             = []
   comment             = "${var.site_domain}"
   tags                = {}
   enabled             = true
@@ -106,14 +106,14 @@ resource "aws_cloudfront_distribution" "cfd" {
       restriction_type = "none"
     }
   }
-  #とりあえずCloudFrontドメインの証明書を利用する場合はこちら
-  viewer_certificate {
-    cloudfront_default_certificate = true
-  }
-
+  #  #とりあえずCloudFrontドメインの証明書を利用する場合はこちら
   #  viewer_certificate {
-  #    acm_certificate_arn      = aws_acm_certificate.main_cert.arn
-  #    ssl_support_method       = "sni-only"
-  #    minimum_protocol_version = "TLSv1.2_2019"
+  #    cloudfront_default_certificate = true
   #  }
+
+  viewer_certificate {
+    acm_certificate_arn      = aws_acm_certificate.main_cert.arn
+    ssl_support_method       = "sni-only"
+    minimum_protocol_version = "TLSv1.2_2021"
+  }
 }
