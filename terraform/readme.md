@@ -46,7 +46,7 @@ terraform validate
 find . -type f -name '*. tf' -exec dirname {} \; | sort -u | xargs -I {} terraform validate {}
 
 # オートコンプリートのインストール
-terraform -install-autocomplete
+terraform-install-autocomplete
 
 # lint
 tflint
