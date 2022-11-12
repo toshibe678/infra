@@ -23,6 +23,7 @@
         owner: root
         group: root
         mode: 0644
+        backup: true
 
     - name: rc.local set
       template:
@@ -31,6 +32,7 @@
         owner: root
         group: root
         mode: 0755
+        backup: true
 
     - name: systemd set state rc-local.service
       systemd:
