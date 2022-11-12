@@ -51,8 +51,6 @@
 
 - import_playbook: ./automatic_boot.yml
 
-- import_playbook: ./dns.yml
-
 - import_playbook: ./monitoring.yml
 
 - import_playbook: ./toshi.yml
