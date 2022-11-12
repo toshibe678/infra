@@ -36,11 +36,6 @@ roles:
     scm: git
     version: "master"
 
-  - src: https://github.com/toshi-click/roles_rootkit_hunter
-    name: rootkit_hunter
-    scm: git
-    version: "master"
-
   - src: https://github.com/toshi-click/roles_monitoring
     name: monitoring
     scm: git

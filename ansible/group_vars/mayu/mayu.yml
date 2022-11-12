@@ -13,17 +13,6 @@ spin_out_hdd_list:
 package_control_auto_reboot: false
 cron_setting: true
 
-rkhunter_install: true
-rkhunter_script_whitelist:
-  - /usr/bin/which
-  - /bin/egrep
-  - /bin/fgrep
-  - /usr/bin/egrep
-  - /usr/bin/fgrep
-  - /bin/which
-  - /usr/bin/ldd
-  - /usr/sbin/adduser
-
 ufw_reset: yes
 ufw_rules:
   - { from_ip: '127.0.0.0/8', comment: 'Allow localhost' }

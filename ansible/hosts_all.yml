@@ -1,8 +1,8 @@
 all:
-  ignore_unreachable: yes
   children:
     linux:
       vars:
+        ignore_unreachable: yes
         ansible_ssh_user: toshi
         ansible_ssh_port: 22
         ansible_python_interpreter: /usr/bin/python3
@@ -21,9 +21,6 @@ all:
           hosts:
             dev.test:
               ansible_connection: local
-        dns:
-          hosts:
-            dns.test: { }
         raspi:
           hosts:
             raspi.test: { }
@@ -43,10 +40,9 @@ all:
             shigure: { }
             mayu: { }
 #            ranko: { }
-            dev: { }
         vm:
           children:
-            dns: { }
+            dev: { }
     network_switch:
       children:
         # YAMAHA RTX1210

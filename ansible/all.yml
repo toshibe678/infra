@@ -55,8 +55,6 @@
 
 - import_playbook: ./toshi.yml
 
-- import_playbook: ./rkhunter.yml
-
 - import_playbook: ./cisco.yml
 
 - import_playbook: ./yamaha.yml

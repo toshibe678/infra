@@ -7,16 +7,6 @@ slack_icon: ":ranko1:"
 xrdp_install: true
 
 
-rkhunter_install: true
-rkhunter_script_whitelist:
-  - /usr/bin/which
-  - /bin/egrep
-  - /bin/fgrep
-  - /usr/bin/egrep
-  - /usr/bin/fgrep
-  - /bin/which
-  - /usr/bin/ldd
-  - /usr/sbin/adduser
 
 ufw_reset: yes
 ufw_rules:

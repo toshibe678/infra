@@ -10,7 +10,6 @@ docker_compose_deploy: false
 xrdp_install: false
 
 cron_setting: false
-rkhunter_install: false
 
 # https://github.com/weareinteractive/ansible-ufw
 ufw_reset: yes

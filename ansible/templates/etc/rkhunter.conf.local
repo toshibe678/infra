@@ -1,6 +1,0 @@
-# br0のwarning抑止
-ALOWPROMISCIF="br0"
-
-# rkhunterから「/usr/bin/lwp-request」に関する警告が表示されます。
-# https://unix.stackexchange.com/questions/373718/rkhunter-gives-me-a-warning-for-usr-bin-lwp-request-what-should-i-do-debi
-PKGMGR=DPKG
