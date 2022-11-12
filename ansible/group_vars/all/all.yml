@@ -22,7 +22,6 @@ docker_install: true
 docker_remote_api_enable: "no"
 # firewall
 firewall: true
-package_control_auto_reboot: "true"
 
 # SSHログイン時にメール送付しないグローバルIP
 # IPは正規表現でマッチ。接続元IPがここで定義したip正規表現と一致すればメールが送られない

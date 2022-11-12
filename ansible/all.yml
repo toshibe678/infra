@@ -9,7 +9,6 @@
     - { role: "common" }
     - { role: "ansible" }
     - { role: "dev_tool_install" }
-    - { role: "package_control" }
     - { role: "toshi_tools" }
     - { role: "sshd" }
     - { role: "monitoring" }
@@ -26,6 +25,7 @@
         owner: root
         group: root
         mode: 0644
+        backup: true
 
     - name: aliases set
       template:
@@ -34,6 +34,7 @@
         owner: root
         group: root
         mode: 0644
+        backup: true
 
     - name: "postalias"
       shell: bash -lc "postalias /etc/aliases"

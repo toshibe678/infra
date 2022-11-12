@@ -10,7 +10,6 @@ spin_out_hdd_list:
   - { name: /dev/sdd }
   - { name: /dev/sde }
 
-package_control_auto_reboot: false
 cron_setting: true
 
 ufw_reset: yes

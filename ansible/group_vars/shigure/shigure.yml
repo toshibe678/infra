@@ -15,8 +15,6 @@ spin_out_hdd_list:
   - { name: /dev/sdd }
 
 cron_setting: true
-package_control_auto_reboot: false
-
 
 # https://github.com/weareinteractive/ansible-ufw
 ufw_reset: yes
