@@ -56,11 +56,6 @@ roles:
     scm: git
     version: "master"
 
-  - src: https://github.com/toshi-click/roles_fluentd.git
-    name: fluentd
-    scm: git
-    version: "master"
-
   - src: https://github.com/toshi-click/roles_gitlab_runner.git
     name: gitlab_runner
     scm: git
