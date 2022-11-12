@@ -17,6 +17,10 @@ all:
 #        ranko:
 #          hosts:
 #            ranko.test: { }
+        dev:
+          hosts:
+            dev.test:
+              ansible_connection: local
         dns:
           hosts:
             dns.test: { }
@@ -39,6 +43,7 @@ all:
             shigure: { }
             mayu: { }
 #            ranko: { }
+            dev: { }
         vm:
           children:
             dns: { }
