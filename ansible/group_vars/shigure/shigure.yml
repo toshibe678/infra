@@ -14,7 +14,6 @@ spin_out_hdd_list:
   - { name: /dev/sdc }
   - { name: /dev/sdd }
 
-mackerel_install: true
 cron_setting: true
 package_control_auto_reboot: false
 

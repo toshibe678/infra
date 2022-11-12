@@ -25,8 +25,6 @@ firewall: true
 package_control_auto_reboot: "true"
 # rkhunter
 rkhunter_install: false
-# mackerel
-mackerel_install: false
 
 # SSHログイン時にメール送付しないグローバルIP
 # IPは正規表現でマッチ。接続元IPがここで定義したip正規表現と一致すればメールが送られない
@@ -57,7 +55,6 @@ root_user_password: "{{ crypt_root_user_pass }}"
 ansible_user_password: "{{ crypt_ansible_user_password }}"
 
 # モニタリング
-mackerel_Api_Key: "{{ crypt_mackerel_api_Key }}"
 mail_transfer_address: "{{ crypt_mail_transfer_address }}"
 slack_web_hook_url: "{{ crypt_slack_web_hook_url }}"
 

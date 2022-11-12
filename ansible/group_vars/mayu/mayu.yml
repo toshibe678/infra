@@ -11,7 +11,6 @@ spin_out_hdd_list:
   - { name: /dev/sde }
 
 package_control_auto_reboot: false
-mackerel_install: true
 cron_setting: true
 
 rkhunter_install: true
