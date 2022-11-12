@@ -31,11 +31,6 @@ roles:
     scm: git
     version: "master"
 
-  - src: https://github.com/toshi-click/roles_package_control
-    name: package_control
-    scm: git
-    version: "master"
-
   - src: https://github.com/toshi-click/roles_monitoring
     name: monitoring
     scm: git

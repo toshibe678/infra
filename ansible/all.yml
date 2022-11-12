@@ -7,9 +7,7 @@
   roles:
     - { role: "sudo" }
     - { role: "common" }
-    - { role: "ansible" }
     - { role: "dev_tool_install" }
-    - { role: "toshi_tools" }
     - { role: "sshd" }
     - { role: "monitoring" }
     - { role: "docker", when: docker_install, tags: docker }
@@ -53,8 +51,6 @@
 - import_playbook: ./automatic_boot.yml
 
 - import_playbook: ./monitoring.yml
-
-- import_playbook: ./toshi.yml
 
 - import_playbook: ./cisco.yml
 
