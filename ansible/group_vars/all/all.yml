@@ -73,8 +73,7 @@ deploy_dir: "{{ project_dir }}"
 cron_setting: false
 
 docker_compose_deploy: false
-# xrdpをインストールするかどうかのフラグ デスクトップ環境がいる場合はtrueで
-xrdp_install: false
+
 # fluentdをインストールするか
 fluentd_install: false
 fluentd_user: root
@@ -99,5 +98,3 @@ samba_shares:
     owner: toshi
 samba_only_users:
   - seiri
-xrdp_users:
-  - {name: toshi}

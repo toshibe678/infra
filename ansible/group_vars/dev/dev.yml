@@ -7,8 +7,6 @@ slack_icon: ":house:"
 
 sshd_password_login: "yes"
 docker_compose_deploy: false
-xrdp_install: false
-
 cron_setting: false
 
 # https://github.com/weareinteractive/ansible-ufw
@@ -21,7 +19,7 @@ ufw_rules:
   - { port: 443, rule: allow, comment: 'Allow HTTPS' }
   - { port: 9100, rule: allow, comment: 'Allow Node Exporter' }
   - { port: 24224, rule: allow, comment: 'Allow Fluentd' }
-  - { from_ip: '172.16.0.0/12', port: 3389, rule: allow, comment: 'Allow XRDP' }
+  - { from_ip: '172.16.0.0/12', port: 3389, rule: allow, comment: 'AllowXRDP' }
   - { from_ip: '172.16.0.0/12', port: 139, rule: allow, comment: 'Allow Samba' }
   - { from_ip: '172.16.0.0/12', port: 445, rule: allow, comment: 'Allow Samba' }
 #  - { port: 6443, rule: allow, comment: 'Allow Kubelet' }

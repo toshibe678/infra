@@ -75,8 +75,3 @@ roles:
     name: samba
     scm: git
     version: "master"
-
-  - src: https://github.com/toshi-click/roles_xrdp.git
-    name: xrdp
-    scm: git
-    version: "master"

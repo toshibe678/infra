@@ -6,7 +6,7 @@ ufw_rules:
   - { port: 80, rule: allow, comment: 'Allow HTTP' }
   - { port: 443, rule: allow, comment: 'Allow HTTPS' }
   - { port: 9100, rule: allow, comment: 'Allow Node Exporter' }
-  - { from_ip: '172.16.0.0/12', port: 3389, rule: allow, comment: 'Allow XRDP' }
+  - { from_ip: '172.16.0.0/12', port: 3389, rule: allow, comment: 'Allow RDP' }
   - { from_ip: '172.16.0.0/12', port: 139, rule: allow, comment: 'Allow Samba' }
   - { from_ip: '172.16.0.0/12', port: 445, rule: allow, comment: 'Allow Samba' }
 ufw_default_forward_policy: ACCEPT
