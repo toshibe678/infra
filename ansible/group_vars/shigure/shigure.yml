@@ -11,7 +11,7 @@ spin_out_hdd_list:
   - { name: /dev/sda }
   - { name: /dev/sdb }
   - { name: /dev/sdc }
-  - { name: /dev/sdd }
+  - { name: /dev/sde }
 
 cron_setting: true
 
