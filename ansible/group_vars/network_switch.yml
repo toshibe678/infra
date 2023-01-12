@@ -29,8 +29,8 @@ dhcps:
   - name: "toshipc01"
     host: 172.28.77.10
     subnet: 255.255.255.0
-    address: 00d8.61a1.519b
-    identifier: 0100.d861.a151.9b
+    address: 00d8.61a1.519f
+    identifier: 0100.d861.a151.9f
   - name: "lenovo-p14s"
     host: 172.28.77.21
     subnet: 255.255.255.0
@@ -39,8 +39,8 @@ dhcps:
   - name: "shigure.test"
     host: 172.28.177.100
     subnet: 255.255.255.0
-    address: 7085.c240.d20b
-    identifier: 0170.85c2.40d2.0b
+    address: 00d8.61a1.519b
+    identifier: 0100.d861.a151.9b
   - name: "mayu.test"
     host: 172.28.177.200
     subnet: 255.255.255.0
