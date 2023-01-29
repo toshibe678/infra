@@ -9,7 +9,7 @@
     - { role: "common" }
     - { role: "dev_tool_install" }
     - { role: "sshd" }
-    - { role: "monitoring" }
+#    - { role: "monitoring" }
     - { role: "docker", when: docker_install, tags: docker }
     - { role: "firewall", when: firewall, tags: firewall }
   tasks:

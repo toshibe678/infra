@@ -5,8 +5,8 @@ server_group: "mayu"
 slack_channel: "home_server"
 slack_icon: ":mayu1:"
 spin_out_hdd_list:
-  - { name: /dev/sda }
   - { name: /dev/sdb }
+  - { name: /dev/sdc }
   - { name: /dev/sdd }
   - { name: /dev/sde }
 
