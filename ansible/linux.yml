@@ -1,0 +1,12 @@
+---
+- hosts: linux
+  become: true
+  become_user: root
+  gather_facts: yes
+  tasks:
+    - name: Clone scripts github repository
+      git:
+        repo: git@github.com:toshibe678/scripts.git
+        dest: "/home/{{ manage_user_name }}/scripts"
+        clone: yes
+        update: yes

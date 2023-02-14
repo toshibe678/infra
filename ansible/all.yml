@@ -46,6 +46,8 @@
 # 物理サーバーだけにやる定義
 - import_playbook: ./bare_metal.yml
 
+- import_playbook: ./linux.yml
+
 - import_playbook: ./automatic_boot.yml
 
 - import_playbook: ./cisco.yml
