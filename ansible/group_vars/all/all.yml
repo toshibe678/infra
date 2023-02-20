@@ -1,4 +1,6 @@
 ---
+common_ssh_id_rsa_path: "{{ inventory_dir }}/files/toshi_sshkey"
+common_ssh_git_key_path: "{{ inventory_dir }}/files/gitkey"
 ansible_ssh_pass: "{{ crypt_ansible_ssh_pass }}"
 ansible_become_pass: "{{ crypt_ansible_become_pass }}"
 ansible_sudo_pass: "{{ crypt_ansible_sudo_pass }}"
@@ -98,3 +100,4 @@ samba_shares:
     owner: toshi
 samba_only_users:
   - seiri
+
