@@ -12,3 +12,8 @@ vagrant up時に下記のようなエラーが出る場合がある
 VBoxManage.exe: error: Failed to create the host-only adapter
 ```
 C:\Program Files\Oracle\VirtualBox\drivers\network\netadp6へ移動しVBoxNetAdp6.infを右クリック→インストールすると動く場合がある
+
+vagrantで立ち上げたVMでテストすつ場合
+```shell
+ansible-playbook -D -l dev -i hosts_all.yml all.yml --ask-vault-password
+```

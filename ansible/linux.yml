@@ -10,3 +10,5 @@
         dest: "/home/{{ manage_user_name }}/scripts"
         clone: yes
         update: yes
+        key_file: "/home/{{ manage_user_name }}/.ssh/gitkey"
+        accept_hostkey: true

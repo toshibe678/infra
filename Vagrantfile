@@ -32,6 +32,17 @@ Vagrant.configure("2") do |config|
     echo "127.0.0.1 dev.test" >> /etc/hosts
   SHELL
 
+#   # ansibleで設定行う
+#   config.vm.provision "ansible_local", run: "always" do |ansible|
+#     ansible.limit = "dev"
+#     ansible.galaxy_role_file = "./ansible/requirements.yml"
+#     ansible.galaxy_roles_path = './ansible/roles'
+#     ansible.inventory_path = "./ansible/hosts_all.yml"
+#     ansible.playbook = "./ansible/all.yml"
+#     # Ansible Vault を使う場合は以下の行を追加
+#     ansible.vault_password_file = "./ansible/.ansible_vault_pass"
+#   end
+
   # OS共通でコマンド実行したい場合にここに追記してください
   config.vm.provision "shell", run: "always", inline: <<-SHELL
     echo "Start of the command always executed at the end"
