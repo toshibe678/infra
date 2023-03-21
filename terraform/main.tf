@@ -9,6 +9,11 @@ module "cloudfront_s3_acm" {
   account_id = "073855610728"
 }
 
+module "stg_cloudfront_s3_acm" {
+  source = "./cloudfront_s3_acm"
+  site_domain = "stg.blog.toshi.click"
+  account_id = "073855610728"
+}
 #module "common" {
 #  source = "modules/common"
 #}
@@ -24,6 +29,3 @@ module "cloudfront_s3_acm" {
 #module "iam" {
 #  source = "modules/iam"
 #}
-
-
-
