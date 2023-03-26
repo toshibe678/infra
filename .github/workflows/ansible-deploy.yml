@@ -1,0 +1,30 @@
+name: Deploy Ansible Templates
+
+env:
+  LANG: ja_JP.UTF-8
+
+on:
+  push:
+    paths:
+      - "ansible/**"
+    branches:
+      - main
+      - 'releases/**'
+
+jobs:
+  ansible-deploy:
+    runs-on: self-hosted
+    container: toshiclick/ci-ansible:latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+
+      - name: Deploy ansible server
+        run: |
+          cd ansible
+          apt-get update && apt-get install -y sshpass
+          pip3 install paramiko
+          ansible-galaxy collection install -r requirements.yml --force-with-deps
+          ansible-galaxy install -r requirements.yml -p roles --force
+          bash ./ci.sh
