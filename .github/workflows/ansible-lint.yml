@@ -11,14 +11,14 @@ jobs:
 
     steps:
       - name: Checkout
-        uses: actions/checkout@v2
+        uses: actions/checkout@v3
 
       - name: Setup Ansible Linter with Latest Version
-        uses: ansible/ansible-lint-action@master
+        uses: ansible/ansible-lint-action@main
 
       - name: Print the ansible lint Linter Version & run Linter.
         run: |
           cd ansible
-          
+
           ansible-lint --version
           ansible-lint all.yml -c .ansible-lint
