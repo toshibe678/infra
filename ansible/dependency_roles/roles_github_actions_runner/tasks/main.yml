@@ -4,12 +4,9 @@
 
 - name: Include tasks to uninstall runner
   ansible.builtin.include_tasks: uninstall_runner.yml
-  when: github_runner_uninstall
 
 - name: Include Information collection taks
   ansible.builtin.include_tasks: info.yml
-  when: github_runner_uninstall
 
 - name: Include tasks to install runner
   ansible.builtin.include_tasks: install_runner.yml
-  when: not github_runner_uninstall

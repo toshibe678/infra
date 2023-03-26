@@ -15,7 +15,6 @@
         github_runner_org: "{{ item.org }}"
         github_repo: "{{ item.repo }}"
         github_access_token: "{{ item.token }}"
-        github_runner_uninstall: "{{ item.uninstall }}"
       loop:
-        - { name: "org", org: yes, repo: '', token: "{{github_org_access_token}}", uninstall: false }
-        - { name: "CurriculumVitae", org: no, repo: 'CurriculumVitae', token: "{{github_private_access_token}}", uninstall: false }
+        - { name: "org", org: yes, repo: '', token: "{{github_org_access_token}}" }
+        - { name: "CurriculumVitae", org: no, repo: 'CurriculumVitae', token: "{{github_private_access_token}}" }
