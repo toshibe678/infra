@@ -36,11 +36,11 @@ jobs:
           restore-keys: |
             ${{ runner.os }}-buildx-
 
-      - name: Prepare Build Arg
-        id: prepare_build_arg
-        run: |
-          CURRENT_TAG=${GITHUB_REF#refs/tags/}
-#          echo ::set-output name=CURRENT_TAG::${CURRENT_TAG}
+#      - name: Prepare Build Arg
+#        id: prepare_build_arg
+#        run: |
+#          CURRENT_TAG=${GITHUB_REF#refs/tags/}
+##          echo ::set-output name=CURRENT_TAG::${CURRENT_TAG}
 
       - name: Login to GitHub Container Registry
         uses: docker/login-action@v2
@@ -57,13 +57,17 @@ jobs:
           file: ./docker/ansible/Dockerfile
           platforms: linux/amd64,linux/arm64
           tags: |
-            ghcr.io/${{ github.repository_owner }}/ansible:${{ steps.prepare_build_arg.outputs.CURRENT_TAG }}
+            ghcr.io/${{ github.repository_owner }}/ansible:latest
           labels: |
             org.opencontainers.image.source=${{ github.event.repository.clone_url }}
           cache-from: type=local,src=/tmp/.buildx-cache
           cache-to: type=local,dest=/tmp/.buildx-cache-new
 #          build-args: |
 #            BUNDLER_VERSION=${{ steps.prepare_build_arg.outputs.BUNDLER_VERSION }}
+
+#/usr/bin/docker buildx build --cache-from type=local,src=/tmp/.buildx-cache --cache-to type=local,dest=/tmp/.buildx-cache-new --file ./docker/ansible/Dockerfile --iidfile /tmp/docker-build-push-nOqjt6/iidfile --label org.opencontainers.image.source=https://github.com/toshibe678/infra.git --platform linux/amd64,linux/arm64 --provenance mode=max,builder-id=https://github.com/toshibe678/infra/actions/runs/4525055154 --tag ghcr.io/toshibe678/ansible: --metadata-file /tmp/docker-build-push-nOqjt6/metadata-file --push ./docker/ansible
+#ERROR: invalid tag "ghcr.io/toshibe678/ansible:": invalid reference format
+#Error: buildx failed with: ERROR: invalid tag "ghcr.io/toshibe678/ansible:": invalid reference format
 
       - name: Move cache
         run: |
