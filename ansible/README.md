@@ -16,3 +16,12 @@ ansible-playbook -D -l dev -i hosts_all.yml  --vault-password-file ~/.ssh/.ansib
 ```shell
 ansible-playbook -D -l shigure -i hosts_all.yml all.yml  --ask-pass --ask-become-pass --ask-vault-password -C
 ```
+ansible-playbook -D -l raspi -i hosts_all.yml all.yml --ask-vault-password -t runner
+
+
+### 接続できない場合
+1. 公開鍵を登録
+   * `mkdir -p ~/.ssh && chmod 700 ~/.ssh`
+   * `touch ~/.ssh/authorized_keys && chmod 600 ~/.ssh/authorized_keys && vi ~/.ssh/authorized_keys `
+2. sudo設定
+   * `sudo bash -c 'echo "toshi ALL=(ALL) NOPASSWD: ALL" > /etc/sudoers.d/toshi'`

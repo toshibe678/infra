@@ -4,6 +4,12 @@
   become_user: root
   gather_facts: yes
   tasks:
+    - name: Add to docker group
+      user:
+        name: "{{ manage_user_name }}"
+        groups: docker
+        append: yes
+
     - name: Clone scripts github repository
       git:
         repo: git@github.com:toshibe678/scripts.git

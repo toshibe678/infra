@@ -53,3 +53,5 @@
 - import_playbook: ./cisco.yml
 
 - import_playbook: ./yamaha.yml
+
+- import_playbook: ./github_self_host_runner.yml

@@ -1,3 +1,4 @@
+---
 - hosts:
     - bare_metal
   become: true

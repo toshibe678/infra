@@ -23,7 +23,8 @@ all:
               ansible_connection: local
         raspi:
           hosts:
-            raspi.test: { }
+            raspi.test:
+              github_runner_labels: [arm,linux]
 #          children:
 #            raspi_master: { }
 #            raspi_worker: { }
@@ -65,4 +66,3 @@ all:
             l2switch:
               hosts:
                 172.28.1.2: { }
-

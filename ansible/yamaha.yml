@@ -81,7 +81,7 @@
           - dhcp service server
           - dhcp server rfc2131 compliant except remain-silent
           - dhcp scope 1 172.16.2.2-172.16.254.254/16
-          - dhcp scope bind 1 172.16.11.10 ethernet 98:41:5c:e3:1b:fc
+          - dhcp scope bind 1 172.16.11.10 ethernet C8:7F:54:0A:75:21
           - dhcp scope bind 1 172.16.77.21 ethernet b0:a4:60:c2:ce:05
           - dhcp scope bind 1 172.16.100.12 ethernet 34:de:1a:59:1f:32
           - dhcp scope bind 1 172.16.100.71 ethernet 00:25:22:a0:b0:4c
@@ -89,6 +89,7 @@
           - dhcp scope bind 1 172.16.100.107 ethernet 0c:9d:92:71:0c:bd
           - dhcp scope bind 1 172.16.100.108 ethernet dc:72:9b:c7:23:9f
           - dhcp scope bind 1 172.16.100.109 ethernet 1c:fe:2b:10:0d:8f
+          - dhcp scope bind 1 172.16.100.110 ethernet 98:41:5c:e3:1b:fc
           - dhcp scope bind 1 172.16.100.131 ethernet dc:a6:32:91:b1:9a
           - dhcp scope bind 1 172.16.100.205 ethernet 58:cb:52:7d:dc:a2
           - dhcp scope bind 1 172.16.100.210 ethernet 00:0b:82:91:bf:db

@@ -101,3 +101,6 @@ samba_shares:
 samba_only_users:
   - seiri
 
+github_private_access_token: "{{ crypt_github_access_token }}"
+github_org_access_token: "{{ crypt_github_org_access_token }}"
+github_runner_labels: []

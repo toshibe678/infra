@@ -1,0 +1,124 @@
+---
+- name: Create directory
+  ansible.builtin.file:
+    path: "{{ github_runner_dir }}"
+    state: directory
+    mode: 0755
+    owner: "{{ manage_user_name }}"
+    group: "{{ manage_user_name }}"
+
+- name: Find the latest runner version
+  ansible.builtin.uri:
+    url: "https://api.github.com/repos/actions/runner/releases/latest"
+    headers:
+      Content-Type: "application/json"
+    method: GET
+    return_content: yes
+    status_code: 200
+    body_format: json
+  check_mode: false
+  register: api_response
+  become: false
+
+- name: Set github_runner_version variable
+  ansible.builtin.set_fact:
+    github_runner_version: "{{ api_response.json.tag_name | regex_replace('^v', '') }}"
+
+- name: Check if desired version already installed
+  ansible.builtin.command: "grep -i {{ github_runner_version }} {{ github_runner_dir }}/bin/Runner.Listener.deps.json"
+  register: runner_installed
+  check_mode: false
+  changed_when: false
+  ignore_errors: true
+
+- name: Unarchive runner package
+  ansible.builtin.unarchive:
+    src: "https://github.com/actions/runner/releases/download/v{{ github_runner_version }}/\
+          actions-runner-linux-{{ github_actions_architecture }}-{{ github_runner_version }}.tar.gz"
+    dest: "{{ github_runner_dir }}/"
+    owner: "{{ manage_user_name }}"
+    group: "{{ manage_user_name }}"
+    remote_src: yes
+    mode: 0755
+  become: true
+  when: github_runner_version not in runner_installed.stdout
+
+- name: Check if runner service name file exist
+  ansible.builtin.stat:
+    path: "{{ github_runner_dir }}/.service"
+  register: runner_service_file_path
+
+- name: Set complete GitHub url for repo runner
+  ansible.builtin.set_fact:
+    github_full_url: "https://github.com/{{ github_account }}/{{ github_repo }}"
+  when: not github_runner_org
+
+- name: Set complete GitHub url for org runner
+  ansible.builtin.set_fact:
+    github_full_url: "https://github.com/{{ github_org_name }}"
+  when: github_runner_org | bool
+
+- name: Register runner
+  environment:
+    RUNNER_ALLOW_RUNASROOT: "1"
+  ansible.builtin.command:
+    "{{ github_runner_dir }}/./config.sh \
+    --url {{ github_full_url }} \
+    --token {{ registration.json.token }} \
+    --name '{{ github_runner_name }}' \
+    --labels {{ github_runner_labels | join(',') }} \
+    --unattended"
+  args:
+    chdir: "{{ github_runner_dir }}"
+  become: true
+  become_user: "{{ manage_user_name }}"
+  no_log: yes
+  when: github_runner_name not in registered_runners.json.runners|map(attribute='name')|list
+
+- name: Replace registered runner
+  environment:
+    RUNNER_ALLOW_RUNASROOT: "1"
+  ansible.builtin.command:
+    "{{ github_runner_dir }}/config.sh \
+    --url {{ github_full_url }} \
+    --token {{ registration.json.token }} \
+    --name '{{ github_runner_name }}' \
+    --labels {{ github_runner_labels | join(',') }} \
+    --unattended
+    --replace"
+  args:
+    chdir: "{{ github_runner_dir }}"
+  become: true
+  no_log: yes
+  when: github_runner_name in registered_runners.json.runners|map(attribute='name')|list and not github_runner_org
+
+- name: Install service
+  ansible.builtin.command: "./svc.sh install {{ manage_user_name }}"
+  args:
+    chdir: "{{ github_runner_dir }}"
+  when: not runner_service_file_path.stat.exists
+
+- name: Read service name from file
+  ansible.builtin.slurp:
+    src: "{{ github_runner_dir }}/.service"
+  register: runner_service
+
+- name: START and enable Github Actions Runner service
+  ansible.builtin.systemd:
+    name: "{{ runner_service.content | b64decode | replace('\n', '') }}"
+    state: started
+    enabled: yes
+  ignore_errors: "{{ ansible_check_mode }}"
+
+- name: Version changed - RESTART Github Actions Runner service
+  ansible.builtin.systemd:
+    name: "{{ runner_service.content | b64decode | replace('\n', '') }}"
+    state: restarted
+  ignore_errors: "{{ ansible_check_mode }}"
+  when: github_runner_version not in runner_installed.stdout
+
+- name: Restart runner service
+  ansible.builtin.systemd:
+    name: "{{ runner_service.content | b64decode | replace('\n', '') }}"
+    state: restarted
+  ignore_errors: "{{ ansible_check_mode }}"
