@@ -10,8 +10,8 @@ on:
     branches:
       - main
       - 'releases/**'
-    paths:
-      - "docker/**"
+#    paths:
+#      - "docker/**"
 
 jobs:
   ansible_push_to_registry:
