@@ -58,7 +58,7 @@ jobs:
           context: ./docker/ansible
           file: ./docker/ansible/Dockerfile
           platforms: linux/amd64,linux/arm64
-          tags: ${{ github.repository_owner }}/ansible:latest
+          tags: ${{ github.repository_owner }}/infra/ansible:latest
           labels: |
             org.opencontainers.image.source=${{ github.event.repository.clone_url }}
           cache-from: type=local,src=/tmp/.buildx-cache
