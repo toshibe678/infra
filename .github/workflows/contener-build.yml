@@ -42,7 +42,7 @@ jobs:
 #        id: prepare_build_arg
 #        run: |
 #          CURRENT_TAG=${GITHUB_REF#refs/tags/}
-##          echo ::set-output name=CURRENT_TAG::${CURRENT_TAG}
+#          echo ::set-output name=CURRENT_TAG::${CURRENT_TAG}
 
       - name: Login to GitHub Container Registry
         uses: docker/login-action@v2
@@ -58,7 +58,9 @@ jobs:
           context: ./docker/ansible
           file: ./docker/ansible/Dockerfile
           platforms: linux/amd64,linux/arm64
-          tags: ${{ github.repository_owner }}/infra:latest
+          tags: |
+            ghcr.io/${{ github.repository_owner }}/infra/ansible:latest
+            ghcr.io/${{ github.repository_owner }}/infra/ansible:${GITHUB_REF#refs/tags/}
           labels: |
             org.opencontainers.image.source=${{ github.event.repository.clone_url }}
           cache-from: type=local,src=/tmp/.buildx-cache
