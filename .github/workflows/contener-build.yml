@@ -38,10 +38,10 @@ jobs:
           restore-keys: |
             ${{ runner.os }}-buildx-
 
-      - name: Prepare Build Arg
-        id: prepare_build_arg
-        run: |
-          CURRENT_TAG=${GITHUB_REF#refs/tags/}
+#      - name: Prepare Build Arg
+#        id: prepare_build_arg
+#        run: |
+#          CURRENT_TAG=${GITHUB_REF#refs/tags/}
 #          echo ::set-output name=CURRENT_TAG::${CURRENT_TAG}
 
       - name: Login to GitHub Container Registry
@@ -60,7 +60,7 @@ jobs:
           platforms: linux/amd64,linux/arm64
           tags: |
             ghcr.io/${{ github.repository_owner }}/infra/ansible:latest
-            ghcr.io/${{ github.repository_owner }}/infra/ansible:${{ CURRENT_TAG }}
+#            ghcr.io/${{ github.repository_owner }}/infra/ansible:${{ CURRENT_TAG }}
           labels: |
             org.opencontainers.image.source=${{ github.event.repository.clone_url }}
           cache-from: type=local,src=/tmp/.buildx-cache
