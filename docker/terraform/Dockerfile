@@ -1,8 +1,10 @@
 FROM python:3.10
 
-ARG TERRAFORM_VERSION="1.1.2"
-ARG TERRAGRUNT_VERSION="0.35.16"
-ARG TFLINT_VERSION="0.34.0"
+ARG TERRAFORM_VERSION="1.4.2"
+# https://github.com/gruntwork-io/terragrunt/releases
+ARG TERRAGRUNT_VERSION="0.45.0"
+# https://github.com/terraform-linters/tflint/releases
+ARG TFLINT_VERSION="0.45.0"
 
 # install command.
 RUN apt-get update && apt-get install -y --no-install-recommends less vim wget unzip jq cmake libssl-dev gcc

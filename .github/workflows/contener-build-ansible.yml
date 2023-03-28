@@ -2,16 +2,14 @@ name: Ansible Docker image build and push
 
 env:
   LANG: ja_JP.UTF-8
-  REGISTRY: ghcr.io
-  IMAGE_NAME: ${{ github.repository }}
 
 on:
   push:
     branches:
       - main
       - 'releases/**'
-#    paths:
-#      - "docker/**"
+    paths:
+      - "docker/ansible/**"
 
 jobs:
   ansible_push_to_registry:
