@@ -6,21 +6,6 @@ variables:
   # https://github.com/terraform-linters/tflint/releases/
   TFLINT_VERSION: 0.34.0
 
-cfn-lint:
-  <<: *lint_default
-  image:
-    name: python:3.10
-  script:
-    - pip install cfn-lint
-    - cfn-lint --version
-    - cfn-lint -t ./cloudformation/*.yml
-  except:
-    - schedules
-  only:
-    changes:
-      - "cloudformation/**/*"
-      - ".gitlab-ci.yml"
-
 terraform-lint:
   <<: *lint_default
   image:

@@ -2,23 +2,30 @@ name: Lint Ansible Templates
 
 on:
   push:
-    paths:
-      - "ansible/**"
+#    paths:
+#      - "ansible/**"
+    branches:
+      - main
+      - develop
+      - 'releases/**'
 
 jobs:
   ansible-lint:
     runs-on: self-hosted
+    container:
+      image: ghcr.io/toshibe678/infra/ansible
+      credentials:
+        username: ${{ github.actor }}
+        password: ${{ secrets.GITHUB_TOKEN }}
 
     steps:
       - name: Checkout
         uses: actions/checkout@v3
 
-      - name: Setup Ansible Linter with Latest Version
-        uses: ansible/ansible-lint-action@main
-
       - name: Print the ansible lint Linter Version & run Linter.
         run: |
           cd ansible
-
           ansible-lint --version
+          ansible-galaxy install -p roles -r requirements.yml --force
+          ansible-galaxy collection install -r requirements.yml --force-with-deps
           ansible-lint all.yml -c .ansible-lint
