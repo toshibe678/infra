@@ -35,13 +35,13 @@ services:
       - ./ansible:/ansible
     tty: true
 
-  cloudformation:
-    container_name: "cloudformation"
+  tools:
+    container_name: "tools"
     build:
-      context: ./docker/cloudformation
+      context: docker/tools
       dockerfile: Dockerfile
     env_file: ./.env
-    working_dir: /cloudformation
+    working_dir: /tools
     volumes:
       - ./cloudformation:/cloudformation
     tty: true
