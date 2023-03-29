@@ -1,5 +1,6 @@
 ---
-- hosts: all
+- name: debug pack
+  hosts: all
   become: true
   become_user: root
   gather_facts: yes

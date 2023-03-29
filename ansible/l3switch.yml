@@ -1,6 +1,6 @@
 ---
-# ciscoL3機器の処理を行う
-- hosts:
+- name: l3 switch setting
+  hosts:
     - l3switch
   gather_facts: no
   remote_user: admin

@@ -1,5 +1,6 @@
 ---
-- hosts: linux
+- name: linux common setting
+  hosts: linux
   become: true
   become_user: root
   gather_facts: yes
@@ -9,7 +10,7 @@
     - { role: "common" }
     - { role: "dev_tool_install" }
     - { role: "sshd" }
-#    - { role: "monitoring" }
+    #    - { role: "monitoring" }
     - { role: "docker", when: docker_install, tags: docker }
     - { role: "firewall", when: firewall, tags: firewall }
   tasks:

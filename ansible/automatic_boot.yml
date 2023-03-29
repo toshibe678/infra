@@ -1,4 +1,5 @@
-- hosts:
+- name: boot run setting
+  hosts:
     - linux
   become: true
   become_user: root

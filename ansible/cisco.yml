@@ -1,6 +1,7 @@
 ---
 # cisco機器共通の処理を行う
-- hosts:
+- name: cisco setting
+  hosts:
     - l3switch
     - l2switch
   gather_facts: no

@@ -1,6 +1,6 @@
 ---
-# ciscoL2機器の処理を行う
-- hosts:
+- name: l2 switch setting
+  hosts:
     - l2switch
   gather_facts: no
   tasks:
@@ -41,7 +41,7 @@
       cisco.ios.ios_l2_interfaces:
         config:
           - name: "{{ item.ios_if }}"
-            mode:  "{{ item.mode }}"
+            mode: "{{ item.mode }}"
             access:
               vlan: "{{ item.vlan_id }}"
         state: merged
