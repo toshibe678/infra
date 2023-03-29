@@ -4,7 +4,6 @@
   become: true
   become_user: root
   gather_facts: yes
-  ignore_unreachable: yes
   roles:
     - { role: "sudo" }
     - { role: "common" }

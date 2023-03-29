@@ -4,7 +4,7 @@ quiet: false
 use_default_rules: true
 exclude_paths:
   - ./roles/
-skip_list:
+#skip_list:
 # yum clean はyumモジュールで行えないのにエラー出るので除外 "[E303] yum used in place of yum module"
 #- '303'
 # どうしてもshell使いたいのにエラーが出るので除外 "[E305] Use shell only when shell functionality is required"

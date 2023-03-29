@@ -3,7 +3,6 @@
     - linux
   become: true
   become_user: root
-  ignore_unreachable: yes
   tasks:
     - name: install power pkg
       apt:
