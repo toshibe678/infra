@@ -5,8 +5,8 @@ env:
 
 on:
   push:
-#    paths:
-#      - "ansible/**"
+    paths:
+      - "ansible/**"
     branches:
       - main
       - 'releases/**'

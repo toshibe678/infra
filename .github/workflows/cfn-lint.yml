@@ -2,8 +2,8 @@ name: Lint CloudFormation Templates
 
 on:
   push:
-#    paths:
-#      - "cloudformation/**"
+    paths:
+      - "cloudformation/**"
     branches:
       - main
       - develop

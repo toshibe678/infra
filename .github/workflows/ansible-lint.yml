@@ -2,8 +2,8 @@ name: Lint Ansible Templates
 
 on:
   push:
-#    paths:
-#      - "ansible/**"
+    paths:
+      - "ansible/**"
     branches:
       - main
       - develop
