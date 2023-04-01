@@ -6,11 +6,6 @@ collections:
 
 # ansible-galaxy install -r requirements.yml -p roles --force
 roles:
-  - src: https://github.com/toshi-click/roles_ansible.git
-    name: ansible
-    scm: git
-    version: "master"
-
   - src: https://github.com/toshi-click/roles_common.git
     name: common
     scm: git
@@ -46,23 +41,8 @@ roles:
     scm: git
     version: "master"
 
-  - src: https://github.com/toshi-click/roles_toshi_tools.git
-    name: toshi_tools
-    scm: git
-    version: "master"
-
   - src: https://github.com/toshi-click/roles_chrome.git
     name: chrome
-    scm: git
-    version: "master"
-
-  - src: https://github.com/toshi-click/roles_gitlab_runner.git
-    name: gitlab_runner
-    scm: git
-    version: "master"
-
-  - src: https://github.com/toshi-click/roles_google_cloud_sdk.git
-    name: google_cloud_sdk
     scm: git
     version: "master"
 

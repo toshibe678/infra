@@ -6,8 +6,7 @@ ansible_become_pass: "{{ crypt_ansible_become_pass }}"
 ansible_sudo_pass: "{{ crypt_ansible_sudo_pass }}"
 
 hostname: "{{ inventory_hostname }}"
-# ubuntuの日本語Remix入れるかどうかのフラグ
-japanease: false
+
 hosts:
   # /etc/hostsに設定するホスト情報
   etc_hosts_setting:

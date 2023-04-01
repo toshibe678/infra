@@ -8,7 +8,6 @@
   roles:
     - { role: "samba", when: server_group == "shigure" or server_group == "mayu" }
     - { role: "kvm" }
-    - { role: "gitlab_runner", when: stage == "prd" }
   ignore_unreachable: yes
   tasks:
     # HDDのスピンアウトを設定して省電力化のためのsmartツールをインストールする
