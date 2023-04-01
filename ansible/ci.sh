@@ -14,6 +14,9 @@ cd `dirname $0`
 cat ./hosts > /etc/hosts
 cat /etc/hosts
 
+ansible-galaxy collection install -r requirements.yml --force-with-deps
+ansible-galaxy install -r requirements.yml -p roles --force
+
 echo -e "${TOSHI_KEY}" > ~/.ssh/id_rsa
 chmod 600 ~/.ssh/id_rsa
 echo -e "${VAULT_PASS}" > ~/.ssh/.ansible_vault_pass

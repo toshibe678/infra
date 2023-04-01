@@ -4,6 +4,7 @@ on:
   push:
     paths:
       - "ansible/**"
+      - ".github/workflows/ansible-*"
     branches:
       - main
       - develop
@@ -28,9 +29,6 @@ jobs:
           VAULT_PASS: ${{ secrets.VAULT_PASS }}
         run: |
           cd ansible
-          ansible-lint --version
-          ansible-galaxy install -p roles -r requirements.yml --force
-          ansible-galaxy collection install -r requirements.yml --force-with-deps
           bash ./ci.sh
           ansible-playbook -i hosts_all.yml all.yml --syntax-check --vault-password-file ~/.ssh/.ansible_vault_pass -C
           rm -f ~/.ssh/id_rsa
