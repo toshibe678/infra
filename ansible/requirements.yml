@@ -36,11 +36,6 @@ roles:
     scm: git
     version: "master"
 
-  - src: https://github.com/toshi-click/roles_sudo.git
-    name: sudo
-    scm: git
-    version: "master"
-
   - src: https://github.com/toshi-click/roles_chrome.git
     name: chrome
     scm: git

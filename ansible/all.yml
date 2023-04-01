@@ -6,7 +6,6 @@
   gather_facts: yes
   ignore_unreachable: true
   roles:
-    - { role: "sudo" }
     - { role: "common" }
     - { role: "dev_tool_install" }
     - { role: "sshd" }
