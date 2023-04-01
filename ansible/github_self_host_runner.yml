@@ -5,7 +5,7 @@
   become: true
   become_user: root
   gather_facts: yes
-  ignore_unreachable: yes
+  ignore_unreachable: true
   tasks:
     # 参考：https://github.com/MonolithProjects/ansible-github_actions_runner
     - name: looping role docker hub

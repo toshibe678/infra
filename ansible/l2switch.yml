@@ -3,6 +3,7 @@
   hosts:
     - l2switch
   gather_facts: no
+  ignore_unreachable: true
   tasks:
     - name: setting vlan interface vlan1
       ios_config:

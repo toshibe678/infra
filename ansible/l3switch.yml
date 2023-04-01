@@ -4,6 +4,7 @@
     - l3switch
   gather_facts: no
   remote_user: admin
+  ignore_unreachable: true
   tasks:
     - name: run multiple commands on remote nodes
       cisco.ios.ios_command:

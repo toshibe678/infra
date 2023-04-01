@@ -4,6 +4,7 @@
   become: true
   become_user: root
   gather_facts: yes
+  ignore_unreachable: true
   tasks:
     - name: Add to docker group
       user:

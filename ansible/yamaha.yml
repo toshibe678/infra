@@ -1,6 +1,7 @@
 ---
 - name: yamaha router setting
   hosts: router
+  ignore_unreachable: true
   vars:
     ansible_network_os: yamaha_network.rtx.rtx
     ansible_connection: network_cli

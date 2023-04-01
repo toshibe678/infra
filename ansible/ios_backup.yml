@@ -3,7 +3,7 @@
   hosts: routers
   connection: network_cli
   gather_facts: no
-
+  ignore_unreachable: true
   tasks:
     - name: gather ios_facts
       ios_facts:

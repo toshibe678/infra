@@ -4,6 +4,7 @@
     - bare_metal
   become: true
   become_user: root
+  ignore_unreachable: true
   roles:
     - { role: "samba", when: server_group == "shigure" or server_group == "mayu" }
     - { role: "kvm" }

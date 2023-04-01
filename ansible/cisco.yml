@@ -5,6 +5,7 @@
     - l3switch
     - l2switch
   gather_facts: no
+  ignore_unreachable: true
   tasks:
     - name: Remove unneeded banners
       ios_banner:
