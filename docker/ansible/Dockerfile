@@ -24,6 +24,6 @@ RUN apt-get update \
 
 # install ansible
 RUN python3 -m pip install --upgrade pip \
-  && python3 -m pip install ansible paramiko ansible-lint
+  && python3 -m pip install ansible paramiko ansible-lint ansible-pylibssh
 
 RUN ansible-galaxy collection install cisco.ios
