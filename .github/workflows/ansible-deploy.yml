@@ -33,6 +33,6 @@ jobs:
           cd ansible
           bash ./ci.sh
           ansible-playbook -l shigure,mayu -i hosts_all.yml all.yml --vault-password-file ~/.ssh/.ansible_vault_pass
-          ansible-playbook -l network_switch -i hosts_all.yml all.yml --vault-password-file ~/.ssh/.ansible_vault_pass -C
+          ansible-playbook -l router -i hosts_all.yml all.yml --vault-password-file ~/.ssh/.ansible_vault_pass
           rm -f ~/.ssh/id_rsa
           rm -f ~/.ssh/.ansible_vault_pass
