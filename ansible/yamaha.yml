@@ -121,13 +121,3 @@
 #          - pp select 1
 #        match: strict
 #        save_when: changed
-
-    - name: get configuration
-      yamaha_network.rtx.rtx_command:
-        commands:
-          - show config
-      register: result
-
-    - name: show config
-      debug:
-        msg: "{{ result.stdout_lines[0] }}"
