@@ -26,16 +26,6 @@
 #      debug:
 #        msg: "{{ environment_result.stdout_lines[0] }}"
 
-    - name: get configuration
-      yamaha_network.rtx.rtx_command:
-        commands:
-          - show config
-      register: result
-
-    - name: show config
-      debug:
-        msg: "{{ result.stdout_lines[0] }}"
-
     - name: set DNS common setting
       yamaha_network.rtx.rtx_config:
         lines:
