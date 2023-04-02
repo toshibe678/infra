@@ -71,7 +71,7 @@
           - ip host vpnclient 172.16.77.201
           - ip host qnap 172.16.100.241
           - ip host qnap2 172.16.100.242
-#          - ip host qnap-bak1 172.28.100.241
+          - ip host qnap-bak1 172.28.100.241
 #          - ip host qnap-bak2 172.28.100.242
           - ip host toshipc01 172.16.77.11
           - ip host toshipc02 172.16.77.21
