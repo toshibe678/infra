@@ -1,19 +1,10 @@
-project_name: "shigure"
 server_group: "shigure"
-
-# Slackチャンネルの情報
-slack_channel: "home_server"
-slack_icon: ":house:"
-
-docker_compose_deploy: true
 
 spin_out_hdd_list:
   - { name: /dev/sda }
   - { name: /dev/sdb }
   - { name: /dev/sdc }
   - { name: /dev/sde }
-
-cron_setting: true
 
 # https://github.com/weareinteractive/ansible-ufw
 ufw_reset: yes

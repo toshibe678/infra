@@ -22,7 +22,6 @@ terraform-lint:
   only:
     changes:
       - "terraform/**/*"
-      - ".gitlab-ci.yml"
 
 ansiblelint:
   <<: *lint_default
@@ -38,4 +37,3 @@ ansiblelint:
   only:
     changes:
       - "ansible/**/*"
-      - ".gitlab-ci.yml"

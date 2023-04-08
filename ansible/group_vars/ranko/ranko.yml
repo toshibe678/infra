@@ -1,9 +1,3 @@
-project_name: "ranko"
-
-# Slackチャンネルの情報
-slack_channel: "home_server"
-slack_icon: ":ranko1:"
-
 ufw_reset: yes
 ufw_rules:
   - { from_ip: '127.0.0.0/8', comment: 'Allow localhost' }

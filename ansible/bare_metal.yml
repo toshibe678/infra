@@ -28,24 +28,6 @@
         backup: true
 
     - block:
-        - name: "set /etc/gitlab-runner/config.toml"
-          template:
-            src: "etc/gitlab/config.toml"
-            dest: "/etc/gitlab-runner/config.toml"
-            owner: root
-            group: root
-            mode: 0600
-            backup: true
-
-        - name: systemd set state gitlab-runner
-          service:
-            name: gitlab-runner
-            state: restarted
-            enabled: yes
-      when:
-        - stage == "prd"
-
-    - block:
         - name: systemd set state nmbd
           service:
             name: nmbd
@@ -58,5 +40,4 @@
             state: restarted
             enabled: yes
       when:
-        - stage == "prd"
         - server_group == "shigure" or server_group == "mayu"

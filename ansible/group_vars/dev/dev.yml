@@ -1,13 +1,4 @@
-project_name: "dev"
-server_group: "dev"
-
-# Slackチャンネルの情報
-slack_channel: "home_server"
-slack_icon: ":house:"
-
 sshd_password_login: "yes"
-docker_compose_deploy: false
-cron_setting: false
 
 # https://github.com/weareinteractive/ansible-ufw
 ufw_reset: yes

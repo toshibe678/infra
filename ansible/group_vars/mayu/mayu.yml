@@ -1,16 +1,10 @@
-project_name: "mayu"
 server_group: "mayu"
 
-# Slackチャンネルの情報
-slack_channel: "home_server"
-slack_icon: ":mayu1:"
 spin_out_hdd_list:
   - { name: /dev/sdb }
   - { name: /dev/sdc }
   - { name: /dev/sdd }
   - { name: /dev/sde }
-
-cron_setting: true
 
 ufw_reset: yes
 ufw_rules:
@@ -30,4 +24,3 @@ ufw_default_forward_policy: ACCEPT
 ufw_logging: low
 ufw_applications:
   - { name: "Postfix" }
-
