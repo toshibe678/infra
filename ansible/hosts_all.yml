@@ -14,33 +14,23 @@ all:
         mayu:
           hosts:
             mayu.test: { }
-#        ranko:
-#          hosts:
-#            ranko.test: { }
         dev:
           hosts:
             dev.test:
               ansible_connection: local
         raspi:
+          vars:
+            github_runner_labels: [arm,linux]
           hosts:
-            raspi.test:
-              github_runner_labels: [arm,linux]
-#          children:
-#            raspi_master: { }
-#            raspi_worker: { }
-#        raspi_master:
-#          hosts:
-#            raspi-master.test: { }
-#        raspi_worker:
-#          hosts:
-#            raspi-worker1.test: { }
-#            raspi-worker2.test: { }
-#            raspi-worker3.test: { }
+            raspi.test: { }
+            ranko.test: { }
+            sae.test: {}
+            kaede.test: {}
+            shiki.test: {}
         bare_metal:
           children:
             shigure: { }
             mayu: { }
-#            ranko: { }
         vm:
           children:
             dev: { }

@@ -1,7 +1,7 @@
 .PHONY: build plan apply destroy init check exec_tf exec_ansible lint deploy
 
 init:
-#	@docker compose run --rm terraform terraform init
+	@docker compose run --rm terraform terraform init
 # 	@docker compose run --rm ansible ansible-galaxy collection install -r requirements.yml --force-with-deps
 	@docker compose run --rm nw-ansible ansible-galaxy collection install -r requirements.yml --force-with-deps
 	@docker compose run --rm ansible ansible-galaxy install -p roles -r requirements.yml --force
@@ -36,9 +36,6 @@ exec_tf:
 
 exec_ansible:
 	@docker compose run --rm ansible bash
-
-exec_nw_ansible:
-	@docker compose run --rm nw-ansible bash
 
 lint:
 	@docker compose run --rm ansible ansible-lint all.yml -c .ansible-lint

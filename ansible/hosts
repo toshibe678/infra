@@ -9,10 +9,10 @@
 
 # raspi
 172.16.100.254 raspi.test
-172.16.100.131 raspi-master.test
-172.16.100.132 raspi-worker1.test
-172.16.100.133 raspi-worker2.test
-172.16.100.134 raspi-worker3.test
+172.16.100.131 ranko.test
+172.16.100.132 sae.test
+172.16.100.133 kaede.test
+172.16.100.134 shiki.test
 
 # nw
 172.16.1.1 rtx1210 router
