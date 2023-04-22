@@ -18,4 +18,3 @@ vagrantで立ち上げたVMでテストすつ場合
 ansible-playbook -D -l dev -i hosts_all.yml all.yml --ask-vault-password
 ```
 
-
