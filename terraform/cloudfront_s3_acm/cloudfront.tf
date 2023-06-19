@@ -1,6 +1,6 @@
 # Root Objectのhtmlを省略することが出来るようにファンクション
 resource "aws_cloudfront_function" "cloudfront_s3_acm_function" {
-  name    = "cloudfront_s3_acm_function"
+  name    = "${local.uppercase_domain_name}-function"
   runtime = "cloudfront-js-1.0"
   comment = "cloudfront_s3_acm base object function"
   publish = true

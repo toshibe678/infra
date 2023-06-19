@@ -2,6 +2,10 @@
 - name: github self host runner setting
   hosts:
     - raspi.test
+    - ranko.test
+    - sae.test
+    - kaede.test
+    - shiki.test
   become: true
   become_user: root
   gather_facts: yes

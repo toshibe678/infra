@@ -14,6 +14,7 @@ ufw_rules:
   - { port: 25, rule: allow, comment: 'Allow Mail' }
   - { port: 80, rule: allow, comment: 'Allow HTTP' }
   - { port: 443, rule: allow, comment: 'Allow HTTPS' }
+  - { port: 7860, rule: allow, comment: 'Allow Stable Diffusion' }
   - { port: 9100, rule: allow, comment: 'Allow Node Exporter' }
   - { port: 24224, rule: allow, comment: 'Allow Fluentd' }
   - { from_ip: '172.16.0.0/12', port: 3389, rule: allow, comment: 'Allow RDP' }
