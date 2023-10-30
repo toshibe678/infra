@@ -1,5 +1,8 @@
 .PHONY: build plan apply destroy init check exec_tf exec_ansible lint deploy
 
+# makefile内のすべてのコマンドが単一のシェルスクリプトで実行されるようになるおまじない
+.ONESHELL:
+
 init:
 	@docker compose run --rm terraform terraform init
 # 	@docker compose run --rm ansible ansible-galaxy collection install -r requirements.yml --force-with-deps

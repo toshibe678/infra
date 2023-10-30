@@ -23,6 +23,7 @@ all:
             github_runner_labels: [arm,linux]
           hosts:
             raspi.test: { }
+            rasdev.test: { }
             ranko.test: { }
             sae.test: {}
             kaede.test: {}

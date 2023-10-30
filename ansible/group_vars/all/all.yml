@@ -13,6 +13,7 @@ hosts:
   etc_hosts_setting:
     - { name: "{{ hostname }}", ip: 127.0.0.1 }
     - { name: "raspi.test", ip: 172.16.100.254 }
+    - { name: "rasdev.test", ip: 172.16.100.253 }
     - { name: "raspi-master1.test", ip: 172.16.100.131 }
     - { name: "raspi-worker1.test", ip: 172.16.100.132 }
     - { name: "raspi-worker2.test", ip: 172.16.100.133 }
