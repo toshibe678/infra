@@ -2,6 +2,7 @@
 - name: github self host runner setting
   hosts:
     - raspi.test
+    - rasdev.test
     - ranko.test
     - sae.test
     - kaede.test

@@ -1,5 +1,5 @@
-wire_guard_server_ip_address: 172.16.101.1
-wire_guard_server_listen_port: 51820
+wire_guard_server_ip_address: 172.16.101.2
+wire_guard_server_listen_port: 51821
 ufw_reset: yes
 ufw_rules:
   - { from_ip: '127.0.0.0/8', comment: 'Allow localhost' }
@@ -7,7 +7,7 @@ ufw_rules:
   - { port: 25, rule: allow, comment: 'Allow Mail' }
   - { port: 80, rule: allow, comment: 'Allow HTTP' }
   - { port: 443, rule: allow, comment: 'Allow HTTPS' }
-  - { port: 51820, proto: udp, rule: allow, comment: 'wireguard' }
+  - { port: 51821, proto: udp, rule: allow, comment: 'wireguard' }
   - { from_ip: '172.16.0.0/12', port: 2049, rule: allow, comment: 'Allow NFS Server' }
   - { from_ip: '172.16.0.0/12', port: 33333, rule: allow, comment: 'Allow NFS static Mount port' }
   - { from_ip: '172.16.0.0/12', port: 6443, rule: allow, comment: 'Allow forward Kubelet' }

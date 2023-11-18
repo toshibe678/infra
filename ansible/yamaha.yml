@@ -48,6 +48,7 @@
 #          - ip host mayu.test 172.28.177.200
 #          - ip host ranko.test 172.28.100.64
           - ip host raspi.test 172.16.100.254
+          - ip host rasdev.test 172.16.100.253
           - ip host raspi-master.test 172.16.100.131
           - ip host raspi-worker1.test 172.16.100.132
           - ip host raspi-worker2.test 172.16.100.133
@@ -57,14 +58,11 @@
           - ip host l3-3560 172.28.1.1
           - ip host l2-2960 172.28.1.2
           - ip host printer 172.16.177.211
-          - ip host ip-phone 172.16.177.210
           - ip host vpnclient 172.16.77.201
           - ip host qnap 172.16.100.241
           - ip host qnap2 172.16.100.242
           - ip host qnap-bak1 172.28.100.241
 #          - ip host qnap-bak2 172.28.100.242
-          - ip host toshipc01 172.16.77.11
-          - ip host toshipc02 172.16.77.21
         save_when: changed
 
     # DHCP
@@ -74,16 +72,6 @@
           - dhcp service server
           - dhcp server rfc2131 compliant except remain-silent
           - dhcp scope 1 172.16.2.2-172.16.254.254/16
-          - dhcp scope bind 1 172.16.11.10 ethernet C8:7F:54:0A:75:21
-          - dhcp scope bind 1 172.16.77.21 ethernet b0:a4:60:c2:ce:05
-          - dhcp scope bind 1 172.16.100.12 ethernet 34:de:1a:59:1f:32
-          - dhcp scope bind 1 172.16.100.71 ethernet 00:25:22:a0:b0:4c
-          - dhcp scope bind 1 172.16.100.106 ethernet 8c:25:05:db:3a:20
-          - dhcp scope bind 1 172.16.100.107 ethernet 0c:9d:92:71:0c:bd
-          - dhcp scope bind 1 172.16.100.108 ethernet dc:72:9b:c7:23:9f
-          - dhcp scope bind 1 172.16.100.109 ethernet 1c:fe:2b:10:0d:8f
-          - dhcp scope bind 1 172.16.100.110 ethernet 98:41:5c:e3:1b:fc
-          - dhcp scope bind 1 172.16.100.131 ethernet dc:a6:32:91:b1:9a
           - dhcp scope bind 1 172.16.100.205 ethernet 58:cb:52:7d:dc:a2
           - dhcp scope bind 1 172.16.100.210 ethernet 00:0b:82:91:bf:db
           - dhcp scope bind 1 172.16.100.211 ethernet f4:a9:97:48:c2:a2

@@ -1,0 +1,9 @@
+---
+- name: wireguard setting
+  hosts:
+    - raspi.test
+    - rasdev.test
+  become: true
+  become_user: root
+  roles:
+    - { name: ./dependency_roles/wireguard }

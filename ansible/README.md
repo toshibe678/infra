@@ -16,7 +16,9 @@ ansible-playbook -D -l dev -i hosts_all.yml  --vault-password-file ~/.ssh/.ansib
 ```shell
 ansible-playbook -D -l shigure -i hosts_all.yml all.yml  --ask-pass --ask-become-pass --ask-vault-password -C
 ```
-ansible-playbook -D -l raspi -i hosts_all.yml all.yml --ask-vault-password -t runner
+ansible-playbook -D -l raspi -i hosts_all.yml all.yml  --ask-vault-password  --ask-become-pass  -t runner
+
+ansible-playbook -D -l rasdev.test -i hosts_all.yml all.yml -t wireguard  --ask-vault-password
 
 
 ### 接続できない場合

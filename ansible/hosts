@@ -3,12 +3,10 @@
 172.28.177.200 mayu.test
 172.28.100.64 ranko.test
 
-# vm
-172.28.100.53 dns.test
-#172.28.100.111 monitoring.test
 
 # raspi
 172.16.100.254 raspi.test
+172.16.100.253 rasdev.test
 172.16.100.131 ranko.test
 172.16.100.132 sae.test
 172.16.100.133 kaede.test
@@ -20,15 +18,9 @@
 172.28.1.1 l3-3560
 172.28.1.2 l2-2960
 172.16.177.211 printer
-172.16.177.210 ip-phone
-172.16.77.201 vpnclient
 
 # ネットワークドライブ
 172.16.100.241 qnap
 172.16.100.242 qnap2
 172.28.100.241 qnap-bak1
 172.28.100.242 qnap-bak2
-
-# 所有デバイス
-172.16.77.11 toshipc01
-172.16.77.21 toshipc02 lenovo-p14s

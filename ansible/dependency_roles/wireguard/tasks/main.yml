@@ -1,0 +1,35 @@
+---
+- name: Install wireguard
+  ansible.builtin.package:
+    name:
+      - wireguard-tools
+      - iptables
+      - qrencode
+    state: present
+  tags: wireguard
+
+- name: Create wireguard directory
+  ansible.builtin.file:
+    path: "{{ wire_guard_dir }}"
+    state: directory
+    mode: '0700'
+  tags: wireguard
+
+- name: wireguard server setting
+  ansible.builtin.template:
+    src: etc/wireguard/wg.conf
+    dest: "{{ wire_guard_dir }}/{{ wire_guard_server_vpn_interface }}.conf"
+    mode: '0600'
+  tags: wireguard
+  notify:
+    - Restart Wireguard service
+
+- name: client conf
+  ansible.builtin.template:
+    src: etc/wireguard/client.conf
+    dest: "{{ wire_guard_dir }}/{{ hostname }}_{{ item.name }}.conf"
+    mode: '0600'
+    owner: root
+    group: "{{ manage_user_group }}"
+  loop: "{{ wire_guard_clients }}"
+  tags: wireguard
