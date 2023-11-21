@@ -44,3 +44,7 @@ lint:
 	@docker compose run --rm ansible ansible-lint all.yml -c .ansible-lint
 	@docker compose run --rm terraform ./tflint.sh
 	@docker compose run --rm cloudformation cfn-lint -t ./**/*.yml
+
+raspi-up:
+	@docker compose build -f compose-raspi.yml
+	@docker compose up -d --foroe-recreate -f compose-raspi.yml

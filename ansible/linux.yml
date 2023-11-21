@@ -20,3 +20,12 @@
         update: yes
         key_file: "/home/{{ manage_user_name }}/.ssh/gitkey"
         accept_hostkey: true
+
+    - name: Clone infra github repository
+      git:
+        repo: git@github.com:toshibe678/infra.git
+        dest: "/home/{{ manage_user_name }}/infra"
+        clone: yes
+        update: yes
+        key_file: "/home/{{ manage_user_name }}/.ssh/gitkey"
+        accept_hostkey: true
