@@ -7,12 +7,6 @@ services:
     container_name: n8n_db
     restart: always
     image: postgres:11
-    environment:
-      - POSTGRES_USER
-      - POSTGRES_PASSWORD
-      - POSTGRES_DB
-      - POSTGRES_NON_ROOT_USER
-      - POSTGRES_NON_ROOT_PASSWORD
     env_file: ./.env.raspi
     command: 'postgres -c config_file="/etc/postgresql.conf"'
     volumes:
@@ -36,6 +30,7 @@ services:
       - DB_POSTGRESDB_DATABASE=${POSTGRES_DB}
       - DB_POSTGRESDB_USER=${POSTGRES_NON_ROOT_USER}
       - DB_POSTGRESDB_PASSWORD=${POSTGRES_NON_ROOT_PASSWORD}
+    env_file: ./.env.raspi
     ports:
       - 5678:5678
     links:

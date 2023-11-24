@@ -13,7 +13,9 @@
         append: yes
 
     - name: Clone scripts github repository
-      git:
+      become: yes
+      become_user: '{{ manage_user_name }}'
+      ansible.builtin.git:
         repo: git@github.com:toshibe678/scripts.git
         dest: "/home/{{ manage_user_name }}/scripts"
         clone: yes
@@ -22,7 +24,9 @@
         accept_hostkey: true
 
     - name: Clone infra github repository
-      git:
+      become: yes
+      become_user: '{{ manage_user_name }}'
+      ansible.builtin.git:
         repo: git@github.com:toshibe678/infra.git
         dest: "/home/{{ manage_user_name }}/infra"
         clone: yes
