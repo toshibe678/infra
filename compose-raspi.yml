@@ -24,7 +24,7 @@ services:
     ports:
       - 5678:5678
     links:
-      - postgres
+      - n8n_db
     volumes:
       - ./docker/n8n/data:/home/node/.n8n
     depends_on:
