@@ -10,7 +10,7 @@ services:
     env_file: ./.env.raspi
     command: 'postgres -c config_file="/etc/postgresql.conf"'
     volumes:
-      - db_storage:/var/lib/postgresql/data
+      - ./docker/n8n/db_data:/var/lib/postgresql/data
       - ./docker/n8n/init-data.sh:/docker-entrypoint-initdb.d/init-data.sh
     healthcheck:
       test: ['CMD-SHELL', 'pg_isready -h localhost -U postgres -d n8n']
@@ -29,7 +29,7 @@ services:
     links:
       - postgres
     volumes:
-      - n8n_storage:/home/node/.n8n
+      - ./docker/n8n/data:/home/node/.n8n
     depends_on:
       postgres:
         condition: service_healthy

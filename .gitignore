@@ -29,3 +29,10 @@ $RECYCLE.BIN/
 # Windows shortcuts
 *.lnk
 # End of https://www.gitignore.io
+
+docker/n8n/data/**
+!docker/n8n/data/**/
+!docker/n8n/data/**/.gitkeep
+docker/n8n/db_data/**
+!docker/n8n/db_data/**/
+!docker/n8n/db_data/**/.gitkeep
