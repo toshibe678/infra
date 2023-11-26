@@ -47,4 +47,4 @@ lint:
 
 raspi-up:
 	@docker compose -f compose-raspi.yml build
-	@docker compose -f compose-raspi.yml up -d --foroe-recreate
+	@docker compose -f compose-raspi.yml up -d

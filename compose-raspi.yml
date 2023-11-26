@@ -1,7 +1,4 @@
 services:
-  volumes:
-    db_storage:
-    n8n_storage:
   # データベース系--------------------------------------------------
   n8n_db:
     container_name: n8n_db
@@ -31,7 +28,7 @@ services:
     volumes:
       - ./docker/n8n/data:/home/node/.n8n
     depends_on:
-      postgres:
+      n8n_db:
         condition: service_healthy
     tty: true
     stdin_open: true
