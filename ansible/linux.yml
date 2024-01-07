@@ -87,5 +87,9 @@
         owner: root
         group: root
         mode: 0644
-      notify:
-        - Restart resolvconf service
+
+    - name: restart resolvconf
+      service:
+        name: resolvconf
+        state: restarted
+        enabled: yes
