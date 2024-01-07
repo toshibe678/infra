@@ -7,8 +7,6 @@ on:
   # 毎日23時に反映
   schedule:
     - cron: '3 23 * * *'
-  branches:
-    - main
 
 jobs:
   ansible-vpn-deploy:

@@ -7,8 +7,6 @@ on:
   # 毎日24時に反映
   schedule:
     - cron: '3 0 * * *'
-  branches:
-    - main
 
 jobs:
   ansible-rasdev-deploy:
