@@ -1,0 +1,6 @@
+---
+- name: Restart resolvconf service
+  ansible.builtin.service:
+    name: resolvconf
+    state: restarted
+    enabled: yes

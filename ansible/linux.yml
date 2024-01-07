@@ -71,5 +71,21 @@
     - name: Install wireguard client
       ansible.builtin.package:
         name:
-          - wireguard-tools
+          - wireguard
         state: present
+
+    - name: Install resolvconf
+      ansible.builtin.package:
+        name:
+          - resolvconf
+        state: present
+
+    - name: resolvconf set
+      template:
+        src: "etc/resolvconf/resolv.conf.d/head"
+        dest: /etc/resolvconf/resolv.conf.d/head
+        owner: root
+        group: root
+        mode: 0644
+      notify:
+        - Restart resolvconf service

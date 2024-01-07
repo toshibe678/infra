@@ -49,3 +49,8 @@
     group: "{{ manage_user_group }}"
   loop: "{{ wire_guard_clients }}"
   tags: wireguard
+
+- name: enable Wireguard service
+  ansible.builtin.service:
+    name: "{{ wire_guard_service }}"
+    enabled: yes

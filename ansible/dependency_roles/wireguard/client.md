@@ -30,3 +30,13 @@ qrencode -o /tmp/wireguard/raspi.test_smartphone01.png -t png < /etc/wireguard/r
 qrencode -o /tmp/wireguard/raspi.test_smartphone02.png -t png < /etc/wireguard/raspi.test_smartphone02.conf
 qrencode -o /tmp/wireguard/raspi.test_other01.png -t png < /etc/wireguard/raspi.test_other01.conf
 ```
+
+
+### linuxクライアントの設定
+各サーバー用のconfファイルを転送
+```
+scp /etc/wireguard/vpn.toshi.click_mayu.conf toshi@mayu.test:/tmp
+mv /tmp/vpn.toshi.click_mayu.conf /etc/wireguard/wg0.conf
+systemctl enable wg-quick@wg0
+systemctl start wg-quick@wg0
+```
