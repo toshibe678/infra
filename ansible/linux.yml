@@ -12,6 +12,10 @@
         groups: docker
         append: yes
 
+    - name: "git safe directory at /home/{{ manage_user_name }}/scripts"
+      shell: "git config --global --add safe.directory /home/{{ manage_user_name }}/scripts"
+      changed_when: false
+
     - name: Clone scripts github repository
       become: yes
       become_user: '{{ manage_user_name }}'
@@ -22,6 +26,10 @@
         update: yes
         key_file: "/home/{{ manage_user_name }}/.ssh/gitkey"
         accept_hostkey: true
+
+    - name: "git safe directory at /home/{{ manage_user_name }}/scripts"
+      shell: "git config --global --add safe.directory /home/{{ manage_user_name }}/infra"
+      changed_when: false
 
     - name: Clone infra github repository
       become: yes
