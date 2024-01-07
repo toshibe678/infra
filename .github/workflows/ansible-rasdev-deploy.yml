@@ -4,16 +4,11 @@ env:
   LANG: ja_JP.UTF-8
 
 on:
-  push:
-    paths:
-      - "ansible/**"
-      - ".github/workflows/ansible-rasdev-deploy.yml"
-    branches:
-      - main
-      - 'releases/**'
   # 毎日24時に反映
   schedule:
     - cron: '3 0 * * *'
+  branches:
+    - main
 
 jobs:
   ansible-rasdev-deploy:
