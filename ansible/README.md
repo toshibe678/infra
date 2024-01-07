@@ -27,3 +27,9 @@ ansible-playbook -D -l rasdev.test -i hosts_all.yml all.yml -t wireguard  --ask-
    * `touch ~/.ssh/authorized_keys && chmod 600 ~/.ssh/authorized_keys && vi ~/.ssh/authorized_keys `
 2. sudo設定
    * `sudo bash -c 'echo "toshi ALL=(ALL) NOPASSWD: ALL" > /etc/sudoers.d/toshi'`
+
+
+### vpnサーバー作成（VPS）
+```shell
+ansible-playbook -D -l vpn -i hosts_all.yml all.yml -u root --ask-pass --ask-vault-password
+```

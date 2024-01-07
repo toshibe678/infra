@@ -33,3 +33,9 @@
         update: yes
         key_file: "/home/{{ manage_user_name }}/.ssh/gitkey"
         accept_hostkey: true
+
+    - name: Install wireguard client
+      ansible.builtin.package:
+        name:
+          - wireguard-tools
+        state: present

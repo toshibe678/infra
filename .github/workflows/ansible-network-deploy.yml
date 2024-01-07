@@ -1,0 +1,40 @@
+name: Network Deploy Ansible
+
+env:
+  LANG: ja_JP.UTF-8
+
+on:
+  push:
+    paths:
+      - "ansible/**"
+      - ".github/workflows/ansible-network-deploy.yml"
+    branches:
+      - main
+      - 'releases/**'
+  # 毎日21時に反映
+  schedule:
+    - cron: '3 21 * * *'
+
+jobs:
+  ansible-network-deploy:
+    runs-on: self-hosted
+    container:
+      image: ghcr.io/toshibe678/infra/ansible
+      credentials:
+        username: ${{ github.actor }}
+        password: ${{ secrets.GITHUB_TOKEN }}
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+
+      - name: Deploy ansible server
+        env:
+          TOSHI_KEY: ${{ secrets.TOSHI_KEY }}
+          VAULT_PASS: ${{ secrets.VAULT_PASS }}
+        run: |
+          cd ansible
+          bash ./ci.sh
+          ansible-playbook -l network_switch -i hosts_all.yml all.yml --vault-password-file ~/.ssh/.ansible_vault_pass
+          rm -f ~/.ssh/id_rsa
+          rm -f ~/.ssh/.ansible_vault_pass

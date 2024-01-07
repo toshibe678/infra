@@ -58,34 +58,3 @@ samba_only_users:
 github_private_access_token: "{{ crypt_github_access_token }}"
 github_org_access_token: "{{ crypt_github_org_access_token }}"
 github_runner_labels: []
-
-wire_guard_server_host: "{{ crypt_wire_guard_server_host }}"
-wire_guard_server_private_key: "{{ crypt_wire_guard_server_private_key }}"
-wire_guard_server_public_key: M0WSPoqUVs1OBAXhBYr/MtQE8AhQoLlwSAW+FL5RZGk=
-wire_guard_server_wan_interface: wlan0
-wire_guard_clients:
-  - name: toshipc01
-    private_key: "{{ crypt_wire_guard_client_toshipc01_private_key }}"
-    public_key: "{{ crypt_wire_guard_client_toshipc01_public_key }}"
-    preshared_key: "{{ crypt_wire_guard_client_toshipc01_preshared_key }}"
-    ip_address: 172.16.101.10
-  - name: toshipc02
-    private_key: "{{ crypt_wire_guard_client_toshipc02_private_key }}"
-    public_key: "{{ crypt_wire_guard_client_toshipc02_public_key }}"
-    preshared_key: "{{ crypt_wire_guard_client_toshipc02_preshared_key }}"
-    ip_address: 172.16.101.11
-  - name: smartphone01
-    private_key: "{{ crypt_wire_guard_client_smartphone01_private_key }}"
-    public_key: "{{ crypt_wire_guard_client_smartphone01_public_key }}"
-    preshared_key: "{{ crypt_wire_guard_client_smartphone01_preshared_key }}"
-    ip_address: 172.16.101.101
-  - name: smartphone02
-    private_key: "{{ crypt_wire_guard_client_smartphone02_private_key }}"
-    public_key: "{{ crypt_wire_guard_client_smartphone02_public_key }}"
-    preshared_key: "{{ crypt_wire_guard_client_smartphone02_preshared_key }}"
-    ip_address: 172.16.101.102
-  - name: other01
-    private_key: "{{ crypt_wire_guard_client_other01_private_key }}"
-    public_key: "{{ crypt_wire_guard_client_other01_public_key }}"
-    preshared_key: "{{ crypt_wire_guard_client_other01_preshared_key }}"
-    ip_address: 172.16.101.201

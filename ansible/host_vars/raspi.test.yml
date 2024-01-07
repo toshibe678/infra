@@ -1,3 +1,4 @@
+---
 wire_guard_server_ip_address: 172.16.101.1
 wire_guard_server_listen_port: 51820
 ufw_reset: yes
@@ -16,3 +17,4 @@ ufw_default_forward_policy: ACCEPT
 ufw_logging: low
 ufw_applications:
   - { name: "Postfix" }
+github_runner_labels: [arm,linux,main]
