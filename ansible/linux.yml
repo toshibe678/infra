@@ -14,7 +14,20 @@
 
     - name: "git safe directory at /home/{{ manage_user_name }}/scripts"
       shell: "git config --global --add safe.directory /home/{{ manage_user_name }}/scripts"
-      changed_when: false
+
+    - name: Check if scripts directory exists
+      stat:
+        path: "/home/{{ manage_user_name }}/scripts"
+      register: scripts_dir_stat
+
+    - name: すでにクローン済みの場合ディレクトリとファイルのパーミッションを再帰的に変更する
+      file:
+        path: "/home/{{ manage_user_name }}/scripts"
+        state: directory
+        owner: "{{ manage_user_name }}"
+        group: "{{ manage_user_group }}"
+        recurse: yes
+      when: scripts_dir_stat.stat.exists
 
     - name: Clone scripts github repository
       become: yes
@@ -29,7 +42,20 @@
 
     - name: "git safe directory at /home/{{ manage_user_name }}/scripts"
       shell: "git config --global --add safe.directory /home/{{ manage_user_name }}/infra"
-      changed_when: false
+
+    - name: Check if infra directory exists
+      stat:
+        path: "/home/{{ manage_user_name }}/infra"
+      register: infra_dir_stat
+
+    - name: すでにクローン済みの場合ディレクトリとファイルのパーミッションを再帰的に変更する
+      file:
+        path: "/home/{{ manage_user_name }}/infra"
+        state: directory
+        owner: "{{ manage_user_name }}"
+        group: "{{ manage_user_group }}"
+        recurse: yes
+      when: infra_dir_stat.stat.exists
 
     - name: Clone infra github repository
       become: yes

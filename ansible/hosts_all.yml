@@ -17,10 +17,10 @@ all:
         mayu:
           hosts:
             mayu.test: { }
-        dev:
-          hosts:
-            dev.test:
-              ansible_connection: local
+#        dev:
+#          hosts:
+#            dev.test:
+#              ansible_connection: local
         raspi:
           hosts:
             raspi.test: { }
