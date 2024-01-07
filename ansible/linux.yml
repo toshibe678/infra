@@ -80,10 +80,10 @@
           - resolvconf
         state: present
 
-    - name: resolvconf set
+    - name: /etc/systemd/resolved.conf set
       template:
-        src: "etc/resolvconf/resolv.conf.d/head"
-        dest: /etc/resolvconf/resolv.conf.d/head
+        src: "etc/systemd/resolved.conf"
+        dest: /etc/systemd/resolved.conf
         owner: root
         group: root
         mode: 0644
@@ -91,5 +91,11 @@
     - name: restart resolvconf
       service:
         name: resolvconf
+        state: restarted
+        enabled: yes
+
+    - name: restart resolvconf
+      service:
+        name: systemd-resolved
         state: restarted
         enabled: yes
