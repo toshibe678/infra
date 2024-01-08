@@ -44,25 +44,10 @@
     - name: set DNS hosts setting
       yamaha_network.rtx.rtx_config:
         lines:
-#          - ip host shigure.test 172.28.177.100
-#          - ip host mayu.test 172.28.177.200
-#          - ip host ranko.test 172.28.100.64
           - ip host raspi.test 172.16.100.254
           - ip host rasdev.test 172.16.100.253
-          - ip host raspi-master.test 172.16.100.131
-          - ip host raspi-worker1.test 172.16.100.132
-          - ip host raspi-worker2.test 172.16.100.133
-          - ip host raspi-worker3.test 172.16.100.134
           - ip host router.test 172.16.1.1
           - ip host wifi 172.16.254.101
-          - ip host l3-3560 172.28.1.1
-          - ip host l2-2960 172.28.1.2
-          - ip host printer 172.16.177.211
-          - ip host vpnclient 172.16.77.201
-          - ip host qnap 172.16.100.241
-          - ip host qnap2 172.16.100.242
-          - ip host qnap-bak1 172.28.100.241
-#          - ip host qnap-bak2 172.28.100.242
         save_when: changed
 
     # DHCP
@@ -77,6 +62,10 @@
           - dhcp scope bind 1 172.16.100.211 ethernet f4:a9:97:48:c2:a2
           - dhcp scope bind 1 172.16.100.241 ethernet 24:5e:be:1f:34:c8
           - dhcp scope bind 1 172.16.100.251 ethernet f4:69:42:17:4c:1a
+          # shigure
+          #
+          # mayu
+          - dhcp scope bind 1 172.16.77.200 ethernet bc:5f:f4:d8:4a:cc
         save_when: changed
 
 
