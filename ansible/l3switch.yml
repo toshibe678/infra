@@ -58,19 +58,19 @@
           - conf t
           - ip dhcp pool DHCP_POOL_VLAN_99
           - network 172.28.1.11 255.255.255.0
-          - dns-server 172.16.1.1 172.28.100.53 8.8.8.8
+          - dns-server 172.16.1.1 8.8.8.8
           - default-router 172.28.1.1
           - ip dhcp pool DHCP_POOL_VLAN_77
           - network 172.28.77.0 255.255.255.0
-          - dns-server 172.16.1.1 172.28.100.53 8.8.8.8
+          - dns-server 172.16.1.1 8.8.8.8
           - default-router 172.28.77.1
           - ip dhcp pool DHCP_POOL_VLAN_100
           - network 172.28.100.0 255.255.255.0
-          - dns-server 172.16.1.1 172.28.100.53 8.8.8.8
+          - dns-server 172.16.1.1 8.8.8.8
           - default-router 172.28.100.1
           - ip dhcp pool DHCP_POOL_VLAN_177
           - network 172.28.177.0 255.255.255.0
-          - dns-server 172.16.1.1 172.28.100.53 8.8.8.8
+          - dns-server 172.16.1.1 8.8.8.8
           - default-router 172.28.177.1
 
     - name: setting router rip

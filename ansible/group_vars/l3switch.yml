@@ -16,28 +16,28 @@ interfaces:
     desc: "access port"
     enabled: true
     mode: access
-    vlan_id: 100
+    vlan_id: 177
 #    ipv4: "10.100.101.253/24"
 #    ipv6: "2001:db8:101::f/64"
   - ios_if: "GigabitEthernet0/3"
     desc: "access port"
     enabled: true
     mode: access
-    vlan_id: 100
+    vlan_id: 177
   #    ipv4: "dhcp"
   #    ipv6: "2001:db8:901:beef::1/128"
   - ios_if: "GigabitEthernet0/4"
     desc: "access port"
     enabled: true
     mode: access
-    vlan_id: 100
+    vlan_id: 177
 #    ipv4: "10.100.201.254/24"
 #    ipv6: "2001:db8:201::a/64"
   - ios_if: "GigabitEthernet0/5"
     desc: "access port"
     enabled: true
     mode: access
-    vlan_id: 100
+    vlan_id: 177
   - ios_if: "GigabitEthernet0/6"
     desc: "trunk port"
     enabled: true

@@ -11,6 +11,10 @@ on:
     paths:
       - "docker/tools/**"
 
+concurrency:
+  group: ${{ github.ref }}
+  cancel-in-progress: true
+
 jobs:
   tools_push_to_registry:
     name: Push Docker image to Docker Hub
