@@ -26,13 +26,8 @@ vlans:
     mtu: 1500
 
 dhcps:
-  - name: "toshipc01"
-    host: 172.28.77.10
-    subnet: 255.255.255.0
-    address: 00d8.61a1.519f
-    identifier: 0100.d861.a151.9f
   - name: "lenovo-p14s"
-    host: 172.28.77.21
+    host: 172.16.77.21
     subnet: 255.255.255.0
     address: b0a4.60c2.ce05
     identifier: 01b0.a460.c2ce.05

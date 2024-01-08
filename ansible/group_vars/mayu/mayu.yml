@@ -8,16 +8,15 @@ spin_out_hdd_list:
 
 ufw_reset: yes
 ufw_rules:
-  - { from_ip: '127.0.0.0/8', comment: 'Allow localhost' }
+  - { from_ip: '127.0.0.1/32', comment: 'Allow localhost' }
   - { port: 22, rule: limit, comment: 'Allow Limit SSH' }
   - { port: 25, rule: allow, comment: 'Allow Mail' }
   - { port: 80, rule: allow, comment: 'Allow HTTP' }
   - { port: 443, rule: allow, comment: 'Allow HTTPS' }
   - { port: 9100, rule: allow, comment: 'Allow Node Exporter' }
-  - { port: 24224, rule: allow, comment: 'Allow Fluentd' }
-  - { from_ip: '172.16.0.0/12', port: 3389, rule: allow, comment: 'Allow RDP' }
-  - { from_ip: '172.16.0.0/12', port: 139, rule: allow, comment: 'Allow Samba' }
-  - { from_ip: '172.16.0.0/12', port: 445, rule: allow, comment: 'Allow Samba' }
+  - { port: 3389, rule: allow, comment: 'Allow RDP' }
+  - { port: 139, rule: allow, comment: 'Allow Samba' }
+  - { port: 445, rule: allow, comment: 'Allow Samba' }
 #  - { from_ip: '172.16.0.0/16', port: 10250, rule: allow, comment: "Kubernetes Worker"  }
 #  - { from_ip: '172.16.0.0/16', port: "30000:32767", proto: tcp, rule: allow, comment: "Kubernetes Worker"  }
 ufw_default_forward_policy: ACCEPT

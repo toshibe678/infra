@@ -1,8 +1,6 @@
 # bare metal
 172.28.177.100 shigure.click shigure.test mail.test www.test syslog.test snmp.test file file.test
-172.28.177.200 mayu.test
-172.28.100.64 ranko.test
-
+172.16.77.200 mayu.test
 
 # raspi
 172.16.100.254 raspi.test
@@ -15,12 +13,9 @@
 # nw
 172.16.1.1 rtx1210 router
 172.16.254.101 ZenWiFi_XD4 wifi
-172.28.1.1 l3-3560
-172.28.1.2 l2-2960
-172.16.177.211 printer
 
 # ネットワークドライブ
 172.16.100.241 qnap
 172.16.100.242 qnap2
-172.28.100.241 qnap-bak1
-172.28.100.242 qnap-bak2
+172.16.100.243 qnap-bak1
+172.16.100.244 qnap-bak2

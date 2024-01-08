@@ -38,7 +38,7 @@ ansible_user_password: "{{ crypt_ansible_user_password }}"
 # モニタリング
 mail_transfer_address: "{{ crypt_mail_transfer_address }}"
 
-samba_interfaces: "127.0.0.0/8 172.16.0.0/12 172.28.0.0/16 172.28.177.0/24 192.168.0.0/16 172.16.101.0/24"
+samba_interfaces: "172.16.0.0/16"
 samba_users:
   - name: toshi
     password: "{{ crypt_toshi_samba_users_pass }}"

@@ -63,7 +63,7 @@
           - dhcp scope bind 1 172.16.100.241 ethernet 24:5e:be:1f:34:c8
           - dhcp scope bind 1 172.16.100.251 ethernet f4:69:42:17:4c:1a
           # shigure
-          #
+          - dhcp scope bind 1 172.16.77.100 ethernet 00:d8:61:a1:51:9b
           # mayu
           - dhcp scope bind 1 172.16.77.200 ethernet bc:5f:f4:d8:4a:cc
         save_when: changed
