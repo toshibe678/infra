@@ -99,3 +99,58 @@ wire_guard_clients:
     preshared_key: "{{ crypt_wire_guard_client_sister2_preshared_key }}"
     ip_address: 172.16.101.203
     forward_address: 172.16.101.0/24
+
+  - name: raspi
+    private_key: "{{ crypt_wire_guard_client_raspi_private_key }}"
+    public_key: "{{ crypt_wire_guard_client_raspi_public_key }}"
+    preshared_key: "{{ crypt_wire_guard_client_raspi_preshared_key }}"
+    ip_address: 172.16.101.51
+    forward_address: 172.16.101.0/24
+  - name: rasdev
+    private_key: "{{ crypt_wire_guard_client_rasdev_private_key }}"
+    public_key: "{{ crypt_wire_guard_client_rasdev_public_key }}"
+    preshared_key: "{{ crypt_wire_guard_client_rasdev_preshared_key }}"
+    ip_address: 172.16.101.52
+    forward_address: 172.16.101.0/24
+  - name: sae
+    private_key: "{{ crypt_wire_guard_client_sae_private_key }}"
+    public_key: "{{ crypt_wire_guard_client_sae_public_key }}"
+    preshared_key: "{{ crypt_wire_guard_client_sae_preshared_key }}"
+    ip_address: 172.16.101.53
+    forward_address: 172.16.101.0/24
+  - name: kaede
+    private_key: "{{ crypt_wire_guard_client_kaede_private_key }}"
+    public_key: "{{ crypt_wire_guard_client_kaede_public_key }}"
+    preshared_key: "{{ crypt_wire_guard_client_kaede_preshared_key }}"
+    ip_address: 172.16.101.54
+    forward_address: 172.16.101.0/24
+  - name: shiki
+    private_key: "{{ crypt_wire_guard_client_shiki_private_key }}"
+    public_key: "{{ crypt_wire_guard_client_shiki_public_key }}"
+    preshared_key: "{{ crypt_wire_guard_client_shiki_preshared_key }}"
+    ip_address: 172.16.101.55
+    forward_address: 172.16.101.0/24
+  - name: kako
+    private_key: "{{ crypt_wire_guard_client_kako_private_key }}"
+    public_key: "{{ crypt_wire_guard_client_kako_public_key }}"
+    preshared_key: "{{ crypt_wire_guard_client_kako_preshared_key }}"
+    ip_address: 172.16.101.56
+    forward_address: 172.16.101.0/24
+  - name: ayaka
+    private_key: "{{ crypt_wire_guard_client_ayaka_private_key }}"
+    public_key: "{{ crypt_wire_guard_client_ayaka_public_key }}"
+    preshared_key: "{{ crypt_wire_guard_client_ayaka_preshared_key }}"
+    ip_address: 172.16.101.57
+    forward_address: 172.16.101.0/24
+  - name: other2
+    private_key: "{{ crypt_wire_guard_client_other2_private_key }}"
+    public_key: "{{ crypt_wire_guard_client_other2_public_key }}"
+    preshared_key: "{{ crypt_wire_guard_client_other2_preshared_key }}"
+    ip_address: 172.16.101.58
+    forward_address: 172.16.101.0/24
+  - name: other3
+    private_key: "{{ crypt_wire_guard_client_other3_private_key }}"
+    public_key: "{{ crypt_wire_guard_client_other3_public_key }}"
+    preshared_key: "{{ crypt_wire_guard_client_other3_preshared_key }}"
+    ip_address: 172.16.101.59
+    forward_address: 172.16.101.0/24

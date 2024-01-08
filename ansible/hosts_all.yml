@@ -11,6 +11,8 @@ all:
         vpn:
           hosts:
             vpn.toshi.click: { }
+            raspi.test: { }
+            rasdev.test: { }
         shigure:
           hosts:
             shigure.test: { }
