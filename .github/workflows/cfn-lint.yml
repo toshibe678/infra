@@ -9,10 +9,6 @@ on:
       - develop
       - 'releases/**'
 
-concurrency:
-  group: ${{ github.ref }}
-  cancel-in-progress: true
-
 jobs:
   cloudformation-linter:
     runs-on: self-hosted

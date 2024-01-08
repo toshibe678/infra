@@ -10,10 +10,6 @@ on:
       - develop
       - 'releases/**'
 
-concurrency:
-  group: ${{ github.ref }}
-  cancel-in-progress: true
-
 jobs:
   ansible-lint:
     runs-on: self-hosted
