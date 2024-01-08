@@ -1,5 +1,5 @@
 # bare metal
-172.28.177.100 shigure.click shigure.test mail.test www.test syslog.test snmp.test file file.test
+172.16.77.100 shigure.click shigure.test mail.test www.test syslog.test snmp.test file file.test
 172.16.77.200 mayu.test
 
 # raspi

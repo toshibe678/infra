@@ -1,8 +1,6 @@
 ---
 collections:
-  - name: cisco.ios
   - name: yamaha_network.rtx
-    version: 1.0.1
 
 # ansible-galaxy install -r requirements.yml -p roles --force
 roles:
