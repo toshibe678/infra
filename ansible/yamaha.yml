@@ -65,6 +65,9 @@
           - dhcp scope bind 1 172.16.77.100 ethernet 00:d8:61:a1:51:9b
           # mayu
           - dhcp scope bind 1 172.16.77.200 ethernet bc:5f:f4:d8:4a:cc
+          # QNAP
+          - dhcp scope bind 1 172.16.100.241 ethernet 24:5E:BE:04:9A:F8
+          - dhcp scope bind 1 172.16.100.242 ethernet 24:5E:BE:04:9A:F9
           # QNAP TS-231P
           - dhcp scope bind 1 172.16.100.243 ethernet 24:5e:be:1f:34:c8
           - dhcp scope bind 1 172.16.100.244 ethernet 24:5e:be:1f:34:c9
@@ -78,7 +81,7 @@
           - dhcp scope bind 1 172.16.250.5 ethernet 70:85:c2:40:d2:0b
           # yukari ROG-Phone-5
           - dhcp scope bind 1 172.16.250.6 ethernet 8e:4a:fc:c8:ac:1a
-          # amazon-Fire TV Stick
+          # amazon-Fire TV Stick 4k max
           - dhcp scope bind 1 172.16.250.7 ethernet 10:ce:02:7f:90:76
           # fujie pc
           - dhcp scope bind 1 172.16.250.8 ethernet 28:cd:c4:c5:86:2f
@@ -86,6 +89,10 @@
           - dhcp scope bind 1 172.16.250.9 ethernet 1c:93:c4:72:59:4c
           # switch
           - dhcp scope bind 1 172.16.250.10 ethernet bc:ce:25:f9:ad:78
+          # amazon-Fire TV Stick 4k
+          - dhcp scope bind 1 172.16.250.11 ethernet 1c:fe:2b:10:0d:8f
+          # Pixel-3-XL
+          - dhcp scope bind 1 172.16.250.11 ethernet b2:a0:91:3b:64:45
         save_when: changed
 
 #    - name: set description
