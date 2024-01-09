@@ -1,4 +1,5 @@
 ---
+wire_guard_server_host: "substitute-vpn.toshi.click"
 wire_guard_server_ip_address: 172.16.101.2
 wire_guard_server_listen_port: 51821
 ufw_reset: yes
