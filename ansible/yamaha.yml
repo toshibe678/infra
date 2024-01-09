@@ -68,6 +68,18 @@
           # QNAP TS-231P
           - dhcp scope bind 1 172.16.100.243 ethernet 24:5e:be:1f:34:c8
           - dhcp scope bind 1 172.16.100.244 ethernet 24:5e:be:1f:34:c9
+          # pixel4a
+          - dhcp scope bind 1 172.16.250.2 ethernet e2:3c:3d:2d:cb:b5
+          # pixel6
+          - dhcp scope bind 1 172.16.250.3 ethernet 0c:c4:13:1d:69:4d
+          # pixel6a
+          - dhcp scope bind 1 172.16.250.4 ethernet 2e:28:4f:fd:b9:95
+          # yukari pc
+          - dhcp scope bind 1 172.16.250.5 ethernet 70:85:c2:40:d2:0b
+          # yukari ROG-Phone-5
+          - dhcp scope bind 1 172.16.250.6 ethernet 8e:4a:fc:c8:ac:1a
+          # amazon-Fire TV Stick
+          - dhcp scope bind 1 172.16.250.7 ethernet 1c:fe:2b:10:0d:8f
         save_when: changed
 
 #    - name: set description
