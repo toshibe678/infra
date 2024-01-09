@@ -2,6 +2,8 @@
 - name: wireguard setting
   hosts:
     - vpn
+    - raspi.test
+    - rasdev.test
   become: true
   become_user: root
   roles:
