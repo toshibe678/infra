@@ -79,7 +79,13 @@
           # yukari ROG-Phone-5
           - dhcp scope bind 1 172.16.250.6 ethernet 8e:4a:fc:c8:ac:1a
           # amazon-Fire TV Stick
-          - dhcp scope bind 1 172.16.250.7 ethernet 1c:fe:2b:10:0d:8f
+          - dhcp scope bind 1 172.16.250.7 ethernet 10:ce:02:7f:90:76
+          # fujie pc
+          - dhcp scope bind 1 172.16.250.8 ethernet 28:cd:c4:c5:86:2f
+          # firetablet 10 hd
+          - dhcp scope bind 1 172.16.250.9 ethernet 1c:93:c4:72:59:4c
+          # switch
+          - dhcp scope bind 1 172.16.250.10 ethernet bc:ce:25:f9:ad:78
         save_when: changed
 
 #    - name: set description
