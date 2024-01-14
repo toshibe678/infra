@@ -57,6 +57,12 @@
           - dhcp service server
           - dhcp server rfc2131 compliant except remain-silent
           - dhcp scope 1 172.16.2.2-172.16.254.254/16
+          # toshipc01
+          - dhcp scope bind 1 172.16.77.10 ethernet C8:7F:54:0A:75:21
+          # toshipc02
+          - dhcp scope bind 1 172.16.77.21 ethernet b0:a4:60:c2:ce:05
+          # ranko
+          - dhcp scope bind 1 172.16.77.77 ethernet 04:7c:16:54:93:ad
           # shigure
           - dhcp scope bind 1 172.16.77.100 ethernet 00:d8:61:a1:51:9b
           # mayu
