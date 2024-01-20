@@ -17,3 +17,4 @@ vagrantで立ち上げたVMでテストすつ場合
 ```shell
 ansible-playbook -D -l dev -i hosts_all.yml all.yml --ask-vault-password
 ```
+
