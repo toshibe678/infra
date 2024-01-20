@@ -1,0 +1,36 @@
+name: manual Deploy Ansible
+
+env:
+  LANG: ja_JP.UTF-8
+
+on:
+  workflow_dispatch:
+    inputs:
+      target:
+        description: 'ansible ターゲットグループ名'
+        required: true
+        default: 'mayu'
+
+jobs:
+  ansible-manual-deploy:
+    runs-on: self-hosted
+    container:
+      image: ghcr.io/toshibe678/infra/ansible
+      credentials:
+        username: ${{ github.actor }}
+        password: ${{ secrets.GITHUB_TOKEN }}
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+
+      - name: Deploy ansible server
+        env:
+          TOSHI_KEY: ${{ secrets.TOSHI_KEY }}
+          VAULT_PASS: ${{ secrets.VAULT_PASS }}
+        run: |
+          cd ansible
+          bash ./ci.sh
+          ansible-playbook -l ${{ github.event.inputs.target }} -i hosts_all.yml all.yml --vault-password-file ~/.ssh/.ansible_vault_pass
+          rm -f ~/.ssh/id_rsa
+          rm -f ~/.ssh/.ansible_vault_pass
