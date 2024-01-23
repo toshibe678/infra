@@ -2,7 +2,7 @@
 ```
 [Interface]
 PrivateKey = クライアント用PrivateKey(client_private.key)
-Address = 172.16.101.11/24
+Address = 192.168.101.11/24
 DNS = 172.16.1.1 8.8.8.8
 
 [Peer]

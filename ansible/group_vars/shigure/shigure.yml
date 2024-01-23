@@ -1,6 +1,6 @@
 server_group: "shigure"
 
-samba_interfaces: "172.16.0.0/16 172.16.101.71/24"
+samba_interfaces: "172.16.0.0/16 192.168.101.71/24"
 
 spin_out_hdd_list:
   - { name: /dev/sda }

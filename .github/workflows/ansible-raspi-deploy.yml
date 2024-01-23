@@ -9,7 +9,7 @@ on:
     - cron: '3 23 * * *'
 
 jobs:
-  ansible-vpn-deploy:
+  ansible-raspi-deploy:
     runs-on: [self-hosted,sub]
     container:
       image: ghcr.io/toshibe678/infra/ansible

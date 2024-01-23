@@ -3,7 +3,7 @@ wire_guard_server_host: example.com
 wire_guard_server_private_key: "hoge"
 wire_guard_dir: /etc/wireguard
 wire_guard_service: wg-quick@wg0
-wire_guard_server_ip_address: 172.16.101.1
+wire_guard_server_ip_address: 192.168.101.1
 wire_guard_server_listen_port: 51820
 wire_guard_server_vpn_interface: wg0
 wire_guard_server_wan_interface: eth0
