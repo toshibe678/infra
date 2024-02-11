@@ -1,21 +1,38 @@
+# pc
+192.168.101.10 toshipc01.test
+192.168.101.11 toshipc02.test
+192.168.101.73 ranko.test
+# smartphone
+192.168.101.21 smartphone01.test
+192.168.101.22 smartphone02.test
+# other
+192.168.101.99 other01.test
+192.168.101.58 other02.test
+192.168.101.59 other03.test
 # bare metal
-172.16.77.100 shigure.click shigure.test mail.test www.test syslog.test snmp.test file file.test
-172.16.77.200 mayu.test
+192.168.101.71 shigure.click shigure.test mail.test www.test syslog.test snmp.test file file.test dhcp.test dns.test
+192.168.101.72 mayu.test
+
+# server
+192.168.101.57 ayaka.test
+
+# NAS
+192.168.101.91 qnapmain.test
+192.168.101.92 qnapsub.test
 
 # raspi
-172.16.100.254 raspi.test
-172.16.100.253 rasdev.test
-172.16.100.131 ranko.test
-172.16.100.132 sae.test
-172.16.100.133 kaede.test
-172.16.100.134 shiki.test
+192.168.101.51 raspi.test
+192.168.101.52 rasdev.test
+192.168.101.53 sae.test
+192.168.101.54 kaede.test
+192.168.101.55 shiki.test
+192.168.101.56 kako.test
 
 # nw
 172.16.1.1 rtx1210 router
 172.16.254.101 ZenWiFi_XD4 wifi
 
-# ネットワークドライブ
-172.16.100.241 qnap
-172.16.100.242 qnap2
-172.16.100.243 qnap-bak1
-172.16.100.244 qnap-bak2
+# family
+192.168.101.201 mother.test
+192.168.101.202 sister1.test
+192.168.101.203 sister2.test
