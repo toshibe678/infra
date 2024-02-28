@@ -81,10 +81,10 @@
           - dhcp scope bind 1 172.16.250.3 ethernet 0c:c4:13:1d:69:4d
           # pixel6a
           - dhcp scope bind 1 172.16.250.4 ethernet 2e:28:4f:fd:b9:95
-          # yukari pc
-          - dhcp scope bind 1 172.16.250.5 ethernet 70:85:c2:40:d2:0b
-          # yukari ROG-Phone-5
-          - dhcp scope bind 1 172.16.250.6 ethernet 8e:4a:fc:c8:ac:1a
+#          # yukari pc
+#          - dhcp scope bind 1 172.16.250.5 ethernet 70:85:c2:40:d2:0b
+#          # yukari ROG-Phone-5
+#          - dhcp scope bind 1 172.16.250.6 ethernet 8e:4a:fc:c8:ac:1a
           # amazon-Fire TV Stick 4k max
           - dhcp scope bind 1 172.16.250.7 ethernet 10:ce:02:7f:90:76
           # fujie pc
@@ -96,7 +96,7 @@
           # amazon-Fire TV Stick 4k
           - dhcp scope bind 1 172.16.250.11 ethernet 1c:fe:2b:10:0d:8f
           # Pixel-3-XL
-          - dhcp scope bind 1 172.16.250.11 ethernet b2:a0:91:3b:64:45
+          - dhcp scope bind 1 172.16.250.12 ethernet b2:a0:91:3b:64:45
 
         save_when: changed
 
