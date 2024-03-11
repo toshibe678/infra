@@ -11,7 +11,8 @@
 192.168.101.59 other03.test
 # bare metal
 192.168.101.71 shigure.click shigure.test mail.test www.test syslog.test snmp.test file file.test dhcp.test dns.test
-192.168.101.72 mayu.test
+#192.168.101.72 mayu.test
+172.16.77.200 mayu.test
 
 # server
 192.168.101.57 ayaka.test
