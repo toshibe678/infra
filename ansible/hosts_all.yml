@@ -32,7 +32,6 @@ all:
         bare_metal:
           children:
             shigure: { }
-            mayu: { }
         vm:
           children:
             dev: { }

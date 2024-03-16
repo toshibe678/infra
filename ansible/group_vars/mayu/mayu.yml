@@ -2,11 +2,11 @@ server_group: "mayu"
 
 samba_interfaces: "172.16.0.0/16 192.168.101.72/24"
 
-spin_out_hdd_list:
-  - { name: /dev/sdb }
-  - { name: /dev/sdc }
-  - { name: /dev/sdd }
-  - { name: /dev/sde }
+#spin_out_hdd_list:
+#  - { name: /dev/sdb }
+#  - { name: /dev/sdc }
+#  - { name: /dev/sdd }
+#  - { name: /dev/sde }
 
 ufw_reset: yes
 ufw_rules:
