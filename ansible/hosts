@@ -9,17 +9,14 @@
 192.168.101.99 other01.test
 192.168.101.58 other02.test
 192.168.101.59 other03.test
-# bare metal
-192.168.101.71 shigure.click shigure.test mail.test www.test syslog.test snmp.test file file.test dhcp.test dns.test
-#192.168.101.72 mayu.test
-172.16.77.200 mayu.test
 
 # server
 192.168.101.57 ayaka.test
+192.168.101.71 shigure.test
+192.168.101.72 mayu.test
 
 # NAS
-192.168.101.91 qnapmain.test
-192.168.101.92 qnapsub.test
+192.168.101.91 qnap.test
 
 # raspi
 192.168.101.51 raspi.test
@@ -30,8 +27,7 @@
 192.168.101.56 kako.test
 
 # nw
-172.16.1.1 rtx1210 router
-172.16.254.101 ZenWiFi_XD4 wifi
+172.16.1.1 router.test
 
 # family
 192.168.101.201 mother.test
