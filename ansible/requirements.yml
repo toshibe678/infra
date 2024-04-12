@@ -1,16 +1,11 @@
 ---
-collections:
-  - name: yamaha_network.rtx
+#collections:
+#  - name: yamaha_network.rtx
 
 # ansible-galaxy install -r requirements.yml -p roles --force
 roles:
   - src: https://github.com/toshi-click/roles_common.git
     name: common
-    scm: git
-    version: "master"
-
-  - src: https://github.com/toshi-click/roles_dev_tool_install.git
-    name: dev_tool_install
     scm: git
     version: "master"
 
@@ -24,10 +19,10 @@ roles:
     scm: git
     version: "master"
 
-  - src: https://github.com/toshi-click/roles_monitoring
-    name: monitoring
-    scm: git
-    version: "master"
+#  - src: https://github.com/toshi-click/roles_monitoring
+#    name: monitoring
+#    scm: git
+#    version: "master"
 
   - src: https://github.com/toshi-click/roles_sshd.git
     name: sshd

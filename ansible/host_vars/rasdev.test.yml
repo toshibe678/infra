@@ -20,3 +20,5 @@ ufw_applications:
   - { name: "Postfix" }
 
 github_runner_labels: [arm,linux,sub]
+
+docker_remote_api_enable: "yes"

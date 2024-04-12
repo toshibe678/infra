@@ -1,0 +1,26 @@
+# ansibleで書き戻されるのでansibleから編集すること
+127.0.0.1   localhost localhost.localdomain localhost4 localhost4.localdomain4
+::1         localhost localhost.localdomain localhost6 localhost6.localdomain6
+
+# The following lines are desirable for IPv6 capable hosts
+::1     ip6-localhost ip6-loopback
+fe00::0 ip6-localnet
+ff00::0 ip6-mcastprefix
+ff02::1 ip6-allnodes
+ff02::2 ip6-allrouters
+
+{% if hosts.etc_hosts_setting is defined %}
+{% if hosts.etc_hosts_setting|length > 0 %}
+{% for item in hosts.etc_hosts_setting %}
+{{ item.ip }}    {{ item.name }}
+{% endfor %}
+{% endif %}
+{% endif %}
+
+{% if hosts_setting is defined %}
+{% if hosts_setting|length > 0 %}
+{% for item in hosts_setting %}
+{{ item.ip }}    {{ item.name }}
+{% endfor %}
+{% endif %}
+{% endif %}

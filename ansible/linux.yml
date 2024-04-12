@@ -99,3 +99,12 @@
         name: systemd-resolved
         state: restarted
         enabled: yes
+
+    - name: Generate /etc/hosts file
+      template:
+        src: "etc/hosts"
+        dest: "/etc/hosts"
+        owner: root
+        group: root
+        mode: 0644
+        backup: true

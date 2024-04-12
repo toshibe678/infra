@@ -7,7 +7,6 @@
   ignore_unreachable: true
   roles:
     - { role: "common" }
-    - { role: "dev_tool_install" }
     - { role: "sshd" }
     #    - { role: "monitoring" }
     - { role: "docker", when: docker_install, tags: docker }
