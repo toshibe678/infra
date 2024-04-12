@@ -9,6 +9,7 @@ ufw_rules:
   - { port: 25, rule: allow, comment: 'Allow Mail' }
   - { port: 80, rule: allow, comment: 'Allow HTTP' }
   - { port: 443, rule: allow, comment: 'Allow HTTPS' }
+  - { port: 2375, rule: allow, comment: 'Allow Docker API' }
   - { port: 51820, proto: udp, rule: allow, comment: 'wireguard' }
   - { from_ip: '172.16.0.0/12', port: 2049, rule: allow, comment: 'Allow NFS Server' }
   - { from_ip: '172.16.0.0/12', port: 33333, rule: allow, comment: 'Allow NFS static Mount port' }
@@ -18,6 +19,7 @@ ufw_default_forward_policy: ACCEPT
 ufw_logging: low
 ufw_applications:
   - { name: "Postfix" }
+
 github_runner_labels: [arm,linux,main]
 
 docker_remote_api_enable: "yes"
