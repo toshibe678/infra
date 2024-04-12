@@ -10,6 +10,7 @@ ufw_rules:
   - { port: 443, rule: allow, comment: 'Allow HTTPS' }
   - { port: 9100, rule: allow, comment: 'Allow Node Exporter' }
   - { port: 24224, rule: allow, comment: 'Allow Fluentd' }
+  - { port: 2375, rule: allow, comment: 'Allow Docker API' }
   - { from_ip: '172.16.0.0/12', port: 3389, rule: allow, comment: 'AllowXRDP' }
   - { from_ip: '172.16.0.0/12', port: 139, rule: allow, comment: 'Allow Samba' }
   - { from_ip: '172.16.0.0/12', port: 445, rule: allow, comment: 'Allow Samba' }
@@ -20,3 +21,5 @@ ufw_default_forward_policy: ACCEPT
 ufw_logging: low
 ufw_applications:
   - { name: "Postfix" }
+
+docker_remote_api_enable: "yes"
