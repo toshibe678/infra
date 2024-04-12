@@ -19,9 +19,12 @@ ufw_rules:
   - { port: 3389, rule: allow, comment: 'Allow RDP' }
   - { port: 139, rule: allow, comment: 'Allow Samba' }
   - { port: 445, rule: allow, comment: 'Allow Samba' }
+  - { port: 2375, rule: allow, comment: 'Allow Docker API' }
 #  - { from_ip: '172.16.0.0/16', port: 10250, rule: allow, comment: "Kubernetes Worker"  }
 #  - { from_ip: '172.16.0.0/16', port: "30000:32767", proto: tcp, rule: allow, comment: "Kubernetes Worker"  }
 ufw_default_forward_policy: ACCEPT
 ufw_logging: low
 ufw_applications:
   - { name: "Postfix" }
+
+docker_remote_api_enable: "yes"
