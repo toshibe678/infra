@@ -8,8 +8,13 @@ on:
     inputs:
       target:
         description: 'ansible ターゲットグループ名'
-        required: true
-        default: 'mayu'
+        type: choice
+        options:
+          - mayu
+          - raspi.test
+          - rasdev.test
+          - shigure
+          - vpn
 
 jobs:
   ansible-manual-deploy:
