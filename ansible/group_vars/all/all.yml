@@ -7,6 +7,7 @@ ansible_become_pass: "{{ crypt_ansible_become_pass }}"
 ansible_sudo_pass: "{{ crypt_ansible_sudo_pass }}"
 
 hostname: "{{ inventory_hostname }}"
+auto_reboot: false
 
 hosts:
   # /etc/hostsに設定するホスト情報

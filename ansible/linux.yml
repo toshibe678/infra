@@ -151,3 +151,11 @@
         name: "@go-task/cli"
         global: yes
         state: present
+
+    - name: auto_rebootが true なら自動再起動設定
+      cron:
+        name: "set cron for auto reboot"
+        minute: "0"
+        hour: "2"
+        job: "/usr/sbin/shutdown -r now"
+      when: auto_reboot
