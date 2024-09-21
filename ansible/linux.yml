@@ -128,9 +128,15 @@
           - tiptop
         state: present
 
+    - name: golang repository Add an apt key by id from a keyserver
+      ansible.builtin.apt_key:
+        keyserver: keyserver.ubuntu.com
+        id: 52B59B1571A79DBC054901C0F6BC817356A3D45E
+
     - name: apt add golang repository
       ansible.builtin.apt_repository:
         repo: ppa:longsleep/golang-backports
+        state: present
 
     - name: Install golang
       ansible.builtin.package:

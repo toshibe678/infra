@@ -4,7 +4,7 @@ github_runner_dir_base: /opt/actions-runner
 
 # GitHub Actions Runnerバージョン番号
 # https://github.com/actions/runner/releases/
-github_runner_version: "2.311.0"
+github_runner_version: "2.319.1"
 
 # GitHubのパーソナルアクセストークン
 github_access_token: ""
