@@ -7,7 +7,7 @@ import {BlogStack} from '../lib/blog-stack';
 import {CdkStack} from '../lib/cdk-stack';
 
 const app = new cdk.App();
-const profile = process.env.AWS_PROFILE;
+const profile = process.env.AWS_PROFILE || 'default';
 
 new CdkStack(app, 'CdkStack', {
   /*  information, see https://docs.aws.amazon.com/cdk/latest/guide/environments.html */
