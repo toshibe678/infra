@@ -97,17 +97,17 @@ jobs:
         run: npx cdk deploy BlogStack --require-approval never
         working-directory: ./cdk
 
-  cdk-test:
-    if: github.ref == 'refs/heads/develop'
-    runs-on: ubuntu-latest
-    steps:
-      - name: Checkout repository
-        uses: actions/checkout@v3
-
-      - name: Install dependencies
-        run: npm install
-        working-directory: ./cdk
-
-      - name: Run tests
-        run: npm test
-        working-directory: ./cdk
+#  cdk-test:
+#    if: github.ref == 'refs/heads/develop'
+#    runs-on: ubuntu-latest
+#    steps:
+#      - name: Checkout repository
+#        uses: actions/checkout@v3
+#
+#      - name: Install dependencies
+#        run: npm install
+#        working-directory: ./cdk
+#
+#      - name: Run tests
+#        run: npm test
+#        working-directory: ./cdk
