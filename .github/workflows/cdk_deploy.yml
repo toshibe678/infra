@@ -27,12 +27,15 @@ jobs:
 
       - name: Install dependencies
         run: npm install
+        working-directory: ./cdk
 
       - name: Deploy CdkStack
         run: npx cdk deploy CdkStack --require-approval never
+        working-directory: ./cdk
 
       - name: Deploy RootStack
         run: npx cdk deploy RootStack --require-approval never
+        working-directory: ./cdk
 
   deploy-sandbox:
     if: github.ref == 'refs/heads/main'
@@ -54,12 +57,15 @@ jobs:
 
       - name: Install dependencies
         run: npm install
+        working-directory: ./cdk
 
       - name: Deploy CdkStack
         run: npx cdk deploy CdkStack --require-approval never
+        working-directory: ./cdk
 
       - name: Deploy SandboxStack
         run: npx cdk deploy SandboxStack --require-approval never
+        working-directory: ./cdk
 
   deploy-blog:
     if: github.ref == 'refs/heads/main'
@@ -81,12 +87,15 @@ jobs:
 
       - name: Install dependencies
         run: npm install
+        working-directory: ./cdk
 
       - name: Deploy CdkStack
         run: npx cdk deploy CdkStack --require-approval never
+        working-directory: ./cdk
 
       - name: Deploy SandboxStack
         run: npx cdk deploy BlogStack --require-approval never
+        working-directory: ./cdk
 
   cdk-test:
     if: github.ref == 'refs/heads/develop'
@@ -97,6 +106,8 @@ jobs:
 
       - name: Install dependencies
         run: npm install
+        working-directory: ./cdk
 
       - name: Run tests
         run: npm test
+        working-directory: ./cdk
