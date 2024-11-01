@@ -93,7 +93,7 @@ jobs:
         run: npx cdk deploy CdkStack --require-approval never
         working-directory: ./cdk
 
-      - name: Deploy SandboxStack
+      - name: Deploy BlogStack
         run: npx cdk deploy BlogStack --require-approval never
         working-directory: ./cdk
 
