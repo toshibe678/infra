@@ -21,7 +21,7 @@ export class CdkStack extends cdk.Stack {
           ['token.actions.githubusercontent.com:aud']: 'sts.amazonaws.com',
         },
         StringLike: {
-          ['token.actions.githubusercontent.com:sub']: 'repo:toshibe678/*:*',
+          ['token.actions.githubusercontent.com:sub']: 'repo:toshibe678/*:ref:refs/heads/main',
         },
       }),
     });
