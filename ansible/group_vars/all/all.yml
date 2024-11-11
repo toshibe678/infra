@@ -64,7 +64,7 @@ github_runner_labels: []
 
 
 # ローカル以外VPN経由ルール
-wire_guard_default_forward_address: 0.0.0.0/5, 8.0.0.0/7, 11.0.0.0/8, 12.0.0.0/6, 16.0.0.0/4, 32.0.0.0/3, 64.0.0.0/2, 128.0.0.0/3, 160.0.0.0/5, 168.0.0.0/6, 172.0.0.0/12, 172.32.0.0/11, 172.64.0.0/10, 172.128.0.0/9, 173.0.0.0/8, 174.0.0.0/7, 176.0.0.0/4, 192.0.0.0/9, 192.128.0.0/11, 192.160.0.0/13, 192.169.0.0/16, 192.170.0.0/15, 192.172.0.0/14, 192.176.0.0/12, 192.192.0.0/10, 193.0.0.0/8, 194.0.0.0/7, 196.0.0.0/6, 200.0.0.0/5, 208.0.0.0/4, 192.168.101.0/24
+wire_guard_default_forward_address: 192.168.101.0/24
 
 wire_guard_server_private_key: "{{ crypt_wire_guard_server_private_key }}"
 wire_guard_server_public_key: M0WSPoqUVs1OBAXhBYr/MtQE8AhQoLlwSAW+FL5RZGk=
@@ -140,13 +140,13 @@ wire_guard_clients:
     public_key: "{{ crypt_wire_guard_client_sister1_public_key }}"
     preshared_key: "{{ crypt_wire_guard_client_sister1_preshared_key }}"
     ip_address: 192.168.101.202
-    forward_address: 192.168.101.0/24
+    forward_address: "{{ wire_guard_default_forward_address }}"
   - name: sister2
     private_key: "{{ crypt_wire_guard_client_sister2_private_key }}"
     public_key: "{{ crypt_wire_guard_client_sister2_public_key }}"
     preshared_key: "{{ crypt_wire_guard_client_sister2_preshared_key }}"
     ip_address: 192.168.101.203
-    forward_address: 192.168.101.0/24
+    forward_address: "{{ wire_guard_default_forward_address }}"
 
   - name: raspi
     private_key: "{{ crypt_wire_guard_client_raspi_private_key }}"

@@ -14,18 +14,9 @@ module "stg_cloudfront_s3_acm" {
   site_domain = "stg.blog.toshi.click"
   account_id = "073855610728"
 }
-#module "common" {
-#  source = "modules/common"
-#}
 
-#module "organization" {
-#  source = "/modules/organization"
-#}
-
-#module "network" {
-#  source = "modules/network"
-#}
-
-#module "iam" {
-#  source = "modules/iam"
-#}
+module "gcp_common_settings" {
+  source = "./modules/gcp"
+  project = "toshiclick"
+  org_name = "toshibe678"
+}

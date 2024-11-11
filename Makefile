@@ -1,3 +1,4 @@
+export COMPOSE_HTTP_TIMEOUT := 500
 .PHONY: build plan apply destroy init check exec_tf exec_ansible lint deploy
 
 # makefile内のすべてのコマンドが単一のシェルスクリプトで実行されるようになるおまじない
