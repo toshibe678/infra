@@ -13,9 +13,9 @@ Default output format [None]: text
 
 #### dockerで実行
 ```bash
-AWS_ACCESS_KEY_ID=$(aws configure get aws_access_key_id)
-AWS_SECRET_ACCESS_KEY=$(aws configure get aws_secret_access_key)
-AWS_DEFAULT_REGION=$(aws configure get region)
+export AWS_ACCESS_KEY_ID=$(aws configure get aws_access_key_id)
+export AWS_SECRET_ACCESS_KEY=$(aws configure get aws_secret_access_key)
+export AWS_DEFAULT_REGION=$(aws configure get region)
 docker pull hashicorp/terraform:0.15.3
 cd this_repository
 docker run -e AWS_ACCESS_KEY_ID=$AWS_ACCESS_KEY_ID -e AWS_SECRET_ACCESS_KEY=$AWS_SECRET_ACCESS_KEY -e AWS_DEFAULT_REGION=$AWS_DEFAULT_REGION -v $(pwd):/terraform -w /terraform -it --entrypoint=ash hashicorp/terraform:0.15.4
@@ -65,3 +65,15 @@ terraform import -var "access_key=${AWS_ACCESS_KEY_ID}" -var "secret_key=$AWS_SE
 
 # workspaces作成
 terraform workspace new main
+
+
+
+# 修正中
+```bash
+gcloud init --console-only
+gcloud config configurations list
+gcloud auth login
+
+# terraform実行前に
+gcloud auth application-default login
+```

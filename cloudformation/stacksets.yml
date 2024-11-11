@@ -22,7 +22,7 @@ Resources:
             Condition:
               NotIpAddress:
                 aws:SourceIp:
-                  - 61.213.68.235/32
+                  - 160.251.204.118/32
       Path: /
       Policies:
         - PolicyName: AdministratorAccess

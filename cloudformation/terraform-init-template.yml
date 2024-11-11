@@ -33,9 +33,7 @@ Resources:
             Condition:
               NotIpAddress:
                 aws:SourceIp:
-                  - 61.213.68.235/32
-      Users:
-        - !Ref TerraformIamUser
+                  - 160.251.204.118/32
       Groups:
         - !Ref TerraformIamGroup
 
@@ -54,9 +52,7 @@ Resources:
             Condition:
               IpAddress:
                 aws:SourceIp:
-                  - 61.213.68.235/32
-      Users:
-        - !Ref TerraformIamUser
+                  - 160.251.204.118/32
       Groups:
         - !Ref TerraformIamGroup
 

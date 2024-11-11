@@ -66,7 +66,7 @@ resource "aws_security_group" "staging_sg" {
   }
 
   ingress {
-    cidr_blocks = ["61.213.68.235/32"]
+    cidr_blocks = ["160.251.204.118/32"]
     from_port   = "0"
     protocol    = "tcp"
     self        = "false"

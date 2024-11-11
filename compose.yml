@@ -1,0 +1,43 @@
+services:
+  terraform:
+    container_name: "terraform"
+    build:
+      context: ./
+      dockerfile: Dockerfile
+    env_file: ./.env
+    working_dir: /terraform
+    volumes:
+      - ./terraform:/terraform
+    tty: true
+#
+#  ansible:
+#    container_name: "ansible"
+#    build:
+#      context: ./docker/ansible
+#      dockerfile: Dockerfile
+#    env_file: ./.env
+#    working_dir: /ansible
+#    volumes:
+#      - ./ansible:/ansible
+#    tty: true
+#
+#  tools:
+#    container_name: "tools"
+#    build:
+#      context: docker/tools
+#      dockerfile: Dockerfile
+#    env_file: ./.env
+#    working_dir: /tools
+#    volumes:
+#      - ./cloudformation:/cloudformation
+#    tty: true
+#
+#  named:
+#    restart: always
+#    build: ./docker/named
+#    container_name: named
+#    volumes:
+#      - ./tmp/log/named:/var/log/named
+#    ports:
+#      - "53:53"
+#      - "53:53/udp"
