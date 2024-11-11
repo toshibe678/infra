@@ -13,7 +13,7 @@ jobs:
   terraform_test:
     runs-on: self-hosted
     container:
-      image: ghcr.io/toshibe678/infra/terraform
+      image: ghcr.io/toshibe678/develop/develop:latest
       credentials:
         username: ${{ github.actor }}
         password: ${{ secrets.GITHUB_TOKEN }}

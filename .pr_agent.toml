@@ -24,3 +24,7 @@ extra_instructions = "Please use Japanese for everything."
 
 [pr_improve_component] # /improve_component #
 extra_instructions = "Please use Japanese for everything."
+
+[vertexai]
+vertex_project = "toshiclick"
+vertex_location = ""
