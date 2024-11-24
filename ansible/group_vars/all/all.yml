@@ -48,14 +48,14 @@ samba_users:
 samba_shares:
   - name: share1
     comment: '/share1'
-    path: /share1/share
+    path: /mnt/encrypted_raid1/share
     read_only: no
     guest_ok: no
     write_list: toshi
     owner: toshi
   - name: share2
     comment: '/share2'
-    path: /share2/share
+    path: /mnt/encrypted_raid1/share
     read_only: no
     guest_ok: no
     write_list: toshi
