@@ -42,6 +42,8 @@
         state: restarted
         enabled: yes
 
+- import_playbook: ./wireguard.yml
+
 # 物理サーバーだけにやる定義
 - import_playbook: ./bare_metal.yml
 
@@ -50,5 +52,3 @@
 - import_playbook: ./automatic_boot.yml
 
 - import_playbook: ./github_self_host_runner.yml
-
-- import_playbook: ./wireguard.yml
