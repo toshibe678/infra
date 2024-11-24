@@ -14,7 +14,7 @@ ansible-playbook -D -l dev -i hosts_all.yml  --vault-password-file ~/.ssh/.ansib
 
 # shigure初期構築
 ```shell
-ansible-playbook -D -l shigure -i hosts_all.yml all.yml  --ask-pass --ask-become-pass --ask-vault-password -C
+ansible-playbook -D -l shigure -i hosts_all.yml all.yml --ask-vault-password -C
 ```
 ansible-playbook -D -l raspi -i hosts_all.yml all.yml  --ask-vault-password  --ask-become-pass  -t runner
 
