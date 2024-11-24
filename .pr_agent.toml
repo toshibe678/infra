@@ -1,7 +1,7 @@
 [config]
-model = "vertex_ai/gemini-1.5-flash"
-model_turbo = "vertex_ai/gemini-1.5-flash"
-fallback_models="vertex_ai/gemini-1.5-flash"
+model = "anthropic.claude-3-haiku-20240307-v1:0"
+model_turbo = "anthropic.claude-3-haiku-20240307-v1:0"
+fallback_models="anthropic.claude-3-haiku-20240307-v1:0"
 
 [pr_reviewer] # /review #
 extra_instructions = "Please use Japanese for everything."
@@ -25,6 +25,6 @@ extra_instructions = "Please use Japanese for everything."
 [pr_improve_component] # /improve_component #
 extra_instructions = "Please use Japanese for everything."
 
-[vertexai]
-vertex_project = "toshiclick"
-vertex_location = ""
+#[vertexai]
+#vertex_project = "toshiclick"
+#vertex_location = ""
