@@ -34,7 +34,7 @@ jobs:
 #          access_token_lifetime: 300s
 
       - name: Configure AWS credentials from OIDC
-        uses: aws-actions/configure-aws-credentials@v2
+        uses: aws-actions/configure-aws-credentials@v3
         with:
           role-to-assume: arn:aws:iam::570339075110:role/GitHubActionsRole
           aws-region: ap-northeast-1
