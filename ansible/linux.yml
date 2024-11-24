@@ -88,11 +88,12 @@
         group: root
         mode: 0644
 
-    - name: restart resolvconf
-      service:
-        name: resolvconf
-        state: restarted
-        enabled: yes
+    - name: Configure systemd-resolved
+      ansible.builtin.file:
+        src: /run/systemd/resolve/resolv.conf
+        dest: /etc/resolv.conf
+        state: link
+        force: yes
 
     - name: restart resolvconf
       service:
