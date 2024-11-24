@@ -48,7 +48,7 @@ samba_users:
 samba_shares:
   - name: share1
     comment: '/share1'
-    path: /mnt/encrypted_raid1/share
+    path: /mnt/encrypted_raid0/share
     read_only: no
     guest_ok: no
     write_list: toshi
