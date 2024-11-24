@@ -25,13 +25,19 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
-      - name: Auth to Google Cloud by OpenID Connect
-        uses: google-github-actions/auth@v2
+#      - name: Auth to Google Cloud by OpenID Connect
+#        uses: google-github-actions/auth@v2
+#        with:
+#          project_id: 'toshiclick'
+#          workload_identity_provider: 'projects/189082996927/locations/global/workloadIdentityPools/github-actions-pool/providers/github-actions-provider'
+#          service_account: 'github-actions@toshiclick.iam.gserviceaccount.com'
+#          access_token_lifetime: 300s
+
+      - name: Configure AWS credentials
+        uses: aws-actions/configure-aws-credentials@v4
         with:
-          project_id: 'toshiclick'
-          workload_identity_provider: 'projects/189082996927/locations/global/workloadIdentityPools/github-actions-pool/providers/github-actions-provider'
-          service_account: 'github-actions@toshiclick.iam.gserviceaccount.com'
-          access_token_lifetime: 300s
+          role-to-assume: arn:aws:iam::${{ vars.AWS_SANDBOX_ACCOUNT_ID }}:role/GitHubActionsRole
+          aws-region: ap-northeast-1
 
       - name: PR Agent action step
         id: pragent
