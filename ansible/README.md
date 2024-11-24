@@ -33,3 +33,7 @@ ansible-playbook -D -l rasdev.test -i hosts_all.yml all.yml -t wireguard  --ask-
 ```shell
 ansible-playbook -D -l vpn -i hosts_all.yml all.yml -u root --ask-pass --ask-vault-password
 ```
+
+```shell
+ansible-vault encrypt /path/to/file
+```

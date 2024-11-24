@@ -40,3 +40,15 @@
             enabled: yes
       when:
         - server_group == "shigure" or server_group == "mayu"
+
+    - block:
+        - name: disk encrypt key set
+          copy:
+            src: "etc/diskkeyfile"
+            dest: "/etc/diskkeyfile"
+            owner: root
+            group: root
+            mode: 0600
+            backup: true
+      when:
+        - server_group == "shigure"

@@ -46,9 +46,16 @@ samba_users:
   - name: seiri
     password: "{{ crypt_seiri_samba_users_pass }}"
 samba_shares:
-  - name: share
-    comment: '/share/share'
-    path: /share/share
+  - name: share1
+    comment: '/share1'
+    path: /share1
+    read_only: no
+    guest_ok: no
+    write_list: toshi
+    owner: toshi
+  - name: share2
+    comment: '/share2'
+    path: /share2
     read_only: no
     guest_ok: no
     write_list: toshi
