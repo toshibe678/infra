@@ -3,6 +3,9 @@
 model = "bedrock/anthropic.claude-3-5-sonnet-20241022-v2:0"
 model_turbo = "bedrock/anthropic.claude-3-5-sonnet-20241022-v2:0"
 fallback_models="bedrock/anthropic.claude-3-5-haiku-20241022-v1:0"
+#model = "amazon.nova-pro-v1:0"
+#model_turbo = "amazon.nova-lite-v1:0"
+#fallback_models="amazon.nova-lite-v1:0"
 
 [pr_reviewer] # /review #
 extra_instructions = "Please use Japanese for everything."
