@@ -19,16 +19,16 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
-      - name: Auth to Google Cloud by OpenID Connect
-        uses: google-github-actions/auth@v2
-        with:
-          project_id: 'toshiclick'
-          workload_identity_provider: 'projects/189082996927/locations/global/workloadIdentityPools/github-actions-pool/providers/github-actions-provider'
-          service_account: 'github-actions@toshiclick.iam.gserviceaccount.com'
-          access_token_lifetime: 300s
+#      - name: Auth to Google Cloud by OpenID Connect
+#        uses: google-github-actions/auth@v2
+#        with:
+#          project_id: 'toshiclick'
+#          workload_identity_provider: 'projects/189082996927/locations/global/workloadIdentityPools/github-actions-pool/providers/github-actions-provider'
+#          service_account: 'github-actions@toshiclick.iam.gserviceaccount.com'
+#          access_token_lifetime: 300s
 
       - name: Configure AWS credentials from OIDC
-        uses: aws-actions/configure-aws-credentials@v3
+        uses: aws-actions/configure-aws-credentials@v4
         with:
           role-to-assume: arn:aws:iam::570339075110:role/GitHubActionsRole
           aws-region: us-east-1
