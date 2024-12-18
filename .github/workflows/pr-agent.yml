@@ -41,7 +41,7 @@ jobs:
 
       - name: PR Agent action step
         id: pragent
-        uses: tmokmss/bedrock-pr-reviewer@main
+        uses: Codium-ai/pr-agent@main
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           github_action.auto_review: "true"

@@ -1,7 +1,8 @@
 [config]
-model = "anthropic.claude-3-haiku-20240307-v1:0"
-model_turbo = "anthropic.claude-3-haiku-20240307-v1:0"
-fallback_models="anthropic.claude-3-haiku-20240307-v1:0"
+# モデルはhttps://github.com/Codium-ai/pr-agent/blob/main/pr_agent/algo/__init__.pyを参照
+model = "bedrock/anthropic.claude-3-5-sonnet-20241022-v2:0"
+model_turbo = "bedrock/anthropic.claude-3-5-sonnet-20241022-v2:0"
+fallback_models="bedrock/anthropic.claude-3-5-haiku-20241022-v1:0"
 
 [pr_reviewer] # /review #
 extra_instructions = "Please use Japanese for everything."
