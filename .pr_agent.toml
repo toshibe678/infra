@@ -1,7 +1,7 @@
 [config]
 # モデルはhttps://github.com/Codium-ai/pr-agent/blob/main/pr_agent/algo/__init__.pyを参照
-model = "bedrock/anthropic.claude-3-5-sonnet-20241022-v2:0"
-model_turbo = "bedrock/anthropic.claude-3-5-sonnet-20241022-v2:0"
+model = "bedrock/anthropic.claude-3-5-sonnet-20240620-v1:0"
+model_turbo = "bedrock/anthropic.claude-3-5-sonnet-20240620-v1:0"
 fallback_models="bedrock/anthropic.claude-3-5-haiku-20241022-v1:0"
 #model = "amazon.nova-pro-v1:0"
 #model_turbo = "amazon.nova-lite-v1:0"
