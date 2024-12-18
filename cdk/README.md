@@ -16,6 +16,14 @@ The `cdk.json` file tells the CDK Toolkit how to execute your app.
 # how to use
 ```shell
 npm install
+aws sso login --profile sso-admin
+export AWS_PROFILE=sso-admin
+npx cdk deploy CdkStack --profile sso-admin
+
+aws sso login --profile sso-blog
+export AWS_PROFILE=sso-blog
+npx cdk deploy CdkStack --profile sso-blog
+
 aws sso login --profile sso-sandbox
 export AWS_PROFILE=sso-sandbox
 npx cdk deploy CdkStack --profile sso-sandbox
