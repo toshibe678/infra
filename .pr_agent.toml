@@ -1,7 +1,10 @@
 [config]
-model = "anthropic.claude-3-haiku-20240307-v1:0"
-model_turbo = "anthropic.claude-3-haiku-20240307-v1:0"
-fallback_models="anthropic.claude-3-haiku-20240307-v1:0"
+model = "amazon.nova-pro-v1:0"
+model_turbo = "amazon.nova-lite-v1:0"
+fallback_models="amazon.nova-lite-v1:0"
+#model = "anthropic.claude-3-haiku-20240307-v1:0"
+#model_turbo = "anthropic.claude-3-haiku-20240307-v1:0"
+#fallback_models="anthropic.claude-3-haiku-20240307-v1:0"
 
 [pr_reviewer] # /review #
 extra_instructions = "Please use Japanese for everything."
