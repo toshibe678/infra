@@ -127,6 +127,8 @@
           - nicstat
           - ethtool
           - tiptop
+          - iotop
+          - dstat
         state: present
 
     - name: golang repository Add an apt key by id from a keyserver
