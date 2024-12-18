@@ -18,14 +18,13 @@ export class CdkStack extends cdk.Stack {
       maxSessionDuration: Duration.hours(2),
       assumedBy: new iam.WebIdentityPrincipal(idProvider.openIdConnectProviderArn, {
         StringEquals: {
-          ['token.actions.githubusercontent.com:aud']: 'sts.amazonaws.com',
+          'token.actions.githubusercontent.com:aud': 'sts.amazonaws.com',
+          // ActionsでOIDCできるリポジトリとブランチを指定
+          // "repo:<GitHubOrg>/<GitHubRepo>:ref:refs/heads/<GitHubBranch>"
+          'token.actions.githubusercontent.com:sub': 'repo:toshibe678/*',
         },
-        StringLike: {
-          'token.actions.githubusercontent.com:sub': [
-            'repo:toshibe678/*:ref:refs/heads/main',
-            'repo:toshibe678/*:ref:refs/heads/develop',
-            ],
-        },
+
+
       }),
     });
     role.addManagedPolicy(iam.ManagedPolicy.fromAwsManagedPolicyName('AdministratorAccess'));
