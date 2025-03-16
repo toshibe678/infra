@@ -4,6 +4,9 @@
 
 # ansible-galaxy install -r requirements.yml -p roles --force
 roles:
+  - name: monolithprojects.github_actions_runner
+    src: https://github.com/MonolithProjects/ansible-github_actions_runner
+
   - src: https://github.com/toshi-click/roles_common.git
     name: common
     scm: git
@@ -43,3 +46,4 @@ roles:
     name: samba
     scm: git
     version: "master"
+

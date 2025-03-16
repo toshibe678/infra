@@ -2,4 +2,4 @@
 wifi_setting: true
 
 monitoring_ansible_architecture: "arm64"
-auto_reboot: true
+auto_reboot: false
