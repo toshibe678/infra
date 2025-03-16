@@ -25,10 +25,10 @@ all:
           hosts:
             raspi.test: { }
             rasdev.test: { }
-#            ranko.test: { }
-#            sae.test: {}
-#            kaede.test: {}
-#            shiki.test: {}
+            sae.test: {}
+            kaede.test: {}
+            shiki.test: {}
+            kako.test: {}
         bare_metal:
           children:
             shigure: { }

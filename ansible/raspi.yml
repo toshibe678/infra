@@ -1,0 +1,16 @@
+---
+- name: raspi setting
+  hosts: raspi
+  become: true
+  become_user: root
+  gather_facts: yes
+  ignore_unreachable: true
+  tasks:
+    - name: Install raspi tools
+      ansible.builtin.package:
+        name:
+          - raspi-config
+          - rpi-eeprom
+        state: present
+
+

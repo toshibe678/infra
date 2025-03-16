@@ -18,7 +18,7 @@ ansible-playbook -D -l shigure -i hosts_all.yml all.yml --ask-vault-password -C
 ```
 ansible-playbook -D -l raspi -i hosts_all.yml all.yml  --ask-vault-password  --ask-become-pass  -t runner
 
-ansible-playbook -D -l rasdev.test -i hosts_all.yml all.yml -t wireguard  --ask-vault-password
+ansible-playbook -D -l raspi.test,rasdev.test -i hosts_all.yml all.yml --ask-become-pass --ask-vault-password
 
 
 ### 接続できない場合

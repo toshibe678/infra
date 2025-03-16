@@ -11,16 +11,10 @@
   become_user: root
   gather_facts: yes
   ignore_unreachable: true
-  tasks:
-    # 参考：https://github.com/MonolithProjects/ansible-github_actions_runner
-    - name: looping role docker hub
-      ansible.builtin.include_role:
-        name: ./dependency_roles/roles_github_actions_runner
-      vars:
-        github_runner_dir_name: "{{ item.name }}-runner"
-        github_runner_org: "{{ item.org }}"
-        github_repo: "{{ item.repo }}"
-        github_access_token: "{{ item.token }}"
-      loop:
-        - { name: "org", org: yes, repo: '', token: "{{github_org_access_token}}" }
-        - { name: "CurriculumVitae", org: no, repo: 'CurriculumVitae', token: "{{github_private_access_token}}" }
+  vars:
+    - github_account: toshibe678
+    - runner_org: true
+    - runner_labels: [self-hosted, linux, arm64]
+    - access_token: "{{ crypt_github_org_access_token }}"
+  roles:
+    - role: monolithprojects.github_actions_runner

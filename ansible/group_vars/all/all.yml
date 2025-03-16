@@ -15,10 +15,10 @@ hosts:
     - { name: "{{ hostname }}", ip: 127.0.0.1 }
     - { name: "raspi.test", ip: 172.16.100.254 }
     - { name: "rasdev.test", ip: 172.16.100.253 }
-    - { name: "raspi-master1.test", ip: 172.16.100.131 }
-    - { name: "raspi-worker1.test", ip: 172.16.100.132 }
-    - { name: "raspi-worker2.test", ip: 172.16.100.133 }
-    - { name: "raspi-worker3.test", ip: 172.16.100.134 }
+    - { name: "sae.test", ip: 172.16.100.221 }
+    - { name: "kaede.test", ip: 172.16.100.222 }
+    - { name: "shiki.test", ip: 172.16.100.223 }
+    - { name: "kako.test", ip: 172.16.100.224 }
 
 # 各ミドルウェアのインストール・設定フラグ
 # docker
@@ -62,13 +62,6 @@ samba_shares:
     owner: toshi
 samba_only_users:
   - seiri
-
-github_private_access_token: "{{ crypt_github_access_token }}"
-github_org_access_token: "{{ crypt_github_org_access_token }}"
-github_runner_labels: []
-
-
-
 
 # ローカル以外VPN経由ルール
 wire_guard_default_forward_address: 192.168.101.0/24
