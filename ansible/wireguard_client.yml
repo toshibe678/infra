@@ -1,0 +1,35 @@
+---
+- name: wireguard client setting
+  become: true
+  become_user: root
+  hosts:
+    - vpn_client
+  tasks:
+    - name: install wireguard
+      ansible.builtin.package:
+        name: wireguard-tools
+        state: present
+      tags: wireguard_client
+
+    - name: Create wireguard directory
+      ansible.builtin.file:
+        path: "/etc/wireguard"
+        state: directory
+        mode: '0700'
+      tags: wireguard_client
+
+    - name: copy wireguard config
+      ansible.builtin.template:
+        src: etc/wireguard/wireguard_client.conf.j2
+        dest: /etc/wireguard/wg0.conf
+        owner: root
+        group: root
+        mode: 0600
+      tags: wireguard_client
+
+    - name: enable Wireguard service
+      ansible.builtin.service:
+        name: "wg-quick@wg0"
+        state: restarted
+        enabled: yes
+      tags: wireguard_client

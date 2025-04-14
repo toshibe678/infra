@@ -1,0 +1,3 @@
+wireguard_client_private_key: "{{ crypt_wire_guard_client_kaede_private_key }}"
+wireguard_client_preshared_key: "{{ crypt_wire_guard_client_kaede_preshared_key }}"
+wireguard_client_ip_address: 192.168.101.54

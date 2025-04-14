@@ -11,16 +11,16 @@ all:
         vpn:
           hosts:
             vpn.toshi.click: { }
+        vpn_client:
+          children:
+            shigure: { }
+            raspi: { }
         shigure:
           hosts:
             shigure.test: { }
-        mayu:
-          hosts:
-            mayu.test: { }
-#        dev:
-#          hosts:
-#            dev.test:
-#              ansible_connection: local
+        # mayu:
+        #   hosts:
+        #     mayu.test: { }
         raspi:
           hosts:
             raspi.test: { }
@@ -32,12 +32,3 @@ all:
         bare_metal:
           children:
             shigure: { }
-        vm:
-          children:
-            dev: { }
-    network_switch:
-      children:
-        # YAMAHA RTX1210
-        router:
-          hosts:
-            172.16.1.1: {}

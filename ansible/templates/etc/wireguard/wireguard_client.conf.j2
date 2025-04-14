@@ -1,0 +1,20 @@
+[Interface]
+#  client.keyの内容を指定。
+PrivateKey = {{ wireguard_client_private_key }}
+# WireGuardクライアントで使用するIPアドレスを指定。
+Address = {{ wireguard_client_ip_address }}/24
+DNS = 172.16.1.1, 8.8.8.8
+# MTU
+MTU = 1374
+
+[Peer]
+# WireGuardサーバーの公開鍵を指定。
+PublicKey = {{ wire_guard_server_public_key }}
+# クライアント用のpreshared-key(client_preshared.key)
+PresharedKey = {{ wireguard_client_preshared_key }}
+# WireGuardサーバーからクライアントに転送するIPアドレスを指定。
+AllowedIPs = {{ wire_guard_default_forward_address }}
+# WireGuardサーバーのグローバルIPアドレスとポート番号を指定。
+Endpoint = vpn.toshi.click:51820
+# キープアライブパケットを送信する間隔を秒単位で定義
+PersistentKeepalive = 20
