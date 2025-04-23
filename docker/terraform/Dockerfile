@@ -44,7 +44,5 @@ RUN apt-get update \
     && rm -rf /var/lib/apt/lists/*
 
 COPY ../../.terraformrc /root/.terraformrc
-COPY ../../entrypoint.sh /usr/local/bin/entrypoint.sh
-RUN chmod +x /usr/local/bin/entrypoint.sh
 
 ENTRYPOINT ["entrypoint.sh"]
