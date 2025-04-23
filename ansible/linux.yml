@@ -79,6 +79,7 @@
         name:
           - resolvconf
         state: present
+      tags: resolve
 
     - name: /etc/systemd/resolved.conf set
       template:
@@ -87,6 +88,7 @@
         owner: root
         group: root
         mode: 0644
+      tags: resolve
 
     - name: Configure systemd-resolved
       ansible.builtin.file:
@@ -94,12 +96,14 @@
         dest: /etc/resolv.conf
         state: link
         force: yes
+      tags: resolve
 
     - name: restart resolvconf
       service:
         name: systemd-resolved
         state: restarted
         enabled: yes
+      tags: resolve
 
     - name: Generate /etc/hosts file
       template:
@@ -109,6 +113,7 @@
         group: root
         mode: 0644
         backup: true
+      tags: resolve
 
     - name: Install debug tools
       ansible.builtin.package:

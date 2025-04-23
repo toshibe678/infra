@@ -1,0 +1,8 @@
+services:
+  dhcp:
+    build: ./
+    container_name: kea-dhcp
+    restart: always
+    network_mode: host
+    volumes:
+      - ./kea-dhcp4.conf:/etc/kea/kea-dhcp4.conf
