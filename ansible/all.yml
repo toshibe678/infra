@@ -7,10 +7,10 @@
   ignore_unreachable: true
   roles:
     - { role: "common" }
+    - { role: "firewall", when: firewall, tags: firewall }
     - { role: "sshd" }
     #    - { role: "monitoring" }
     - { role: "docker", when: docker_install, tags: docker }
-    - { role: "firewall", when: firewall, tags: firewall }
   tasks:
     # postfix関連の設定を行う
     - name: main.cf set
