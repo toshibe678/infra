@@ -43,6 +43,3 @@ RUN apt-get update \
     && apt-get clean \
     && rm -rf /var/lib/apt/lists/*
 
-COPY ../../.terraformrc /root/.terraformrc
-
-ENTRYPOINT ["entrypoint.sh"]
