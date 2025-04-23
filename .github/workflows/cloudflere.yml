@@ -13,7 +13,7 @@ jobs:
   cloudflere:
     runs-on: self-hosted
     container:
-      image: ghcr.io/toshibe678/develop/develop:latest
+      image: ghcr.io/toshibe678/infra/terraform:latest
       credentials:
         username: ${{ github.actor }}
         password: ${{ secrets.GITHUB_TOKEN }}
