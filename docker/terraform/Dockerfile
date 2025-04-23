@@ -1,8 +1,6 @@
-FROM python:3.11
+FROM python:3.13
 
-ARG TERRAFORM_VERSION="1.4.2"
-# https://github.com/gruntwork-io/terragrunt/releases
-ARG TERRAGRUNT_VERSION="0.45.0"
+ARG TERRAFORM_VERSION="1.11.4"
 # https://github.com/terraform-linters/tflint/releases
 ARG TFLINT_VERSION="0.45.0"
 
@@ -33,11 +31,6 @@ RUN python3 -m pip install --upgrade pip \
 RUN wget https://releases.hashicorp.com/terraform/${TERRAFORM_VERSION}/terraform_${TERRAFORM_VERSION}_linux_amd64.zip \
     && unzip ./terraform_${TERRAFORM_VERSION}_linux_amd64.zip -d /usr/local/bin/ \
     && rm ./terraform_${TERRAFORM_VERSION}_linux_amd64.zip
-
-# install terargrunt
-RUN wget https://github.com/gruntwork-io/terragrunt/releases/download/v${TERRAGRUNT_VERSION}/terragrunt_linux_amd64 \
-    && chmod +x ./terragrunt_linux_amd64 \
-    && mv ./terragrunt_linux_amd64 /usr/local/bin/terragrunt
 
 # install tflint
 RUN wget https://github.com/terraform-linters/tflint/releases/download/v${TFLINT_VERSION}/tflint_linux_amd64.zip -O tflint.zip \
