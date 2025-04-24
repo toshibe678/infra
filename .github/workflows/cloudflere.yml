@@ -20,7 +20,8 @@ jobs:
     timeout-minutes: 10
     steps:
       - uses: actions/checkout@v3
-      - run: sleep 1000000
+      - name: debug
+        run: sleep 1000000
 #      - name: configure AWS credentials
 #        uses: aws-actions/configure-aws-credentials@v2
 #        with:
