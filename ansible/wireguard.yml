@@ -6,3 +6,6 @@
   become_user: root
   roles:
     - { name: ./dependency_roles/wireguard }
+
+# cron
+# */5 * * * * source /root/.bashrc && bash /home/toshi/scripts/shell/wireguard_check.sh
