@@ -3,3 +3,5 @@ wifi_setting: true
 
 monitoring_ansible_architecture: "arm64"
 auto_reboot: false
+
+node_exporter_arch: 'arm64'

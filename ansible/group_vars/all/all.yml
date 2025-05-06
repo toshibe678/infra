@@ -13,12 +13,6 @@ hosts:
   # /etc/hostsに設定するホスト情報
   etc_hosts_setting:
     - { name: "{{ hostname }}", ip: 127.0.0.1 }
-    - { name: "raspi.test", ip: 172.16.100.254 }
-    - { name: "rasdev.test", ip: 172.16.100.253 }
-    - { name: "sae.test", ip: 172.16.100.221 }
-    - { name: "kaede.test", ip: 172.16.100.222 }
-    - { name: "shiki.test", ip: 172.16.100.223 }
-    - { name: "kako.test", ip: 172.16.100.224 }
 
 # 各ミドルウェアのインストール・設定フラグ
 # docker
@@ -129,6 +123,7 @@ wire_guard_clients:
     preshared_key: "{{ crypt_wire_guard_client_qnapsub_preshared_key }}"
     ip_address: 192.168.101.92
     forward_address: "{{ wire_guard_default_forward_address }}"
+
   - name: mother
     private_key: "{{ crypt_wire_guard_client_mother_private_key }}"
     public_key: "{{ crypt_wire_guard_client_mother_public_key }}"

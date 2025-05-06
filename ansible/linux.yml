@@ -5,6 +5,8 @@
   become_user: root
   gather_facts: yes
   ignore_unreachable: true
+  roles:
+    - { role: "node_exporter" }
   tasks:
     - name: Add to docker group
       user:

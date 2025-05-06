@@ -16,19 +16,47 @@ all:
             shigure: { }
             raspi: { }
         shigure:
+          children:
+            shigure_novpn: { }
+            shigure_vpn: { }
+        shigure_novpn:
           hosts:
-            shigure.test: { }
+            shigure.abe365.org: { }
+        shigure_vpn:
+          hosts:
+            vpn.shigure.abe365.org: { }
         # mayu:
         #   hosts:
-        #     mayu.test: { }
+        #     mayu.abe365.org: { }
         raspi:
+          children:
+            raspi_novpn: { }
+            raspi_vpn: { }
+        raspi_novpn:
           hosts:
-            raspi.test: { }
-            rasdev.test: { }
-            sae.test: {}
-            kaede.test: {}
-            shiki.test: {}
-            kako.test: {}
+            raspi.abe365.org: { }
+            rasdev.abe365.org: { }
+            sae.abe365.org: {}
+            kaede.abe365.org: {}
+            shiki.abe365.org: {}
+            kako.abe365.org: {}
+        raspi_vpn:
+          hosts:
+            vpn.raspi.abe365.org: { }
+            vpn.rasdev.abe365.org: { }
+            vpn.sae.abe365.org: {}
+            vpn.kaede.abe365.org: {}
+            vpn.shiki.abe365.org: {}
+            vpn.kako.abe365.org: {}
         bare_metal:
           children:
             shigure: { }
+    # proxmox:
+    #   vars:
+    #     ansible_ssh_user: toshi
+    #     ansible_ssh_port: 22
+    #     ansible_python_interpreter: /usr/bin/python3
+    #     ansible_ssh_private_key_file: ~/.ssh/id_rsa
+    #   hosts:
+    #     infra.abe365.org: { }
+    #     monitoring.abe365.org: { }
