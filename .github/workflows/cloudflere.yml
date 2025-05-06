@@ -19,6 +19,9 @@ jobs:
         username: ${{ github.actor }}
         password: ${{ secrets.GITHUB_TOKEN }}
     timeout-minutes: 10
+    permissions:
+      id-token: write
+      contents: read
     steps:
       - uses: actions/checkout@v3
       # - name: debug
