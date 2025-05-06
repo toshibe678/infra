@@ -7,5 +7,6 @@
   roles:
     - { name: ./dependency_roles/wireguard }
 
+# /etc/environment にslack urlの環境変数設定
 # cron
-# */5 * * * * source /root/shell_file.sh && bash /home/toshi/scripts/shell/wireguard_check.sh
+# */5 * * * * bash /home/toshi/scripts/shell/wireguard_check.sh
