@@ -5,6 +5,7 @@ on:
   push:
     paths:
       - "cloudflere/**"
+      - ".github/workflows/cloudflere.yml"
     branches:
       - main
       - develop
@@ -29,7 +30,7 @@ jobs:
       #     aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
       #     aws-region: ap-northeast-1
       - name: Configure AWS credentials from OIDC
-        uses: aws-actions/configure-aws-credentials@v2
+        uses: aws-actions/configure-aws-credentials@v4
         with:
           role-to-assume: arn:aws:iam::814229680634:role/GitHubActionsRole
           aws-region: ap-northeast-1
