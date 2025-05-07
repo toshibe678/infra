@@ -49,12 +49,20 @@ resource "cloudflare_record" "vpn_ranko" {
   value   = "192.168.101.73"          # CloudFront を想定した値
   zone_id = "46b5be479776a4897b109614bd8c6a8a" # Cloudflare のゾーン ID
 }
-resource "cloudflare_record" "infra" {
-  name    = "infra"                           # サブドメイン名
+resource "cloudflare_record" "infra1" {
+  name    = "infra1"                           # サブドメイン名
   proxied = false                            # Cloudflare のプロキシを利用するか
   ttl     = 1                               # TTL
   type    = "A"                             # レコードタイプ
   value   = "192.168.0.101"          # CloudFront を想定した値
+  zone_id = "46b5be479776a4897b109614bd8c6a8a" # Cloudflare のゾーン ID
+}
+resource "cloudflare_record" "infra2" {
+  name    = "infra2"                           # サブドメイン名
+  proxied = false                            # Cloudflare のプロキシを利用するか
+  ttl     = 1                               # TTL
+  type    = "A"                             # レコードタイプ
+  value   = "192.168.0.102"          # CloudFront を想定した値
   zone_id = "46b5be479776a4897b109614bd8c6a8a" # Cloudflare のゾーン ID
 }
 resource "cloudflare_record" "monitoring" {
