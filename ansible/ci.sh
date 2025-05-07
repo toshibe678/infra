@@ -11,8 +11,6 @@ Host *
   UserKnownHostsFile=/dev/null
 EOF
 cd `dirname $0`
-cat ./hosts > /etc/hosts
-cat /etc/hosts
 
 ansible-galaxy collection install -r requirements.yml --force-with-deps
 ansible-galaxy install -r requirements.yml -p roles --force

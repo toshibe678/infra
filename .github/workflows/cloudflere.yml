@@ -5,6 +5,7 @@ on:
   push:
     paths:
       - "cloudflere/**"
+      - ".github/workflows/cloudflere.yml"
     branches:
       - main
       - develop
@@ -18,16 +19,24 @@ jobs:
         username: ${{ github.actor }}
         password: ${{ secrets.GITHUB_TOKEN }}
     timeout-minutes: 10
+    permissions:
+      id-token: write
+      contents: read
     steps:
       - uses: actions/checkout@v3
-      - name: debug
-        run: sleep 1000000
-#      - name: configure AWS credentials
-#        uses: aws-actions/configure-aws-credentials@v2
-#        with:
-#          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
-#          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-#          aws-region: ap-northeast-1
+      # - name: debug
+      #   run: sleep 1000000
+      # - name: configure AWS credentials
+      #   uses: aws-actions/configure-aws-credentials@v2
+      #   with:
+      #     aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+      #     aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+      #     aws-region: ap-northeast-1
+      - name: Configure AWS credentials from OIDC
+        uses: aws-actions/configure-aws-credentials@v4
+        with:
+          role-to-assume: arn:aws:iam::814229680634:role/GitHubActionsRole
+          aws-region: ap-northeast-1
       - name: Terraform Init
         id: init
         run: terraform init

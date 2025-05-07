@@ -7,6 +7,9 @@ roles:
   - name: monolithprojects.github_actions_runner
     src: https://github.com/MonolithProjects/ansible-github_actions_runner
 
+  - name: node_exporter
+    src: geerlingguy.node_exporter
+
   - src: https://github.com/toshi-click/roles_common.git
     name: common
     scm: git

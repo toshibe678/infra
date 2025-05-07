@@ -1,12 +1,12 @@
 ---
 - name: github self host runner setting
   hosts:
-    - raspi.test
-    - rasdev.test
-#    - ranko.test
-#    - sae.test
-#    - kaede.test
-#    - shiki.test
+    - raspi.abe365.org
+    - rasdev.abe365.org
+#    - ranko.abe365.org
+#    - sae.abe365.org
+#    - kaede.abe365.org
+#    - shiki.abe365.org
   become: true
   become_user: root
   gather_facts: yes

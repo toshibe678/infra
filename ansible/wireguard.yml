@@ -6,3 +6,7 @@
   become_user: root
   roles:
     - { name: ./dependency_roles/wireguard }
+
+# /etc/environment にslack urlの環境変数設定
+# cron
+# */5 * * * * bash /home/toshi/scripts/shell/wireguard_check.sh

@@ -5,6 +5,8 @@
   become_user: root
   gather_facts: yes
   ignore_unreachable: true
+  roles:
+    - { role: "node_exporter" }
   tasks:
     - name: Add to docker group
       user:
@@ -14,11 +16,13 @@
 
     - name: "git safe directory at /home/{{ manage_user_name }}/scripts"
       shell: "git config --global --add safe.directory /home/{{ manage_user_name }}/scripts"
+      tags: git_checkout
 
     - name: Check if scripts directory exists
       stat:
         path: "/home/{{ manage_user_name }}/scripts"
       register: scripts_dir_stat
+      tags: git_checkout
 
     - name: すでにクローン済みの場合ディレクトリとファイルのパーミッションを再帰的に変更する
       file:
@@ -28,6 +32,7 @@
         group: "{{ manage_user_group }}"
         recurse: yes
       when: scripts_dir_stat.stat.exists
+      tags: git_checkout
 
     - name: Clone scripts github repository
       become: yes
@@ -39,14 +44,17 @@
         update: yes
         key_file: "/home/{{ manage_user_name }}/.ssh/gitkey"
         accept_hostkey: true
+      tags: git_checkout
 
     - name: "git safe directory at /home/{{ manage_user_name }}/scripts"
       shell: "git config --global --add safe.directory /home/{{ manage_user_name }}/infra"
+      tags: git_checkout
 
     - name: Check if infra directory exists
       stat:
         path: "/home/{{ manage_user_name }}/infra"
       register: infra_dir_stat
+      tags: git_checkout
 
     - name: すでにクローン済みの場合ディレクトリとファイルのパーミッションを再帰的に変更する
       file:
@@ -56,6 +64,7 @@
         group: "{{ manage_user_group }}"
         recurse: yes
       when: infra_dir_stat.stat.exists
+      tags: git_checkout
 
     - name: Clone infra github repository
       become: yes
@@ -67,6 +76,7 @@
         update: yes
         key_file: "/home/{{ manage_user_name }}/.ssh/gitkey"
         accept_hostkey: true
+      tags: git_checkout
 
     - name: Install wireguard client
       ansible.builtin.package:
