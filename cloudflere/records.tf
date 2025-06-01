@@ -124,6 +124,14 @@ resource "cloudflare_record" "qnapnas2" {
   value   = "192.168.0.242"          # CloudFront を想定した値
   zone_id = "46b5be479776a4897b109614bd8c6a8a" # Cloudflare のゾーン ID
 }
+resource "cloudflare_record" "qnapnas-infra" {
+  name    = "qnapnas-infra"                           # サブドメイン名
+  proxied = false                            # Cloudflare のプロキシを利用するか
+  ttl     = 1                               # TTL
+  type    = "A"                             # レコードタイプ
+  value   = "192.168.0.243"          # CloudFront を想定した値
+  zone_id = "46b5be479776a4897b109614bd8c6a8a" # Cloudflare のゾーン ID
+}
 ### ----------------------------------------------------------------------------------------------------
 # raspi
 ### ----------------------------------------------------------------------------------------------------
