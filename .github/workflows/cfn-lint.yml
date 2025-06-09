@@ -6,8 +6,6 @@ on:
       - "cloudformation/**"
     branches:
       - main
-      - develop
-      - 'releases/**'
 
 jobs:
   cloudformation-linter:

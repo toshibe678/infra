@@ -144,6 +144,7 @@
           - tiptop
           - iotop
           - dstat
+          - git-lfs
         state: present
 
     - name: golang repository Add an apt key by id from a keyserver

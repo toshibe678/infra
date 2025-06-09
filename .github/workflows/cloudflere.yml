@@ -7,7 +7,6 @@ on:
       - "cloudflere/**"
       - ".github/workflows/cloudflere.yml"
     branches:
-      - main
       - develop
 
 jobs:

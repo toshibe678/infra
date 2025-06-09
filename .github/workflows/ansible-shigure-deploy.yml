@@ -9,8 +9,7 @@ on:
       - "ansible/**"
       - ".github/workflows/ansible-shigure-deploy.yml"
     branches:
-      - main
-      - 'releases/**'
+      - develop
   # 毎日21時に反映
   schedule:
     - cron: '3 21 * * *'
