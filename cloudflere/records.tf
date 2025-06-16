@@ -1,4 +1,39 @@
 ### ----------------------------------------------------------------------------------------------------
+# RDP接続先WinPC
+### ----------------------------------------------------------------------------------------------------
+resource "cloudflare_record" "toshipc01" {
+  name    = "toshipc01"                           # サブドメイン名
+  proxied = false                            # Cloudflare のプロキシを利用するか
+  ttl     = 1                               # TTL
+  type    = "A"                             # レコードタイプ
+  value   = "192.168.77.10"          # CloudFront を想定した値
+  zone_id = "46b5be479776a4897b109614bd8c6a8a" # Cloudflare のゾーン ID
+}
+resource "cloudflare_record" "vpn_toshipc01" {
+  name    = "vpn.toshipc01"                           # サブドメイン名
+  proxied = false                            # Cloudflare のプロキシを利用するか
+  ttl     = 1                               # TTL
+  type    = "A"                             # レコードタイプ
+  value   = "192.168.101.10"          # CloudFront を想定した値
+  zone_id = "46b5be479776a4897b109614bd8c6a8a" # Cloudflare のゾーン ID
+}
+resource "cloudflare_record" "toshipc02" {
+  name    = "toshipc02"                           # サブドメイン名
+  proxied = false                            # Cloudflare のプロキシを利用するか
+  ttl     = 1                               # TTL
+  type    = "A"                             # レコードタイプ
+  value   = "192.168.77.21"          # CloudFront を想定した値
+  zone_id = "46b5be479776a4897b109614bd8c6a8a" # Cloudflare のゾーン ID
+}
+resource "cloudflare_record" "vpn_toshipc02" {
+  name    = "vpn.toshipc02"                           # サブドメイン名
+  proxied = false                            # Cloudflare のプロキシを利用するか
+  ttl     = 1                               # TTL
+  type    = "A"                             # レコードタイプ
+  value   = "192.168.101.11"          # CloudFront を想定した値
+  zone_id = "46b5be479776a4897b109614bd8c6a8a" # Cloudflare のゾーン ID
+}
+### ----------------------------------------------------------------------------------------------------
 # サーバー
 ### ----------------------------------------------------------------------------------------------------
 resource "cloudflare_record" "shigure" {
