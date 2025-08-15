@@ -17,12 +17,20 @@ resource "cloudflare_record" "vpn_toshipc01" {
   value   = "192.168.101.10"          # CloudFront を想定した値
   zone_id = "46b5be479776a4897b109614bd8c6a8a" # Cloudflare のゾーン ID
 }
+resource "cloudflare_record" "toshi-notepc" {
+  name    = "toshi-notepc"                           # サブドメイン名
+  proxied = false                            # Cloudflare のプロキシを利用するか
+  ttl     = 1                               # TTL
+  type    = "A"                             # レコードタイプ
+  value   = "192.168.100.21"          # CloudFront を想定した値
+  zone_id = "46b5be479776a4897b109614bd8c6a8a" # Cloudflare のゾーン ID
+}
 resource "cloudflare_record" "toshipc02" {
   name    = "toshipc02"                           # サブドメイン名
   proxied = false                            # Cloudflare のプロキシを利用するか
   ttl     = 1                               # TTL
   type    = "A"                             # レコードタイプ
-  value   = "192.168.77.21"          # CloudFront を想定した値
+  value   = "192.168.77.22"          # CloudFront を想定した値
   zone_id = "46b5be479776a4897b109614bd8c6a8a" # Cloudflare のゾーン ID
 }
 resource "cloudflare_record" "vpn_toshipc02" {
