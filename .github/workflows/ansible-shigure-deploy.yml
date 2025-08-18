@@ -4,15 +4,7 @@ env:
   LANG: ja_JP.UTF-8
 
 on:
-  push:
-    paths:
-      - "ansible/**"
-      - ".github/workflows/ansible-shigure-deploy.yml"
-    branches:
-      - develop
-  # 毎日21時に反映
-  schedule:
-    - cron: '3 21 * * *'
+  workflow_dispatch:
 
 jobs:
   ansible-shigure-deploy:

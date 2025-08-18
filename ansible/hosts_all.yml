@@ -13,21 +13,7 @@ all:
             vpn.toshi.click: { }
         vpn_client:
           children:
-            shigure: { }
             raspi: { }
-        shigure:
-          children:
-            shigure_novpn: { }
-            shigure_vpn: { }
-        shigure_novpn:
-          hosts:
-            shigure.abe365.org: { }
-        shigure_vpn:
-          hosts:
-            vpn.shigure.abe365.org: { }
-        # mayu:
-        #   hosts:
-        #     mayu.abe365.org: { }
         raspi:
           children:
             raspi_novpn: { }
@@ -48,15 +34,3 @@ all:
             vpn.kaede.abe365.org: {}
             vpn.shiki.abe365.org: {}
             vpn.kako.abe365.org: {}
-        bare_metal:
-          children:
-            shigure: { }
-    # proxmox:
-    #   vars:
-    #     ansible_ssh_user: toshi
-    #     ansible_ssh_port: 22
-    #     ansible_python_interpreter: /usr/bin/python3
-    #     ansible_ssh_private_key_file: ~/.ssh/id_rsa
-    #   hosts:
-    #     infra.abe365.org: { }
-    #     monitoring.abe365.org: { }
