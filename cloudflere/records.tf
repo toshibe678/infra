@@ -76,16 +76,16 @@ resource "cloudflare_record" "vpn_mayu" {
   value   = "192.168.101.72"          # CloudFront を想定した値
   zone_id = "46b5be479776a4897b109614bd8c6a8a" # Cloudflare のゾーン ID
 }
-resource "cloudflare_record" "ranko" {
-  name    = "ranko"                           # サブドメイン名
+resource "cloudflare_record" "toshi-gamepc" {
+  name    = "toshi-gamepc"                           # サブドメイン名
   proxied = false                            # Cloudflare のプロキシを利用するか
   ttl     = 1                               # TTL
   type    = "A"                             # レコードタイプ
   value   = "192.168.77.77"          # CloudFront を想定した値
   zone_id = "46b5be479776a4897b109614bd8c6a8a" # Cloudflare のゾーン ID
 }
-resource "cloudflare_record" "vpn_ranko" {
-  name    = "vpn.ranko"                           # サブドメイン名
+resource "cloudflare_record" "vpn_toshi-gamepc" {
+  name    = "vpn.toshi-gamepc"                           # サブドメイン名
   proxied = false                            # Cloudflare のプロキシを利用するか
   ttl     = 1                               # TTL
   type    = "A"                             # レコードタイプ
