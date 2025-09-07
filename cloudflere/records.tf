@@ -307,6 +307,34 @@ resource "cloudflare_record" "gmail" {
   zone_id = "46b5be479776a4897b109614bd8c6a8a" # Cloudflare のゾーン ID
   priority = "1"
 }
+# spf
+resource "cloudflare_record" "spf" {
+  name    = "@"                 # サブドメイン名
+  ttl     = 3600                   # TTL
+  type    = "TXT"                # レコードタイプ
+  value   = "v=spf1 include:_spf.google.com include:spf.protection.outlook.com include:amazonses.com ~all"
+  zone_id = "46b5be479776a4897b109614bd8c6a8a" # Cloudflare のゾーン ID
+  priority = "1"
+}
+# dkim
+resource "cloudflare_record" "google_domainkey" {
+  name    = "google._domainkey" # サブドメイン名
+  ttl     = 3600                 # TTL
+  type    = "TXT"                # レコードタイプ
+  value   = "v=DKIM1; k=rsa; p=MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAkeMp8Uehg3dxoo7mT3VwIsU3plwgRTbYp3upFfHS6hrb2y4PsMnz8/rZVfpUexA2Sh+4lVAPyWSA/JYe9QLzPzoX/idyZ/9Uq8uASvH2yIyS6p+fsmP4fLwBouln0ip471oLKmzxv3Vys+vMmqL2qMUxP+WOpsN7c3h92WM8Z07ub8hiXKn1+3DH2wJEg4Vh69LCmXOCwzeb2hR3rhRJx/RIwEfXLJWFeUhK8smArk00hNMVlc6Qm/ZvQduNEWAIRRyFraFJ3exyZ/9QKJfgtmUegnmXO9SaTYO1uQHOTNcybgAa5Auu8YeDH3JmlSaMltr/x0rHzVTFbCC6vks4IwIDAQAB"
+  zone_id = "46b5be479776a4897b109614bd8c6a8a" # Cloudflare のゾーン ID
+  priority = "1"
+}
+# dmarc
+resource "cloudflare_record" "_dmarc" {
+  name    = "_dmarc" # サブドメイン名
+  ttl     = 3600                 # TTL
+  type    = "TXT"                # レコードタイプ
+  value   = "v=DMARC1; p=reject; rua=mailto:info@toshi.click; ruf=mailto:info@toshi.click; pct=100; adkim=s; aspf=s"
+  zone_id = "46b5be479776a4897b109614bd8c6a8a" # Cloudflare のゾーン ID
+  priority = "1"
+}
+
 # Azure Entra IDのドメイン検証用のTXTレコード
 resource "cloudflare_record" "azure_id" {
   name    = "@"                         # サブドメイン名
