@@ -1,0 +1,210 @@
+---
+# Proxmox VM初期設定プレイブック
+# Ubuntu 22.04/24.04/26.04 対応
+
+- name: Proxmox VM Initial Setup
+  hosts: proxmox_vms
+  become: true
+  become_user: root
+  gather_facts: yes
+
+  tasks:
+    - name: Show target host information
+      debug:
+        msg: "Configuring {{ inventory_hostname }} ({{ ansible_facts['distribution'] }} {{ ansible_facts['distribution_version'] }})"
+
+    - name: Verify Ubuntu version
+      assert:
+        that:
+          - ansible_facts['distribution'] == "Ubuntu"
+          - ansible_facts['distribution_version'] in ["22.04", "24.04", "26.04"]
+        fail_msg: "This playbook only supports Ubuntu 22.04, 24.04, or 26.04"
+        success_msg: "Ubuntu {{ ansible_facts['distribution_version'] }} detected"
+
+    # ========================================
+    # 1. sudo NOPASSWD設定
+    # ========================================
+    - name: Configure sudo NOPASSWD for user
+      lineinfile:
+        path: /etc/sudoers.d/{{ manage_user_name }}
+        line: "{{ manage_user_name }} ALL=(ALL) NOPASSWD: ALL"
+        create: yes
+        mode: '0440'
+        validate: 'visudo -cf %s'
+      when: sudo_nopassword == "yes"
+
+    # ========================================
+    # 2. システムアップデート
+    # ========================================
+    - name: Update apt cache
+      apt:
+        update_cache: yes
+        cache_valid_time: 3600
+
+    - name: Upgrade all packages
+      apt:
+        upgrade: dist
+        autoremove: yes
+        autoclean: yes
+      register: upgrade_result
+      changed_when: upgrade_result.changed
+
+    # ========================================
+    # 3. 必須パッケージインストール
+    # ========================================
+    - name: Install essential packages
+      apt:
+        name:
+          - git
+          - curl
+          - wget
+          - vim
+          - ca-certificates
+          - gnupg
+          - lsb-release
+          - python3
+          - python3-pip
+          - build-essential
+        state: present
+
+    # ========================================
+    # 4. Docker インストール
+    # ========================================
+    - name: Create directory for Docker GPG key
+      file:
+        path: /etc/apt/keyrings
+        state: directory
+        mode: '0755'
+
+    - name: Add Docker GPG key
+      apt_key:
+        url: https://download.docker.com/linux/ubuntu/gpg
+        keyring: /etc/apt/keyrings/docker.gpg
+        state: present
+
+    - name: Get Ubuntu codename
+      command: lsb_release -cs
+      register: ubuntu_codename
+      changed_when: false
+
+    - name: Add Docker repository
+      apt_repository:
+        repo: "deb [arch=amd64 signed-by=/etc/apt/keyrings/docker.gpg] https://download.docker.com/linux/ubuntu {{ ubuntu_codename.stdout }} stable"
+        state: present
+        filename: docker
+
+    - name: Install Docker packages
+      apt:
+        name:
+          - docker-ce
+          - docker-ce-cli
+          - containerd.io
+          - docker-buildx-plugin
+          - docker-compose-plugin
+        state: present
+        update_cache: yes
+
+    - name: Ensure Docker service is started and enabled
+      systemd:
+        name: docker
+        state: started
+        enabled: yes
+
+    - name: Add user to docker group
+      user:
+        name: "{{ manage_user_name }}"
+        groups: docker
+        append: yes
+
+    # ========================================
+    # 5. SSH設定確認とGitKey配置
+    # ========================================
+    - name: Ensure .ssh directory exists for user
+      file:
+        path: "/home/{{ manage_user_name }}/.ssh"
+        state: directory
+        owner: "{{ manage_user_name }}"
+        group: "{{ manage_user_group }}"
+        mode: '0700'
+
+    - name: Check if gitkey exists
+      stat:
+        path: "{{ common_ssh_git_key_path }}"
+      register: gitkey_stat
+      delegate_to: localhost
+      become: no
+
+    - name: Copy GitHub SSH key if available
+      copy:
+        src: "{{ common_ssh_git_key_path }}"
+        dest: "/home/{{ manage_user_name }}/.ssh/gitkey"
+        owner: "{{ manage_user_name }}"
+        group: "{{ manage_user_group }}"
+        mode: '0600'
+      when: gitkey_stat.stat.exists
+
+    - name: Decrypt Ansible Vault gitkey if needed
+      debug:
+        msg: "If gitkey is encrypted with Ansible Vault, make sure to use --vault-password-file"
+      when: gitkey_stat.stat.exists
+
+    # ========================================
+    # 6. Git設定
+    # ========================================
+    - name: Configure git safe directory settings
+      become: yes
+      become_user: "{{ manage_user_name }}"
+      command: "git config --global --add safe.directory {{ item.dest }}"
+      loop: "{{ git_repositories }}"
+      ignore_errors: yes
+      changed_when: false
+
+    # ========================================
+    # 7. GitHubリポジトリクローン
+    # ========================================
+    - name: Clone GitHub repositories
+      become: yes
+      become_user: "{{ manage_user_name }}"
+      git:
+        repo: "{{ item.repo }}"
+        dest: "{{ item.dest }}"
+        clone: yes
+        update: yes
+        key_file: "/home/{{ manage_user_name }}/.ssh/gitkey"
+        accept_hostkey: yes
+      loop: "{{ git_repositories }}"
+      when: gitkey_stat.stat.exists
+      tags: git_clone
+
+    - name: Set correct permissions for cloned repositories
+      file:
+        path: "{{ item.dest }}"
+        state: directory
+        owner: "{{ manage_user_name }}"
+        group: "{{ manage_user_group }}"
+        recurse: yes
+      loop: "{{ git_repositories }}"
+      when: gitkey_stat.stat.exists
+      tags: git_clone
+
+    # ========================================
+    # 8. 完了メッセージ
+    # ========================================
+    - name: Show completion message
+      debug:
+        msg:
+          - "========================================"
+          - "VM Initial Setup Completed!"
+          - "========================================"
+          - "Host: {{ inventory_hostname }}"
+          - "OS: {{ ansible_facts['distribution'] }} {{ ansible_facts['distribution_version'] }}"
+          - "Docker: Installed and enabled"
+          - "User '{{ manage_user_name }}' added to docker group"
+          - "Sudo NOPASSWD: {{ sudo_nopassword }}"
+          - "Cloned repositories: {{ git_repositories | length }}"
+          - "========================================"
+          - "Next steps:"
+          - "1. Logout and login again to apply docker group"
+          - "2. Verify: docker run hello-world"
+          - "3. Check cloned repos in /home/{{ manage_user_name }}/"
+          - "========================================"

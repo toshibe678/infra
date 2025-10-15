@@ -1,0 +1,32 @@
+---
+# Proxmox VM初期設定用変数
+
+# ユーザー設定
+manage_user_name: toshi
+manage_user_group: toshi
+
+# sudo NOPASSWD設定を有効にするか
+sudo_nopassword: "yes"
+
+# SSH鍵のパス（親ディレクトリのansibleから参照）
+common_ssh_git_key_path: "{{ playbook_dir }}/../ansible/files/gitkey"
+
+# クローンするGitHubリポジトリのリスト
+# 必要に応じて追加・削除してください
+git_repositories:
+  - name: scripts
+    repo: git@github.com:toshibe678/scripts.git
+    dest: "/home/{{ manage_user_name }}/scripts"
+  - name: infra
+    repo: git@github.com:toshibe678/infra.git
+    dest: "/home/{{ manage_user_name }}/infra"
+  # 追加のリポジトリはここに追加
+  # - name: another-repo
+  #   repo: git@github.com:username/repo.git
+  #   dest: "/home/{{ manage_user_name }}/another-repo"
+
+# Docker設定
+docker_install: true
+
+# システム設定
+timezone: Asia/Tokyo
