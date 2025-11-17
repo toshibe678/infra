@@ -1,0 +1,18 @@
+# generator.yml
+# walk: SNMP として取得したい OID 名やテーブル名（MIB に基づく）を指定。
+# lookups: 認識しやすいラベルに変換する場合に使用。
+# auths: SNMP v2/v3 の認証情報を定義（例では community：public）。
+modules:
+  huawei_cpu:
+    walk:
+      - hwCpuDevTable
+    lookups:
+      - source_indexes: [hwCpuDevIndex]
+        lookup: hwCpuDevDn
+    overrides:
+      hwAvgDuty1min:
+        type: gauge
+auths:
+  public_v2:
+    version: 2
+    community: public

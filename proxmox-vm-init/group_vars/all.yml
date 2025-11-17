@@ -9,7 +9,7 @@ manage_user_group: toshi
 sudo_nopassword: "yes"
 
 # SSH鍵のパス（親ディレクトリのansibleから参照）
-common_ssh_git_key_path: "{{ playbook_dir }}/../ansible/files/gitkey"
+common_ssh_git_key_path: "{{ playbook_dir }}/../ansible/files/id_ed25519"
 
 # クローンするGitHubリポジトリのリスト
 # 必要に応じて追加・削除してください

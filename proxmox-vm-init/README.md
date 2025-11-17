@@ -29,13 +29,13 @@ vi hosts_proxmox_vm.yml
 # ~/.ssh/.ansible_vault_pass が存在することを確認
 
 # 実行（初回はsudoパスワードを聞かれる）
-ansible-playbook -i hosts_proxmox_vm.yml vm_init.yml --ask-become-pass
+ansible-playbook -i hosts_proxmox_vm.yml vm_init.yml --ask-become-pass --ask-vault-password
 
 # またはDockerコンテナから
 cd /path/to/infra
 docker compose run --rm ansible bash
 cd /ansible/proxmox-vm-init
-ansible-playbook -i hosts_proxmox_vm.yml vm_init.yml --ask-become-pass
+ansible-playbook -i hosts_proxmox_vm.yml vm_init.yml --ask-become-pass --ask-vault-password
 ```
 
 ### 2回目以降（sudo NOPASSWD設定後）

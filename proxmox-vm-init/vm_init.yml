@@ -137,7 +137,7 @@
     - name: Copy GitHub SSH key if available
       copy:
         src: "{{ common_ssh_git_key_path }}"
-        dest: "/home/{{ manage_user_name }}/.ssh/gitkey"
+        dest: "/home/{{ manage_user_name }}/.ssh/id_ed25519"
         owner: "{{ manage_user_name }}"
         group: "{{ manage_user_group }}"
         mode: '0600'
@@ -170,7 +170,7 @@
         dest: "{{ item.dest }}"
         clone: yes
         update: yes
-        key_file: "/home/{{ manage_user_name }}/.ssh/gitkey"
+        key_file: "/home/{{ manage_user_name }}/.ssh/id_ed25519"
         accept_hostkey: yes
       loop: "{{ git_repositories }}"
       when: gitkey_stat.stat.exists
