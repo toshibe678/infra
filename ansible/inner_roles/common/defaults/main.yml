@@ -1,0 +1,22 @@
+---
+sudo_user_name: "toshi"
+sudo_nopassword: "yes"
+manage_user_name: toshi
+manage_user_group: toshi
+# パスワード生成は「python -c 'import crypt; print crypt.crypt("password", "$6$toshitoshi$")'」
+manage_user_password: $6$toshitoshi$oxKYPA6cfnFjlHmwVDQBsycKd.wedzL4u1Twb7I.ZFzf61BUr.wsAXqQpoW6z.CzqbgJhrCrN7ZNEzF3n642y1
+
+# パスワード生成は「python -c 'import crypt; print crypt.crypt("rootroot", "$6$rootroot$")'」
+root_user_name: root
+root_user_password: $6$rootroot$1a9X9k9wl.uH5llhn5LyS2VKjfCSImoxT9NXRnUX311X7LL45A9jNHGfRQ4T7KdtI4fleZkgaxDoz5UlBuSqV/
+
+common_ssh_id_rsa_path: "id_rsa"
+common_ssh_git_key_path: "git_key"
+
+hostname: "{{ inventory_hostname }}"
+
+ansible_user_create: false
+ansible_user_name: ansible
+ansible_user_group: ansible
+# パスワード生成は「python -c 'import crypt; print crypt.crypt("password", "$6$ansible$")'」などで。
+ansible_user_password: $6$ansible$LFMRmnf/CqZF6hCQF2J5IV03Fsfy.iyPo43qc0W2LleGOkDpVFxk39uuut91lwY2f9XobyobYpTx0DvRysFDx0

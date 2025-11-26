@@ -1,0 +1,11 @@
+---
+- name: set state chronyd
+  systemd:
+    name: chronyd
+    state: restarted
+    enabled: yes
+
+- name: enable chronyd
+  systemd:
+    name: chronyd
+    enabled: yes

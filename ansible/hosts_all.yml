@@ -11,9 +11,6 @@ all:
         vpn:
           hosts:
             vpn.toshi.click: { }
-        vpn_client:
-          children:
-            raspi: { }
         raspi:
           children:
             raspi_novpn: { }

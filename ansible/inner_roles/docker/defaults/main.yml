@@ -1,0 +1,5 @@
+---
+# yesだとdocker remote Apiのportを開放します
+# If yes, release the port of docker remote Api
+docker_remote_api_enable: "no"
+docker_remote_api_port: 2375

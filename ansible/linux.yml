@@ -6,7 +6,10 @@
   gather_facts: yes
   ignore_unreachable: true
   roles:
+    - { name: ./inner_roles/common }
     - { role: "node_exporter" }
+  # Linux機全体に適用する設定を記載する
+  # 適宜Commonロールなどに分割すること
   tasks:
     - name: Add to docker group
       user:

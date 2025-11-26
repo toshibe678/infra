@@ -27,7 +27,7 @@
 - name: client conf
   ansible.builtin.template:
     src: etc/wireguard/client.conf
-    dest: "{{ wire_guard_dir }}/{{ hostname }}_{{ item.name }}.conf"
+    dest: "{{ wire_guard_dir }}/{{ item.name }}_{{ hostname }}.conf"
     mode: '0640'
     owner: root
     group: "{{ manage_user_group }}"
@@ -35,7 +35,7 @@
   tags: wireguard
 
 - name: Generate QR codes
-  shell: "qrencode -o {{ wire_guard_dir }}/{{ hostname }}_{{ item.name }}.png -t png < {{ wire_guard_dir }}/{{ hostname }}_{{ item.name }}.conf"
+  shell: "qrencode -o {{ wire_guard_dir }}/{{ item.name }}_{{ hostname }}.png -t png < {{ wire_guard_dir }}/{{ item.name }}_{{ hostname }}.conf"
   changed_when: false
   loop: "{{ wire_guard_clients }}"
   become: true
@@ -43,7 +43,7 @@
 
 - name: file permission change
   ansible.builtin.file:
-    path: "{{ wire_guard_dir }}/{{ hostname }}_{{ item.name }}.png"
+    path: "{{ wire_guard_dir }}/{{ item.name }}_{{ hostname }}.png"
     mode: '0640'
     owner: root
     group: "{{ manage_user_group }}"

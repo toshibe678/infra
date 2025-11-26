@@ -1,0 +1,240 @@
+---
+- name: "modify /etc/sudoers"
+  template:
+    src: etc/sudoers
+    dest: "/etc/sudoers"
+    owner: root
+    group: root
+    mode: 0440
+    backup: true
+
+- name: "put /etc/sudoers.d/{{ sudo_user_name }}"
+  template:
+    src: etc/sudoers.d/user_sudo
+    dest: "/etc/sudoers.d/{{ sudo_user_name }}"
+    owner: root
+    group: root
+    mode: 0440
+    backup: true
+
+- name: "create group {{ manage_user_group }}"
+  group:
+    name: "{{ manage_user_group }}"
+
+- name: "users exist {{ manage_user_name }}  {{ manage_user_group }}"
+  user:
+    name: "{{ manage_user_name }}"
+    state: present
+    password: "{{ manage_user_password }}"
+    group: "{{ manage_user_group }}"
+    shell: /bin/bash
+
+- name: "directory create /home/{{ manage_user_name }}/.ssh"
+  file:
+    path: "/home/{{ manage_user_name }}/.ssh"
+    state: directory
+    owner: "{{ manage_user_name }}"
+    group: "{{ manage_user_group }}"
+    mode: 0700
+
+# add key
+- name: ssh_key
+  copy:
+    src: "{{ common_ssh_id_rsa_path | default('id_rsa') }}"
+    dest: "/home/{{ manage_user_name }}/.ssh/id_rsa"
+    owner: "{{ manage_user_name }}"
+    group: "{{ manage_user_group }}"
+    mode: 0600
+    backup: true
+
+- name: git_key
+  copy:
+    src: "{{ common_ssh_git_key_path | default('git_key') }}"
+    dest: "/home/{{ manage_user_name }}/.ssh/gitkey"
+    owner: "{{ manage_user_name }}"
+    group: "{{ manage_user_group }}"
+    mode: 0600
+    backup: true
+
+- name: authorized_keys
+  copy:
+    src: "home/manage_user/.ssh/authorized_keys"
+    dest: "/home/{{ manage_user_name }}/.ssh/authorized_keys"
+    owner: "{{ manage_user_name }}"
+    group: "{{ manage_user_group }}"
+    mode: 0600
+    backup: true
+
+- name: set profile
+  copy:
+    src: "home/manage_user/.profile"
+    dest: "/home/{{ manage_user_name }}/.profile"
+    owner: "{{ manage_user_name }}"
+    group: "{{ manage_user_group }}"
+    mode: 0644
+    backup: true
+
+- name: set bashrc
+  copy:
+    src: "home/manage_user/.bashrc"
+    dest: "/home/{{ manage_user_name }}/.bashrc"
+    owner: "{{ manage_user_name }}"
+    group: "{{ manage_user_group }}"
+    mode: 0644
+    backup: true
+
+- name: set history
+  copy:
+    src: "etc/profile.d/history.sh"
+    dest: "/etc/profile.d/history.sh"
+    owner: root
+    group: root
+    mode: 0755
+    backup: true
+
+- name: add kernel parameters and reload
+  sysctl:
+    name: "{{ item.name }}"
+    value: "{{ item.value }}"
+    state: present
+    reload: yes
+    sysctl_file: /etc/sysctl.d/common.conf
+  with_items:
+    - name: vm.max_map_count
+      value: 262144
+    - name: net.ipv4.ip_forward
+      value: 1
+    - name: net.core.somaxconn
+      value: 65535
+    - name: net.ipv4.tcp_max_syn_backlog
+      value: 65535
+    - name: net.core.netdev_max_backlog
+      value: 16384
+    - name: net.ipv4.conf.all.forwarding
+      value: 1
+
+- name: "change hostname to {{ hostname }}"
+  hostname:
+    name: "{{ hostname }}"
+
+- block:
+    - name: "create group {{ ansible_user_group }}"
+      group:
+        name: "{{ ansible_user_group }}"
+
+    - name: "users exist name:{{ ansible_user_name }} group:{{ ansible_user_group }}"
+      user:
+        name: "{{ ansible_user_name }}"
+        state: present
+        password: "{{ ansible_user_password }}"
+        group: "{{ ansible_user_group }}"
+
+    - name: "directory create /home/{{ ansible_user_name }}/.ssh"
+      file:
+        path: "/home/{{ ansible_user_name }}/.ssh"
+        state: directory
+        owner: "{{ ansible_user_name }}"
+        group: "{{ ansible_user_group }}"
+        mode: 0700
+        backup: true
+
+    - name: "create /home/{{ ansible_user_name }}/.ssh/config"
+      copy:
+        src: "home/ansible/.ssh/config"
+        dest: "/home/{{ ansible_user_name }}/.ssh/config"
+        owner: "{{ ansible_user_name }}"
+        group: "{{ ansible_user_group }}"
+        mode: 0600
+        backup: true
+
+    # add key
+    - name: authorized_keys
+      copy:
+        src: "home/ansible/.ssh/authorized_keys"
+        dest: "/home/{{ ansible_user_name }}/.ssh/authorized_keys"
+        owner: "{{ ansible_user_name }}"
+        group: "{{ ansible_user_group }}"
+        mode: 0600
+        backup: true
+  when: ansible_user_create
+
+- name: apt install common tools
+  ansible.builtin.package:
+    name:
+      - ansible
+      - chrony
+      - ibus-mozc
+      - language-pack-ja-base
+      - language-pack-ja
+      - manpages-ja-dev
+      - manpages-ja
+    state: present
+
+- name: create locale ja_JP.UTF-8
+  locale_gen:
+    name: ja_JP.UTF-8
+
+- name: "set-locale"
+  shell: update-locale LANG=ja_JP.UTF-8
+  check_mode: no
+
+- name: Set timezone to Asia/Tokyo
+  file:
+    src: /usr/share/zoneinfo/Asia/Tokyo
+    path: /etc/localtime
+    state: link
+    force: yes
+
+- name: update timezone
+  command: dpkg-reconfigure -f noninteractive tzdata
+  check_mode: no
+
+- name: set state chrony
+  systemd:
+    name: chrony
+    state: restarted
+    enabled: yes
+
+# ipv6よりもipv4を優先する設定
+# https://qastack.jp/ubuntu/32298/prefer-a-ipv4-dns-lookups-before-aaaaipv6-lookups
+- name: put /etc/gai.conf file ipv6 than also ipv4 preferred preference
+  copy:
+    src: etc/gai.conf
+    dest: /etc/gai.conf
+    owner: root
+    group: root
+    mode: 0644
+    backup: true
+
+- name: "root user password change"
+  user:
+    name: "{{ root_user_name }}"
+    password: "{{ root_user_password }}"
+
+- name: Install Ubuntu common dev tool packages
+  ansible.builtin.package:
+    name:
+      - ansible
+      - bash-completion
+      - bmon
+      - curl
+      - git
+      - htop
+      - iftop
+      - iotop
+      - iproute2
+      - iputils-ping
+      - iptraf
+      - iptraf-ng
+      - mailutils
+      - net-tools
+      - nmap
+      - sudo
+      - sysstat
+      - telnet
+      - tree
+      - unzip
+      - vim
+      - wget
+      - zip
+    state: present

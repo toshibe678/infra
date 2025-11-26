@@ -1,0 +1,142 @@
+# ローカル以外VPN経由ルール
+wire_guard_default_forward_address: 192.168.101.0/24
+
+wire_guard_server_private_key: "{{ crypt_wire_guard_server_private_key }}"
+wire_guard_server_public_key: M0WSPoqUVs1OBAXhBYr/MtQE8AhQoLlwSAW+FL5RZGk=
+wire_guard_clients:
+  - name: toshipc01
+    private_key: "{{ crypt_wire_guard_client_toshipc01_private_key }}"
+    public_key: "{{ crypt_wire_guard_client_toshipc01_public_key }}"
+    preshared_key: "{{ crypt_wire_guard_client_toshipc01_preshared_key }}"
+    ip_address: 192.168.101.10
+    forward_address: "{{ wire_guard_default_forward_address }}"
+  - name: toshipc-notepc
+    private_key: "{{ crypt_wire_guard_client_toshipc02_private_key }}"
+    public_key: "{{ crypt_wire_guard_client_toshipc02_public_key }}"
+    preshared_key: "{{ crypt_wire_guard_client_toshipc02_preshared_key }}"
+    ip_address: 192.168.101.11
+    forward_address: "{{ wire_guard_default_forward_address }}"
+  - name: toshi-gamepc
+    private_key: "{{ crypt_wire_guard_client_shigure_private_key }}"
+    public_key: "{{ crypt_wire_guard_client_shigure_public_key }}"
+    preshared_key: "{{ crypt_wire_guard_client_shigure_preshared_key }}"
+    ip_address: 192.168.101.71
+    forward_address: "{{ wire_guard_default_forward_address }}"
+  - name: smartphone01
+    private_key: "{{ crypt_wire_guard_client_smartphone01_private_key }}"
+    public_key: "{{ crypt_wire_guard_client_smartphone01_public_key }}"
+    preshared_key: "{{ crypt_wire_guard_client_smartphone01_preshared_key }}"
+    ip_address: 192.168.101.21
+    forward_address: 0.0.0.0/0
+  - name: smartphone02
+    private_key: "{{ crypt_wire_guard_client_smartphone02_private_key }}"
+    public_key: "{{ crypt_wire_guard_client_smartphone02_public_key }}"
+    preshared_key: "{{ crypt_wire_guard_client_smartphone02_preshared_key }}"
+    ip_address: 192.168.101.22
+    forward_address: 0.0.0.0/0
+  - name: tablet01
+    private_key: "{{ crypt_wire_guard_client_other01_private_key }}"
+    public_key: "{{ crypt_wire_guard_client_other01_public_key }}"
+    preshared_key: "{{ crypt_wire_guard_client_other01_preshared_key }}"
+    ip_address: 192.168.101.99
+    forward_address: 0.0.0.0/0
+
+  - name: nasmain
+    private_key: "{{ crypt_wire_guard_client_qnapmain_private_key }}"
+    public_key: "{{ crypt_wire_guard_client_qnapmain_public_key }}"
+    preshared_key: "{{ crypt_wire_guard_client_qnapmain_preshared_key }}"
+    ip_address: 192.168.101.91
+    forward_address: "{{ wire_guard_default_forward_address }}"
+  - name: nas_backup
+    private_key: "{{ crypt_wire_guard_client_qnapsub_private_key }}"
+    public_key: "{{ crypt_wire_guard_client_qnapsub_public_key }}"
+    preshared_key: "{{ crypt_wire_guard_client_qnapsub_preshared_key }}"
+    ip_address: 192.168.101.92
+    forward_address: "{{ wire_guard_default_forward_address }}"
+  - name: nas_qnap
+    private_key: "{{ crypt_wire_guard_client_ranko_private_key }}"
+    public_key: "{{ crypt_wire_guard_client_ranko_public_key }}"
+    preshared_key: "{{ crypt_wire_guard_client_ranko_preshared_key }}"
+    ip_address: 192.168.101.93
+    forward_address: "{{ wire_guard_default_forward_address }}"
+
+  - name: mother
+    private_key: "{{ crypt_wire_guard_client_mother_private_key }}"
+    public_key: "{{ crypt_wire_guard_client_mother_public_key }}"
+    preshared_key: "{{ crypt_wire_guard_client_mother_preshared_key }}"
+    ip_address: 192.168.101.201
+    forward_address: "{{ wire_guard_default_forward_address }}"
+  - name: sister1_1
+    private_key: "{{ crypt_wire_guard_client_sister1_private_key }}"
+    public_key: "{{ crypt_wire_guard_client_sister1_public_key }}"
+    preshared_key: "{{ crypt_wire_guard_client_sister1_preshared_key }}"
+    ip_address: 192.168.101.202
+    forward_address: "{{ wire_guard_default_forward_address }}"
+  - name: sister2_1
+    private_key: "{{ crypt_wire_guard_client_sister2_private_key }}"
+    public_key: "{{ crypt_wire_guard_client_sister2_public_key }}"
+    preshared_key: "{{ crypt_wire_guard_client_sister2_preshared_key }}"
+    ip_address: 192.168.101.203
+    forward_address: "{{ wire_guard_default_forward_address }}"
+
+  - name: raspi
+    private_key: "{{ crypt_wire_guard_client_raspi_private_key }}"
+    public_key: "{{ crypt_wire_guard_client_raspi_public_key }}"
+    preshared_key: "{{ crypt_wire_guard_client_raspi_preshared_key }}"
+    ip_address: 192.168.101.51
+    forward_address: "{{ wire_guard_default_forward_address }}"
+  - name: rasdev
+    private_key: "{{ crypt_wire_guard_client_rasdev_private_key }}"
+    public_key: "{{ crypt_wire_guard_client_rasdev_public_key }}"
+    preshared_key: "{{ crypt_wire_guard_client_rasdev_preshared_key }}"
+    ip_address: 192.168.101.52
+    forward_address: "{{ wire_guard_default_forward_address }}"
+  - name: sister1_2
+    private_key: "{{ crypt_wire_guard_client_sae_private_key }}"
+    public_key: "{{ crypt_wire_guard_client_sae_public_key }}"
+    preshared_key: "{{ crypt_wire_guard_client_sae_preshared_key }}"
+    ip_address: 192.168.101.53
+    forward_address: "{{ wire_guard_default_forward_address }}"
+  - name: sister2_2
+    private_key: "{{ crypt_wire_guard_client_kaede_private_key }}"
+    public_key: "{{ crypt_wire_guard_client_kaede_public_key }}"
+    preshared_key: "{{ crypt_wire_guard_client_kaede_preshared_key }}"
+    ip_address: 192.168.101.54
+    forward_address: "{{ wire_guard_default_forward_address }}"
+  - name: sister1_3
+    private_key: "{{ crypt_wire_guard_client_shiki_private_key }}"
+    public_key: "{{ crypt_wire_guard_client_shiki_public_key }}"
+    preshared_key: "{{ crypt_wire_guard_client_shiki_preshared_key }}"
+    ip_address: 192.168.101.55
+    forward_address: "{{ wire_guard_default_forward_address }}"
+  - name: sister2_3
+    private_key: "{{ crypt_wire_guard_client_kako_private_key }}"
+    public_key: "{{ crypt_wire_guard_client_kako_public_key }}"
+    preshared_key: "{{ crypt_wire_guard_client_kako_preshared_key }}"
+    ip_address: 192.168.101.56
+    forward_address: "{{ wire_guard_default_forward_address }}"
+
+  - name: yobi1
+    private_key: "{{ crypt_wire_guard_client_mayu_private_key }}"
+    public_key: "{{ crypt_wire_guard_client_mayu_public_key }}"
+    preshared_key: "{{ crypt_wire_guard_client_mayu_preshared_key }}"
+    ip_address: 192.168.101.72
+    forward_address: "{{ wire_guard_default_forward_address }}"
+  - name: yobi2
+    private_key: "{{ crypt_wire_guard_client_ayaka_private_key }}"
+    public_key: "{{ crypt_wire_guard_client_ayaka_public_key }}"
+    preshared_key: "{{ crypt_wire_guard_client_ayaka_preshared_key }}"
+    ip_address: 192.168.101.57
+    forward_address: "{{ wire_guard_default_forward_address }}"
+  - name: yobi3
+    private_key: "{{ crypt_wire_guard_client_other2_private_key }}"
+    public_key: "{{ crypt_wire_guard_client_other2_public_key }}"
+    preshared_key: "{{ crypt_wire_guard_client_other2_preshared_key }}"
+    ip_address: 192.168.101.58
+    forward_address: "{{ wire_guard_default_forward_address }}"
+  - name: yobi4
+    private_key: "{{ crypt_wire_guard_client_other3_private_key }}"
+    public_key: "{{ crypt_wire_guard_client_other3_public_key }}"
+    preshared_key: "{{ crypt_wire_guard_client_other3_preshared_key }}"
+    ip_address: 192.168.101.59
+    forward_address: "{{ wire_guard_default_forward_address }}"
