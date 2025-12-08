@@ -7,183 +7,43 @@
   ignore_unreachable: true
   roles:
     - { name: ./inner_roles/common }
-    - { role: "node_exporter" }
+    - { name: ./inner_roles/docker }
+    - { name: ./inner_roles/firewall }
+    - { name: prometheus.prometheus.node_exporter }
   # Linux機全体に適用する設定を記載する
   # 適宜Commonロールなどに分割すること
   tasks:
-    - name: Add to docker group
-      user:
-        name: "{{ manage_user_name }}"
-        groups: docker
-        append: yes
-
-    - name: "git safe directory at /home/{{ manage_user_name }}/scripts"
-      shell: "git config --global --add safe.directory /home/{{ manage_user_name }}/scripts"
-      tags: git_checkout
-
-    - name: Check if scripts directory exists
-      stat:
-        path: "/home/{{ manage_user_name }}/scripts"
-      register: scripts_dir_stat
-      tags: git_checkout
-
-    - name: すでにクローン済みの場合ディレクトリとファイルのパーミッションを再帰的に変更する
-      file:
-        path: "/home/{{ manage_user_name }}/scripts"
-        state: directory
-        owner: "{{ manage_user_name }}"
-        group: "{{ manage_user_group }}"
-        recurse: yes
-      when: scripts_dir_stat.stat.exists
-      tags: git_checkout
-
-    - name: Clone scripts github repository
-      become: yes
-      become_user: '{{ manage_user_name }}'
-      ansible.builtin.git:
-        repo: git@github.com:toshibe678/scripts.git
-        dest: "/home/{{ manage_user_name }}/scripts"
-        clone: yes
-        update: yes
-        key_file: "/home/{{ manage_user_name }}/.ssh/gitkey"
-        accept_hostkey: true
-      tags: git_checkout
-
-    - name: "git safe directory at /home/{{ manage_user_name }}/scripts"
-      shell: "git config --global --add safe.directory /home/{{ manage_user_name }}/infra"
-      tags: git_checkout
-
-    - name: Check if infra directory exists
-      stat:
-        path: "/home/{{ manage_user_name }}/infra"
-      register: infra_dir_stat
-      tags: git_checkout
-
-    - name: すでにクローン済みの場合ディレクトリとファイルのパーミッションを再帰的に変更する
-      file:
-        path: "/home/{{ manage_user_name }}/infra"
-        state: directory
-        owner: "{{ manage_user_name }}"
-        group: "{{ manage_user_group }}"
-        recurse: yes
-      when: infra_dir_stat.stat.exists
-      tags: git_checkout
-
-    - name: Clone infra github repository
-      become: yes
-      become_user: '{{ manage_user_name }}'
-      ansible.builtin.git:
-        repo: git@github.com:toshibe678/infra.git
-        dest: "/home/{{ manage_user_name }}/infra"
-        clone: yes
-        update: yes
-        key_file: "/home/{{ manage_user_name }}/.ssh/gitkey"
-        accept_hostkey: true
-      tags: git_checkout
-
-    - name: Install wireguard client
+    - name: Install power pkg
       ansible.builtin.package:
         name:
-          - wireguard
+          - wireless-tools
+          - pm-utils
         state: present
 
-    - name: Install resolvconf
-      ansible.builtin.package:
-        name:
-          - resolvconf
-        state: present
-      tags: resolve
-
-    - name: /etc/systemd/resolved.conf set
+    - name: rc-local.service set
       template:
-        src: "etc/systemd/resolved.conf"
-        dest: /etc/systemd/resolved.conf
-        owner: root
-        group: root
-        mode: 0644
-      tags: resolve
-
-    - name: Configure systemd-resolved
-      ansible.builtin.file:
-        src: /run/systemd/resolve/resolv.conf
-        dest: /etc/resolv.conf
-        state: link
-        force: yes
-      tags: resolve
-
-    - name: restart resolvconf
-      service:
-        name: systemd-resolved
-        state: restarted
-        enabled: yes
-      tags: resolve
-
-    - name: Generate /etc/hosts file
-      template:
-        src: "etc/hosts"
-        dest: "/etc/hosts"
+        src: "etc/systemd/system/rc-local.service"
+        dest: "/etc/systemd/system/rc-local.service"
         owner: root
         group: root
         mode: 0644
         backup: true
-      tags: resolve
 
-    - name: Install debug tools
-      ansible.builtin.package:
-        name:
-          - procps
-          - util-linux
-          - sysstat
-          - iproute2
-          - numactl
-          - tcpdump
-          - linux-tools-common
-          - bcc
-          - bpfcc-tools
-          - bpftrace
-          - trace-cmd
-          - nicstat
-          - ethtool
-          - tiptop
-          - iotop
-          - dstat
-          - git-lfs
-        state: present
+    - name: rc.local set
+      template:
+        src: "etc/rc-local"
+        dest: "/etc/rc.local"
+        owner: root
+        group: root
+        mode: 0755
+        backup: true
 
-    - name: golang repository Add an apt key by id from a keyserver
-      ansible.builtin.apt_key:
-        keyserver: keyserver.ubuntu.com
-        id: 52B59B1571A79DBC054901C0F6BC817356A3D45E
+    - name: systemd set state rc-local.service
+      systemd:
+        name: rc-local
+        state: restarted
+        enabled: yes
+        daemon_reload: yes
 
-    - name: apt add golang repository
-      ansible.builtin.apt_repository:
-        repo: ppa:longsleep/golang-backports
-        state: present
 
-    - name: Install golang
-      ansible.builtin.package:
-        name:
-          - golang
-          - golang-go
-        state: present
 
-    - name: Install nodejs and npm
-      ansible.builtin.package:
-        name:
-          - nodejs
-          - npm
-        state: present
-
-    - name: npmでgo-task/cliをグローバルインストール
-      npm:
-        name: "@go-task/cli"
-        global: yes
-        state: present
-
-    - name: auto_rebootが true なら自動再起動設定
-      cron:
-        name: "set cron for auto reboot"
-        minute: "0"
-        hour: "2"
-        job: "/usr/sbin/shutdown -r now"
-      when: auto_reboot

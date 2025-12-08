@@ -40,17 +40,8 @@
 # add key
 - name: ssh_key
   copy:
-    src: "{{ common_ssh_id_rsa_path | default('id_rsa') }}"
-    dest: "/home/{{ manage_user_name }}/.ssh/id_rsa"
-    owner: "{{ manage_user_name }}"
-    group: "{{ manage_user_group }}"
-    mode: 0600
-    backup: true
-
-- name: git_key
-  copy:
-    src: "{{ common_ssh_git_key_path | default('git_key') }}"
-    dest: "/home/{{ manage_user_name }}/.ssh/gitkey"
+    src: "{{ common_ssh_id_ed25519_path | default('id_ed25519') }}"
+    dest: "/home/{{ manage_user_name }}/.ssh/id_ed25519"
     owner: "{{ manage_user_name }}"
     group: "{{ manage_user_group }}"
     mode: 0600
@@ -117,57 +108,50 @@
   hostname:
     name: "{{ hostname }}"
 
-- block:
-    - name: "create group {{ ansible_user_group }}"
-      group:
-        name: "{{ ansible_user_group }}"
-
-    - name: "users exist name:{{ ansible_user_name }} group:{{ ansible_user_group }}"
-      user:
-        name: "{{ ansible_user_name }}"
-        state: present
-        password: "{{ ansible_user_password }}"
-        group: "{{ ansible_user_group }}"
-
-    - name: "directory create /home/{{ ansible_user_name }}/.ssh"
-      file:
-        path: "/home/{{ ansible_user_name }}/.ssh"
-        state: directory
-        owner: "{{ ansible_user_name }}"
-        group: "{{ ansible_user_group }}"
-        mode: 0700
-        backup: true
-
-    - name: "create /home/{{ ansible_user_name }}/.ssh/config"
-      copy:
-        src: "home/ansible/.ssh/config"
-        dest: "/home/{{ ansible_user_name }}/.ssh/config"
-        owner: "{{ ansible_user_name }}"
-        group: "{{ ansible_user_group }}"
-        mode: 0600
-        backup: true
-
-    # add key
-    - name: authorized_keys
-      copy:
-        src: "home/ansible/.ssh/authorized_keys"
-        dest: "/home/{{ ansible_user_name }}/.ssh/authorized_keys"
-        owner: "{{ ansible_user_name }}"
-        group: "{{ ansible_user_group }}"
-        mode: 0600
-        backup: true
-  when: ansible_user_create
-
-- name: apt install common tools
+- name: apt install common packages
   ansible.builtin.package:
     name:
       - ansible
+      - bash-completion
+      - bcc
+      - bmon
+      - bpfcc-tools
+      - bpftrace
       - chrony
+      - curl
+      - dstat
+      - ethtool
+      - git
+      - git-lfs
+      - htop
       - ibus-mozc
-      - language-pack-ja-base
-      - language-pack-ja
-      - manpages-ja-dev
+      - iftop
+      - iotop
+      - iproute2
+      - iptraf
+      - iptraf-ng
+      - iputils-ping
+      - linux-tools-common
+      - mailutils
       - manpages-ja
+      - manpages-ja-dev
+      - net-tools
+      - nicstat
+      - nmap
+      - numactl
+      - procps
+      - sudo
+      - sysstat
+      - tcpdump
+      - telnet
+      - tiptop
+      - trace-cmd
+      - tree
+      - unzip
+      - util-linux
+      - vim
+      - wget
+      - zip
     state: present
 
 - name: create locale ja_JP.UTF-8
@@ -211,30 +195,61 @@
     name: "{{ root_user_name }}"
     password: "{{ root_user_password }}"
 
-- name: Install Ubuntu common dev tool packages
+- name: Install resolvconf
   ansible.builtin.package:
     name:
-      - ansible
-      - bash-completion
-      - bmon
-      - curl
-      - git
-      - htop
-      - iftop
-      - iotop
-      - iproute2
-      - iputils-ping
-      - iptraf
-      - iptraf-ng
-      - mailutils
-      - net-tools
-      - nmap
-      - sudo
-      - sysstat
-      - telnet
-      - tree
-      - unzip
-      - vim
-      - wget
-      - zip
+      - resolvconf
     state: present
+  tags: resolve
+
+- name: /etc/systemd/resolved.conf set
+  template:
+    src: "etc/systemd/resolved.conf"
+    dest: /etc/systemd/resolved.conf
+    owner: root
+    group: root
+    mode: 0644
+  tags: resolve
+
+- name: Configure systemd-resolved
+  ansible.builtin.file:
+    src: /run/systemd/resolve/resolv.conf
+    dest: /etc/resolv.conf
+    state: link
+    force: yes
+  tags: resolve
+
+- name: restart resolvconf
+  service:
+    name: systemd-resolved
+    state: restarted
+    enabled: yes
+  tags: resolve
+
+- name: Generate /etc/hosts file
+  template:
+    src: "etc/hosts"
+    dest: "/etc/hosts"
+    owner: root
+    group: root
+    mode: 0644
+    backup: true
+  tags: resolve
+
+- name: Install open ssh server
+  ansible.builtin.package:
+    name:
+      - openssh-server
+    state: present
+# sshd
+- name: sshd is configured
+  notify:
+    - restart ssh
+    - enable ssh
+  template:
+    src: "ubuntu_sshd_config"
+    dest: "/etc/ssh/sshd_config"
+    owner: root
+    group: root
+    mode: 0644
+    backup: true

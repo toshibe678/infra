@@ -31,3 +31,4 @@ ansible_user_password: "{{ crypt_ansible_user_password }}"
 
 # モニタリング
 mail_transfer_address: "{{ crypt_mail_transfer_address }}"
+host_runner_labels: [self-hosted, linux, x86_64]

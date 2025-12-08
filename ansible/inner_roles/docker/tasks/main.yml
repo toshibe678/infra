@@ -88,3 +88,10 @@
     group: root
     mode: 0644
     backup: true
+
+- name: Add to docker group
+  user:
+    name: "{{ manage_user_name }}"
+    groups: docker
+    append: yes
+    

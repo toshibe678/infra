@@ -5,6 +5,12 @@
   hosts:
     - vpn_client
   tasks:
+    - name: Install wireguard client
+      ansible.builtin.package:
+        name:
+          - wireguard
+        state: present
+        
     - name: install wireguard
       ansible.builtin.package:
         name: wireguard-tools

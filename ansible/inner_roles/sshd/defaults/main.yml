@@ -1,7 +1,0 @@
----
-# sshdの設定
-sshd_password_login: "no"
-# この設定はyes,no,prohibit-password(パスワードは弾くが公開鍵認証は可)のどれか
-sshd_permit_root_login: "prohibit-password"
-# permitUserが空の場合はユーザ制限行いません
-sshd_permit_user: ""

@@ -1,8 +1,9 @@
 ---
-#collections:
-#  - name: yamaha_network.rtx
+collections:
+ - name: prometheus.prometheus
 
 # ansible-galaxy install -r requirements.yml -p roles --force
 roles:
   - name: monolithprojects.github_actions_runner
     src: https://github.com/MonolithProjects/ansible-github_actions_runner
+

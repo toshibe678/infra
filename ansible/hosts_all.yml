@@ -11,6 +11,13 @@ all:
         vpn:
           hosts:
             vpn.toshi.click: { }
+        monitoring:
+          hosts:
+            monitoring.abe365.org: { }
+        # dockerで提供するので、docker系だけ入ればOK
+        home_servers:
+          hosts:
+            dify.abe365.org: { }
         raspi:
           children:
             raspi_novpn: { }
@@ -31,3 +38,8 @@ all:
             vpn.kaede.abe365.org: {}
             vpn.shiki.abe365.org: {}
             vpn.kako.abe365.org: {}
+    proxmox:
+      hosts:
+        shigure.abe365.org: { }
+        infra1.abe365.org: { }
+        infra2.abe365.org: { }
