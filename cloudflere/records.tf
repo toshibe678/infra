@@ -113,7 +113,15 @@ resource "cloudflare_record" "monitoring" {
   proxied = false                            # Cloudflare のプロキシを利用するか
   ttl     = 1                               # TTL
   type    = "A"                             # レコードタイプ
-  value   = "192.168.100.253"          # CloudFront を想定した値
+  value   = "192.168.100.51       # CloudFront を想定した値
+  zone_id = "46b5be479776a4897b109614bd8c6a8a" # Cloudflare のゾーン ID
+}
+resource "cloudflare_record" "dify
+  name    = "dify                         # サブドメイン名
+  proxied = false                            # Cloudflare のプロキシを利用するか
+  ttl     = 1                               # TTL
+  type    = "A"                             # レコードタイプ
+  value   = "192.168.100.52      # CloudFront を想定した値
   zone_id = "46b5be479776a4897b109614bd8c6a8a" # Cloudflare のゾーン ID
 }
 ### ----------------------------------------------------------------------------------------------------
