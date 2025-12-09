@@ -10,7 +10,7 @@ on:
       - ".github/workflows/ansible-vpn-deploy.yml"
     branches:
       - develop
-  # 毎日22時に反映
+  # 毎日22時に反映(UTC)
   schedule:
     - cron: '3 22 * * *'
 

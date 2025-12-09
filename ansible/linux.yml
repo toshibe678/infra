@@ -9,7 +9,7 @@
     - { name: ./inner_roles/common }
     - { name: ./inner_roles/docker }
     - { name: ./inner_roles/firewall }
-    - { name: prometheus.prometheus.node_exporter }
+    # - { name: prometheus.prometheus.node_exporter }
   # Linux機全体に適用する設定を記載する
   # 適宜Commonロールなどに分割すること
   tasks:

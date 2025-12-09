@@ -10,11 +10,10 @@ on:
         description: 'ansible ターゲットグループ名'
         type: choice
         options:
-          - mayu
-          - raspi.test
-          - rasdev.test
-          - shigure_novpn
+          - raspi.abe365.org
+          - rasdev.abe365.org
           - vpn
+          - home_servers
 
 jobs:
   ansible-manual-deploy:
