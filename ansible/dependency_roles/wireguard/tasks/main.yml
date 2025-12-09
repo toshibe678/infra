@@ -20,6 +20,7 @@
     src: etc/wireguard/wg.conf
     dest: "{{ wire_guard_dir }}/{{ wire_guard_server_vpn_interface }}.conf"
     mode: '0600'
+  no_log: true
   tags: wireguard
   notify:
     - Restart Wireguard service
@@ -32,12 +33,14 @@
     owner: root
     group: "{{ manage_user_group }}"
   loop: "{{ wire_guard_clients }}"
+  no_log: true
   tags: wireguard
 
 - name: Generate QR codes
   shell: "qrencode -o {{ wire_guard_dir }}/{{ item.name }}_{{ hostname }}.png -t png < {{ wire_guard_dir }}/{{ item.name }}_{{ hostname }}.conf"
   changed_when: false
   loop: "{{ wire_guard_clients }}"
+  no_log: true
   become: true
   tags: wireguard
 

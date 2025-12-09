@@ -28,6 +28,7 @@
     password: "{{ manage_user_password }}"
     group: "{{ manage_user_group }}"
     shell: /bin/bash
+  no_log: true
 
 - name: "directory create /home/{{ manage_user_name }}/.ssh"
   file:
@@ -46,6 +47,7 @@
     group: "{{ manage_user_group }}"
     mode: 0600
     backup: true
+  no_log: true
 
 - name: authorized_keys
   copy:
@@ -194,6 +196,7 @@
   user:
     name: "{{ root_user_name }}"
     password: "{{ root_user_password }}"
+  no_log: true
 
 - name: Install resolvconf
   ansible.builtin.package:
