@@ -124,6 +124,22 @@ resource "cloudflare_record" "dify" {
   value   = "192.168.100.52"      # CloudFront を想定した値
   zone_id = "46b5be479776a4897b109614bd8c6a8a" # Cloudflare のゾーン ID
 }
+resource "cloudflare_record" "vpn-dev" {
+  name    = "vpn-dev"                         # サブドメイン名
+  proxied = false                            # Cloudflare のプロキシを利用するか
+  ttl     = 1                               # TTL
+  type    = "A"                             # レコードタイプ
+  value   = "192.168.100.53"      # CloudFront を想定した値
+  zone_id = "46b5be479776a4897b109614bd8c6a8a" # Cloudflare のゾーン ID
+}
+resource "cloudflare_record" "llm-proxy" {
+  name    = "llm-proxy"                         # サブドメイン名
+  proxied = false                            # Cloudflare のプロキシを利用するか
+  ttl     = 1                               # TTL
+  type    = "A"                             # レコードタイプ
+  value   = "192.168.100.54"      # CloudFront を想定した値
+  zone_id = "46b5be479776a4897b109614bd8c6a8a" # Cloudflare のゾーン ID
+}
 ### ----------------------------------------------------------------------------------------------------
 # NAS
 ### ----------------------------------------------------------------------------------------------------
