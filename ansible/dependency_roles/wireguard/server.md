@@ -25,3 +25,4 @@ K03BktxiXod16UCF1zx8KfXu5Uhfd4IAGefrB9TkUAg=
 root:~# wg genkey | tee /etc/wireguard/client_preshared.key
 MDuvBHt99FI1jetfTCHqB1rmOTJRtPI9Xnu+FTk29m0=
 ```
+

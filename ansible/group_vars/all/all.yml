@@ -1,9 +1,5 @@
 ---
-common_ssh_id_rsa_path: "{{ inventory_dir }}/files/toshi_sshkey"
-common_ssh_git_key_path: "{{ inventory_dir }}/files/gitkey"
-ansible_ssh_pass: "{{ crypt_ansible_ssh_pass }}"
-ansible_become_pass: "{{ crypt_ansible_become_pass }}"
-ansible_sudo_pass: "{{ crypt_ansible_sudo_pass }}"
+common_ssh_git_key_path: "{{ inventory_dir }}/files/id_ed25519"
 
 hostname: "{{ inventory_hostname }}"
 auto_reboot: false
@@ -27,7 +23,6 @@ manage_user_password: "{{ crypt_manage_user_pass }}"
 # manageユーザのsudo NOパスワードを許容するか
 sudo_nopassword: "yes"
 root_user_password: "{{ crypt_root_user_pass }}"
-ansible_user_password: "{{ crypt_ansible_user_password }}"
 
 # モニタリング
 mail_transfer_address: "{{ crypt_mail_transfer_address }}"

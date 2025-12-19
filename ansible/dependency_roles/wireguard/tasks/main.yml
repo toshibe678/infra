@@ -51,6 +51,7 @@
     owner: root
     group: "{{ manage_user_group }}"
   loop: "{{ wire_guard_clients }}"
+  no_log: true
   tags: wireguard
 
 - name: enable Wireguard service
