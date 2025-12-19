@@ -25,8 +25,5 @@ git_repositories:
   #   repo: git@github.com:username/repo.git
   #   dest: "/home/{{ manage_user_name }}/another-repo"
 
-# Docker設定
-docker_install: true
-
 # システム設定
 timezone: Asia/Tokyo
