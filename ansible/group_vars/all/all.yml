@@ -26,4 +26,4 @@ root_user_password: "{{ crypt_root_user_pass }}"
 
 # モニタリング
 mail_transfer_address: "{{ crypt_mail_transfer_address }}"
-host_runner_labels: [self-hosted, linux, x86_64]
+host_runner_labels: [x86_64]

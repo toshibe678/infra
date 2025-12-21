@@ -23,6 +23,14 @@ all:
         home_servers:
           hosts:
             dify.abe365.org: { }
+            llm-proxy.abe365.org: { }
+            develop.abe365.org: { }
+            ai-test.abe365.org: { }
+        k8s:
+          hosts:
+            k8s1.abe365.org: { }
+            k8s2.abe365.org: { }
+            k8s3.abe365.org: { }
         raspi:
           children:
             raspi_novpn: { }
@@ -31,18 +39,18 @@ all:
           hosts:
             raspi.abe365.org: { }
             rasdev.abe365.org: { }
-            sae.abe365.org: {}
-            kaede.abe365.org: {}
-            shiki.abe365.org: {}
-            kako.abe365.org: {}
+            # sae.abe365.org: {}
+            # kaede.abe365.org: {}
+            # shiki.abe365.org: {}
+            # kako.abe365.org: {}
         raspi_vpn:
           hosts:
             vpn.raspi.abe365.org: { }
             vpn.rasdev.abe365.org: { }
-            vpn.sae.abe365.org: {}
-            vpn.kaede.abe365.org: {}
-            vpn.shiki.abe365.org: {}
-            vpn.kako.abe365.org: {}
+            # vpn.sae.abe365.org: {}
+            # vpn.kaede.abe365.org: {}
+            # vpn.shiki.abe365.org: {}
+            # vpn.kako.abe365.org: {}
     proxmox:
       hosts:
         shigure.abe365.org: { }

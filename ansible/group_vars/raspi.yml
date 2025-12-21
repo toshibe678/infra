@@ -6,4 +6,4 @@ auto_reboot: false
 
 node_exporter_arch: 'arm64'
 
-host_runner_labels: [self-hosted, linux, arm64]
+host_runner_labels: [raspi]

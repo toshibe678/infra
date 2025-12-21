@@ -14,7 +14,21 @@ all:
         # ansible-playbook実行時に --ask-become-pass オプションを使用してください
       hosts:
         # 例: 新しいVMのホスト名またはIPアドレスを追加
-        target1:
+        target01:
+          ansible_host: 192.168.100.11
+        target02:
+          ansible_host: 192.168.100.12        
+        target03:
+          ansible_host: 192.168.100.13      
+        target04:
+          ansible_host: 192.168.100.51
+        target05:
+          ansible_host: 192.168.100.52
+        target06:
           ansible_host: 192.168.100.53
-        # vm02.example.com:
-        #   ansible_host: 192.168.1.101
+        target07:
+          ansible_host: 192.168.100.54
+        target08:
+          ansible_host: 192.168.100.55
+        target09:
+          ansible_host: 192.168.100.56
