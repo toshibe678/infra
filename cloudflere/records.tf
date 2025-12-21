@@ -108,6 +108,30 @@ resource "cloudflare_record" "infra2" {
   value   = "192.168.0.102"          # CloudFront を想定した値
   zone_id = "46b5be479776a4897b109614bd8c6a8a" # Cloudflare のゾーン ID
 }
+resource "cloudflare_record" "k8s1" {
+  name    = "k8s1"                           # サブドメイン名
+  proxied = false                            # Cloudflare のプロキシを利用するか
+  ttl     = 1                               # TTL
+  type    = "A"                             # レコードタイプ
+  value   = "192.168.100.11"       # CloudFront を想定した値
+  zone_id = "46b5be479776a4897b109614bd8c6a8a" # Cloudflare のゾーン ID
+}
+resource "cloudflare_record" "k8s2" {
+  name    = "k8s2"                         # サブドメイン名
+  proxied = false                            # Cloudflare のプロキシを利用するか
+  ttl     = 1                               # TTL
+  type    = "A"                             # レコードタイプ
+  value   = "192.168.100.12"      # CloudFront を想定した値
+  zone_id = "46b5be479776a4897b109614bd8c6a8a" # Cloudflare のゾーン ID
+}
+resource "cloudflare_record" "k8s3" {
+  name    = "k8s3"                         # サブドメイン名
+  proxied = false                            # Cloudflare のプロキシを利用するか
+  ttl     = 1                               # TTL
+  type    = "A"                             # レコードタイプ
+  value   = "192.168.100.13"      # CloudFront を想定した値
+  zone_id = "46b5be479776a4897b109614bd8c6a8a" # Cloudflare のゾーン ID
+}
 resource "cloudflare_record" "monitoring" {
   name    = "monitoring"                           # サブドメイン名
   proxied = false                            # Cloudflare のプロキシを利用するか
