@@ -9,8 +9,8 @@ ufw_rules:
   - { port: 9100, rule: allow, comment: 'Allow Node Exporter' }
 ufw_default_forward_policy: ACCEPT
 ufw_logging: low
-ufw_applications:
-  - { name: "Postfix" }
+# ufw_applications:
+#   - { name: "Postfix" }
 
 wire_guard_server_host: "{{ crypt_wire_guard_server_host }}"
 wire_guard_server_listen_port: 51820

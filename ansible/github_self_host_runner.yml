@@ -6,10 +6,10 @@
     - dify.abe365.org
     - monitoring.abe365.org
     - develop.abe365.org
-#    - ranko.abe365.org
-#    - sae.abe365.org
-#    - kaede.abe365.org
-#    - shiki.abe365.org
+    - ranko.abe365.org
+    - sae.abe365.org
+    - kaede.abe365.org
+    - shiki.abe365.org
   become: true
   become_user: root
   gather_facts: yes
