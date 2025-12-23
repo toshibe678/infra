@@ -362,12 +362,12 @@ resource "cloudflare_record" "google_site_verification" {
   zone_id = "46b5be479776a4897b109614bd8c6a8a" # Cloudflare のゾーン ID
 }
 
-# gmailで利用可能にするためのMXレコード
-resource "cloudflare_record" "gmail" {
+# outlookで利用可能にするためのMXレコード
+resource "cloudflare_record" "mail" {
   name    = "@"                 # サブドメイン名
-  ttl     = 1                   # TTL
+  ttl     = 3600                # TTL
   type    = "MX"                # レコードタイプ
-  value   = "smtp.google.com"  # MXレコードの値
+  value   = "abe365-org.mail.protection.outlook.com"  # MXレコードの値
   zone_id = "46b5be479776a4897b109614bd8c6a8a" # Cloudflare のゾーン ID
   priority = "1"
 }
@@ -403,7 +403,15 @@ resource "cloudflare_record" "ms365" {
   name    = "@"                         # サブドメイン名
   ttl     = 3600                        # TTL
   type    = "TXT"                       # レコードタイプ
-  value   = "MS=ms53238597"             # Azure Entra IDのドメイン検証用の値
+  value   = "MS=ms53238597" 
+  zone_id = "46b5be479776a4897b109614bd8c6a8a" # Cloudflare のゾーン ID
+}
+# MS365のドメイン検証用のCNAMEレコード
+resource "cloudflare_record" "ms365_cname" {
+  name    = "autodiscover"                         # サブドメイン名
+  ttl     = 3600                        # TTL
+  type    = "CNAME"                       # レコードタイプ
+  value   = "autodiscover.outlook.com"
   zone_id = "46b5be479776a4897b109614bd8c6a8a" # Cloudflare のゾーン ID
 }
 # Azure Entra IDのドメイン検証用のTXTレコード
