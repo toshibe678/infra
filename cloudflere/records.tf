@@ -398,7 +398,14 @@ resource "cloudflare_record" "_dmarc" {
   zone_id = "46b5be479776a4897b109614bd8c6a8a" # Cloudflare のゾーン ID
   priority = "1"
 }
-
+# MS365のドメイン検証用のTXTレコード
+resource "cloudflare_record" "ms365" {
+  name    = "@"                         # サブドメイン名
+  ttl     = 3600                        # TTL
+  type    = "TXT"                       # レコードタイプ
+  value   = "MS=ms53238597"             # Azure Entra IDのドメイン検証用の値
+  zone_id = "46b5be479776a4897b109614bd8c6a8a" # Cloudflare のゾーン ID
+}
 # Azure Entra IDのドメイン検証用のTXTレコード
 resource "cloudflare_record" "azure_id" {
   name    = "@"                         # サブドメイン名
