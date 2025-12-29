@@ -1,43 +1,64 @@
-version: "3.8"
+version: '3.8'
 services:
   otel-collector:
     image: otel/opentelemetry-collector-contrib:latest
-    container_name: otel-collector
     volumes:
       - ./config/otel-collector.yml:/etc/otel-collector.yml:ro
+      - ./monitoring/container_data/otel-collector:/var/lib/otelcol
     command: ["--config=/etc/otel-collector.yml"]
     ports:
-      - "4317:4317"   # OTLP gRPC
-      - "4318:4318"   # OTLP HTTP
-      - "9464:9464"   # Prometheus metrics endpoint
+      - "4317:4317"
+      - "4318:4318"
+      - "9464:9464"
     depends_on:
-      - prometheus
       - loki
       - tempo
+      - prometheus
 
   prometheus:
     image: prom/prometheus:latest
-    container_name: prometheus
     volumes:
       - ./config/prometheus.yml:/etc/prometheus/prometheus.yml:ro
+      - ./config/prom-rules.yml:/etc/prometheus/prom-rules.yml:ro
+      - ./monitoring/container_data/prometheus:/prometheus
+    command:
+      - "--config.file=/etc/prometheus/prometheus.yml"
+      - "--web.enable-lifecycle"
     ports:
       - "9090:9090"
+    depends_on:
+      - snmp-exporter
+
+  alertmanager:
+    image: prom/alertmanager:latest
+    volumes:
+      - ./config/alertmanager.yml:/etc/alertmanager/alertmanager.yml:ro
+      - ./monitoring/container_data/alertmanager:/alertmanager
+    ports:
+      - "9093:9093"
 
   loki:
     image: grafana/loki:latest
-    container_name: loki
     volumes:
       - ./config/loki-config.yml:/etc/loki/local-config.yml:ro
-      - loki-data:/loki
+      - ./monitoring/container_data/loki:/loki
     ports:
       - "3100:3100"
 
+  promtail:
+    image: grafana/promtail:latest
+    volumes:
+      - ./config/promtail-config.yml:/etc/promtail/promtail.yml:ro
+      - /var/log:/var/log
+    command: -config.file=/etc/promtail/promtail.yml
+    depends_on:
+      - loki
+
   tempo:
     image: grafana/tempo:latest
-    container_name: tempo
     volumes:
       - ./config/tempo-config.yml:/etc/tempo/tempo.yml:ro
-      - tempo-data:/var/tempo
+      - ./monitoring/container_data/tempo:/var/tempo
     ports:
       - "3200:3200"
 
@@ -49,7 +70,9 @@ services:
       - GF_SECURITY_ADMIN_PASSWORD=admin
     volumes:
       - ./config/grafana-datasources.yml:/etc/grafana/provisioning/datasources/datasources.yml:ro
-      - grafana-data:/var/lib/grafana
+      - ./config/grafana-dashboards.yml:/etc/grafana/provisioning/dashboards/providers.yml:ro
+      - ./dashboards:/var/lib/grafana/dashboards:ro
+      - ./monitoring/container_data/grafana:/var/lib/grafana
     ports:
       - "3000:3000"
     depends_on:
@@ -57,9 +80,11 @@ services:
       - loki
       - tempo
 
-volumes:
-  loki-data:
-  tempo-data:
-  grafana-data:
-
-
+  snmp-exporter:
+    image: prom/snmp-exporter:latest
+    container_name: snmp-exporter
+    volumes:
+      - ./config/snmp.yml:/etc/snmp_exporter/snmp.yml:ro
+    ports:
+      - "9116:9116"
+    restart: unless-stopped
