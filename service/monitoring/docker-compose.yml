@@ -1,10 +1,9 @@
-version: '3.8'
 services:
   otel-collector:
     image: otel/opentelemetry-collector-contrib:latest
     volumes:
       - ./config/otel-collector.yml:/etc/otel-collector.yml:ro
-      - ./monitoring/container_data/otel-collector:/var/lib/otelcol
+      - ./container_data/otel-collector:/var/lib/otelcol
     command: ["--config=/etc/otel-collector.yml"]
     ports:
       - "4317:4317"
@@ -20,12 +19,10 @@ services:
     volumes:
       - ./config/prometheus.yml:/etc/prometheus/prometheus.yml:ro
       - ./config/prom-rules.yml:/etc/prometheus/prom-rules.yml:ro
-      - ./monitoring/container_data/prometheus:/prometheus
+      - ./container_data/prometheus:/prometheus
     command:
       - "--config.file=/etc/prometheus/prometheus.yml"
       - "--web.enable-lifecycle"
-    ports:
-      - "9090:9090"
     depends_on:
       - snmp-exporter
 
@@ -33,17 +30,13 @@ services:
     image: prom/alertmanager:latest
     volumes:
       - ./config/alertmanager.yml:/etc/alertmanager/alertmanager.yml:ro
-      - ./monitoring/container_data/alertmanager:/alertmanager
-    ports:
-      - "9093:9093"
+      - ./container_data/alertmanager:/alertmanager
 
   loki:
     image: grafana/loki:latest
     volumes:
       - ./config/loki-config.yml:/etc/loki/local-config.yml:ro
-      - ./monitoring/container_data/loki:/loki
-    ports:
-      - "3100:3100"
+      - ./container_data/loki:/loki
 
   promtail:
     image: grafana/promtail:latest
@@ -58,9 +51,7 @@ services:
     image: grafana/tempo:latest
     volumes:
       - ./config/tempo-config.yml:/etc/tempo/tempo.yml:ro
-      - ./monitoring/container_data/tempo:/var/tempo
-    ports:
-      - "3200:3200"
+      - ./container_data/tempo:/var/tempo
 
   grafana:
     image: grafana/grafana:latest
@@ -71,10 +62,7 @@ services:
     volumes:
       - ./config/grafana-datasources.yml:/etc/grafana/provisioning/datasources/datasources.yml:ro
       - ./config/grafana-dashboards.yml:/etc/grafana/provisioning/dashboards/providers.yml:ro
-      - ./dashboards:/var/lib/grafana/dashboards:ro
-      - ./monitoring/container_data/grafana:/var/lib/grafana
-    ports:
-      - "3000:3000"
+      - ./container_data/grafana:/var/lib/grafana
     depends_on:
       - prometheus
       - loki
@@ -87,4 +75,19 @@ services:
       - ./config/snmp.yml:/etc/snmp_exporter/snmp.yml:ro
     ports:
       - "9116:9116"
+    restart: unless-stopped
+
+  nginx:
+    image: nginx:alpine
+    container_name: monitoring-nginx
+    volumes:
+      - ./config/nginx.conf:/etc/nginx/nginx.conf:ro
+    ports:
+      - "80:80"
+    depends_on:
+      - grafana
+      - prometheus
+      - alertmanager
+      - loki
+      - tempo
     restart: unless-stopped
