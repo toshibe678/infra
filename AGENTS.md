@@ -69,6 +69,16 @@ Ansible・Terraform・Docker・AWS CDK を中心に、構成管理・クラウ�
   - develop: 統合開発環境（VS Code、JupyterLab、DB群）
   - ai-test: AI/ML実験環境（Ollama、MLflow、Qdrant）
   - dify: AIアプリケーション開発プラットフォーム
+* wgdashboard: WireGuard管理ダッシュボード実装完了
+  - ホストで動作中のWireGuardをDocker経由で管理
+  - network_mode: hostでホストのWireGuard設定にアクセス
+  - Let's Encrypt SSL自動更新実装（certbotコンテナ、init-letsencrypt.sh）
+  - Basic認証による二段階認証（create-htpasswd.sh）
+  - レート制限（10req/s、ログイン3req/分）
+  - セキュリティヘッダー（HSTS、CSP、X-Frame-Options等）
+  - HTTPS強制リダイレクト
+  - グローバルアクセス対応（CONOHA VPS）
+* 全サービスにnginxリバースプロキシ追加完了
 
 ## 進行中
 * AWS CDKによる追加リソース管理
@@ -81,7 +91,7 @@ Ansible・Terraform・Docker・AWS CDK を中心に、構成管理・クラウ�
 * CI/CD パイプライン強化
 * スケーラビリティ・監視体制確立（既存monitoring/siemとの統合）
 * バックアップとコスト最適化
-* VPN Dev (192.168.100.53) サービス実装
+* Fail2Ban導入（wgdashboard、他サービス）
 
 ## 学びと進化
 * 早期ドキュメント化の重要性
@@ -112,7 +122,7 @@ Ansible・Terraform・Docker・AWS CDK を中心に、構成管理・クラウ�
 | Kubernetes Cluster | k8s1-3.abe365.org | 192.168.100.11-13 | k8sクラスタノード |
 | Monitoring | monitoring.abe365.org | 192.168.100.51 | Grafana/Prometheus監視基盤 |
 | Dify | dify.abe365.org | 192.168.100.52 | AIアプリケーション開発プラットフォーム |
-| VPN Dev | vpn-dev.abe365.org | 192.168.100.53 | 開発環境VPN接続 |
+| VPN Dev | vpn-dev.abe365.org | 192.168.100.53 | WireGuard管理ダッシュボード（WGDashboard） |
 | LLM Proxy | llm-proxy.abe365.org | 192.168.100.54 | 統合LLM APIプロキシ（OpenAI/Anthropic/Azure/AWS Bedrock/GCP VertexAI対応、自動フォールオーバー機能付き） |
 | Develop | develop.abe365.org | 192.168.100.55 | 開発環境 |
 | AI Test | ai-test.abe365.org | 192.168.100.56 | AI実験環境 |
@@ -131,6 +141,12 @@ service/
 │   ├── docker-compose.yml
 │   ├── README.md
 │   ├── .env.example
+│   └── nginx/
+├── wgdashboard/      # ✓完成：WireGuard管理ダッシュボード
+│   ├── docker-compose.yml
+│   ├── README.md
+│   ├── .env.example
+│   ├── .gitignore
 │   └── nginx/
 ├── llm-proxy/        # ✓完成：統合LLM APIプロキシ（LiteLLM）
 │   ├── docker-compose.yml
@@ -180,6 +196,7 @@ service/
 | コンテナ | Docker / Docker Compose              | マルチコンポーネント構成    |
 | クラウド | AWS (Bedrock) / GCP (VertexAI)       | マルチクラウドLLM統合   |
 | LLMプロキシ | LiteLLM                              | 統一API・フォールオーバー |
+| セキュリティ | Let's Encrypt / nginx / Fail2Ban     | SSL自動更新・レート制限 |
 | 開発言語 | Python / TypeScript                  | CLI + CDK実装     |
 
 ## 必須依存
