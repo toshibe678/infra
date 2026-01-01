@@ -5,8 +5,8 @@ services:
   code-server:
     image: codercom/code-server:latest
     restart: always
-    ports:
-      - "8080:8080"
+    expose:
+      - "8080"
     environment:
       - PASSWORD=${CODE_SERVER_PASSWORD}
       - SUDO_PASSWORD=${SUDO_PASSWORD}
@@ -22,8 +22,8 @@ services:
   jupyter:
     image: jupyter/datascience-notebook:latest
     restart: always
-    ports:
-      - "8888:8888"
+    expose:
+      - "8888"
     environment:
       - JUPYTER_ENABLE_LAB=yes
       - JUPYTER_TOKEN=${JUPYTER_TOKEN}
@@ -78,8 +78,8 @@ services:
   adminer:
     image: adminer:latest
     restart: always
-    ports:
-      - "8081:8080"
+    expose:
+      - "8080"
     environment:
       - ADMINER_DEFAULT_SERVER=postgres
     networks:
@@ -89,11 +89,29 @@ services:
   portainer:
     image: portainer/portainer-ce:latest
     restart: always
-    ports:
-      - "9000:9000"
+    expose:
+      - "9000"
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock
       - ./data/portainer:/data
+    networks:
+      - develop-network
+
+  # Nginx Reverse Proxy
+  nginx:
+    image: nginx:alpine
+    restart: always
+    ports:
+      - "80:80"
+      - "443:443"
+    volumes:
+      - ./nginx/nginx.conf:/etc/nginx/nginx.conf:ro
+      - ./nginx/ssl:/etc/nginx/ssl:ro
+    depends_on:
+      - code-server
+      - jupyter
+      - adminer
+      - portainer
     networks:
       - develop-network
 

@@ -5,8 +5,8 @@ services:
   litellm:
     image: ghcr.io/berriai/litellm:main-latest
     restart: always
-    ports:
-      - "4000:4000"
+    expose:
+      - "4000"
     environment:
       - DATABASE_URL=${DATABASE_URL:-postgresql://llmproxy:${DB_PASSWORD}@db:5432/litellm}
       - STORE_MODEL_IN_DB=${STORE_MODEL_IN_DB:-True}
@@ -57,14 +57,30 @@ services:
   prometheus:
     image: prom/prometheus:latest
     restart: always
-    ports:
-      - "9090:9090"
+    expose:
+      - "9090"
     volumes:
       - ./config/prometheus.yml:/etc/prometheus/prometheus.yml:ro
       - ./data/prometheus:/prometheus
     command:
       - '--config.file=/etc/prometheus/prometheus.yml'
       - '--storage.tsdb.path=/prometheus'
+    networks:
+      - llm-proxy-network
+
+  # Nginx Reverse Proxy
+  nginx:
+    image: nginx:alpine
+    restart: always
+    ports:
+      - "80:80"
+      - "443:443"
+    volumes:
+      - ./nginx/nginx.conf:/etc/nginx/nginx.conf:ro
+      - ./nginx/ssl:/etc/nginx/ssl:ro
+    depends_on:
+      - litellm
+      - prometheus
     networks:
       - llm-proxy-network
 

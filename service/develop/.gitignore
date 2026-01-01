@@ -1,0 +1,16 @@
+# Environment variables
+.env
+
+# Data directories
+data/
+workspace/
+notebooks/
+config/
+
+# Nginx SSL certificates
+nginx/ssl/
+
+# Temporary files
+*.tmp
+*.bak
+*~

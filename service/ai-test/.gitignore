@@ -1,17 +1,13 @@
 # Environment variables
 .env
 
-# GCP Service Account
-config/gcp-credentials.json
-
-# Logs
-logs/
-
 # Data directories
 data/
+ray/
 
-# LiteLLM config (keep example only)
-config/config.yaml
+# LangServe
+langserve/__pycache__/
+langserve/*.pyc
 
 # Nginx SSL certificates
 nginx/ssl/
