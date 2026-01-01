@@ -1,0 +1,19 @@
+# Environment variables
+.env
+
+# GCP Service Account
+config/gcp-credentials.json
+
+# Logs
+logs/
+
+# Data directories
+data/
+
+# LiteLLM config (keep example only)
+config/config.yaml
+
+# Temporary files
+*.tmp
+*.bak
+*~

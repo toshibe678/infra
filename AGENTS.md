@@ -26,11 +26,13 @@ Ansible・Terraform・Docker・AWS CDK を中心に、構成管理・クラウ�
 1. インフラコード管理：メモリーバンク構築、ドキュメント構造化
 2. 構成管理：Ansible Playbook 構造整理、環境別設定
 3. クラウドリソース：Terraform＋CDKハイブリッド運用
+4. ローカルサービス管理：service/フォルダ構造の整備とDocker Compose定義
 ## 進行中の決定
 * ドキュメント構造の統一化（Core/Component Docs分離）
 * 開発・本番環境分離
 * 環境変数ベース設定とセキュリティ分離
 * IaCと自動化の更なる拡充
+* ローカルネットワーク提供サービスのコンテナ化とDNS統合管理
 ## 改善目標
 * 自動化範囲の拡張
 * テストカバレッジ向上
@@ -60,6 +62,13 @@ Ansible・Terraform・Docker・AWS CDK を中心に、構成管理・クラウ�
 ## 完了
 * リポジトリ構造・Ansible/Terraform/Docker基盤整備
 * ドキュメントテンプレート完成（Project Brief, System Patterns, Technical Context）
+* service/フォルダの4サービス実装完了（dify, llm-proxy, develop, ai-test）
+  - 各サービスのdocker-compose.yml、README.md、.env.example作成
+  - llm-proxy: マルチクラウドLLM統合（AWS Bedrock、GCP VertexAI対応）
+  - llm-proxy: 自動フォールオーバー機能実装（Bedrock→VertexAI）
+  - develop: 統合開発環境（VS Code、JupyterLab、DB群）
+  - ai-test: AI/ML実験環境（Ollama、MLflow、Qdrant）
+  - dify: AIアプリケーション開発プラットフォーム
 
 ## 進行中
 * AWS CDKによる追加リソース管理
@@ -67,9 +76,12 @@ Ansible・Terraform・Docker・AWS CDK を中心に、構成管理・クラウ�
 * 環境変数・シークレットの標準化
 
 ## 今後の課題
+* service/配下のサービス本番デプロイ
+* llm-proxyの使用量監視とコスト最適化
 * CI/CD パイプライン強化
-* スケーラビリティ・監視体制確立
+* スケーラビリティ・監視体制確立（既存monitoring/siemとの統合）
 * バックアップとコスト最適化
+* VPN Dev (192.168.100.53) サービス実装
 
 ## 学びと進化
 * 早期ドキュメント化の重要性
@@ -88,6 +100,71 @@ Ansible・Terraform・Docker・AWS CDK を中心に、構成管理・クラウ�
 * Ansible：ロールベース分割 + group_vars/host_vars による変数管理
 * Terraform：Root-Common-Network-Blog-CloudFront構成
 * Docker：Proxy, n8n, Named, Terraform/Ansible実行環境
+* Cloudflare：DNSレコード管理（ローカルネットワーク名前解決を含む）
+* Service：ローカルネットワーク提供サービスのDocker Compose定義
+
+## ローカルネットワーク提供サービス
+`service/` フォルダには、Cloudflare DNS（records.tf）で定義されたabe365.orgサブドメインで名前解決可能な各サービスのインフラ定義を配置します。
+
+### サービス一覧と構成
+| サービス名 | サブドメイン | IPアドレス | 用途 |
+|-----------|------------|-----------|------|
+| Kubernetes Cluster | k8s1-3.abe365.org | 192.168.100.11-13 | k8sクラスタノード |
+| Monitoring | monitoring.abe365.org | 192.168.100.51 | Grafana/Prometheus監視基盤 |
+| Dify | dify.abe365.org | 192.168.100.52 | AIアプリケーション開発プラットフォーム |
+| VPN Dev | vpn-dev.abe365.org | 192.168.100.53 | 開発環境VPN接続 |
+| LLM Proxy | llm-proxy.abe365.org | 192.168.100.54 | 統合LLM APIプロキシ（OpenAI/Anthropic/Azure/AWS Bedrock/GCP VertexAI対応、自動フォールオーバー機能付き） |
+| Develop | develop.abe365.org | 192.168.100.55 | 開発環境 |
+| AI Test | ai-test.abe365.org | 192.168.100.56 | AI実験環境 |
+
+### サービスフォルダ構造
+```
+service/
+├── monitoring/        # 既存：監視基盤（Grafana, Prometheus）
+│   ├── docker-compose.yml
+│   ├── README.md
+│   └── config/
+├── siem/             # 既存：セキュリティ情報・イベント管理
+│   ├── docker-compose.yml
+│   └── README.md
+├── dify/             # ✓完成：AIアプリケーション開発（Dify Platform）
+│   ├── docker-compose.yml
+│   ├── README.md
+│   ├── .env.example
+│   └── nginx/
+├── llm-proxy/        # ✓完成：統合LLM APIプロキシ（LiteLLM）
+│   ├── docker-compose.yml
+│   ├── README.md
+│   ├── .env.example
+│   ├── .gitignore
+│   └── config/
+│       └── config.yaml.example
+├── develop/          # ✓完成：統合開発環境
+│   ├── docker-compose.yml
+│   ├── README.md
+│   └── .env.example
+└── ai-test/          # ✓完成：AI/ML実験環境
+    ├── docker-compose.yml
+    ├── README.md
+    └── .env.example
+```
+
+### サービス定義の原則
+1. **各サービスは独立したdocker-compose.ymlを持つ**
+   - サービス単位でのデプロイ・管理を可能にする
+   - 環境変数は `.env` ファイルで管理
+   - `.env.example` で環境変数テンプレートを提供
+2. **DNS名前解決との連携**
+   - Cloudflare records.tfで定義されたドメイン名を使用
+   - ローカルネットワーク内で一貫した名前解決を実現
+3. **ドキュメント必須**
+   - 各サービスディレクトリにREADME.mdを配置
+   - セットアップ手順、依存関係、環境変数を明記
+   - トラブルシューティング・セキュリティガイドを含む
+4. **マルチクラウド対応**（llm-proxyの場合）
+   - AWS Bedrock、GCP VertexAI等、複数のクラウドプロバイダー対応
+   - クォータ制限時の自動フォールオーバー機能
+   - 使用量ベースのロードバランシング
 
 ## 設計指針
 1. モジュール化：再利用性・責務分離・テスト容易化
@@ -100,7 +177,9 @@ Ansible・Terraform・Docker・AWS CDK を中心に、構成管理・クラウ�
 | ---- | ------------------------------------ | --------------- |
 | 構成管理 | Ansible                              | カスタムロール＋Vault対応 |
 | インフラ | Terraform / AWS CDK / CloudFormation | IaCの多層管理        |
-| コンテナ | Docker                               | マルチコンポーネント構成    |
+| コンテナ | Docker / Docker Compose              | マルチコンポーネント構成    |
+| クラウド | AWS (Bedrock) / GCP (VertexAI)       | マルチクラウドLLM統合   |
+| LLMプロキシ | LiteLLM                              | 統一API・フォールオーバー |
 | 開発言語 | Python / TypeScript                  | CLI + CDK実装     |
 
 ## 必須依存

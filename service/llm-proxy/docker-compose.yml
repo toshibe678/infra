@@ -1,0 +1,73 @@
+version: '3.8'
+
+services:
+  # LiteLLM Proxy Server
+  litellm:
+    image: ghcr.io/berriai/litellm:main-latest
+    restart: always
+    ports:
+      - "4000:4000"
+    environment:
+      - DATABASE_URL=${DATABASE_URL:-postgresql://llmproxy:${DB_PASSWORD}@db:5432/litellm}
+      - STORE_MODEL_IN_DB=${STORE_MODEL_IN_DB:-True}
+      - LITELLM_MASTER_KEY=${LITELLM_MASTER_KEY}
+      - LITELLM_LOG=${LITELLM_LOG:-INFO}
+      - AWS_ACCESS_KEY_ID=${AWS_ACCESS_KEY_ID}
+      - AWS_SECRET_ACCESS_KEY=${AWS_SECRET_ACCESS_KEY}
+      - AWS_REGION_NAME=${AWS_REGION_NAME:-us-east-1}
+      - GCP_PROJECT_ID=${GCP_PROJECT_ID}
+      - GCP_REGION=${GCP_REGION:-us-central1}
+      - VERTEX_LOCATION=${VERTEX_LOCATION:-us-central1}
+      - GOOGLE_APPLICATION_CREDENTIALS=${GOOGLE_APPLICATION_CREDENTIALS}
+      - GOOGLE_APPLICATION_CREDENTIALS_JSON=${GOOGLE_APPLICATION_CREDENTIALS_JSON}
+    volumes:
+      - ./config/config.yaml:/app/config.yaml:ro
+      - ./config/gcp-credentials.json:/app/gcp-credentials.json:ro
+      - ./logs:/app/logs
+    command: --config /app/config.yaml --detailed_debug
+    depends_on:
+      - db
+    networks:
+      - llm-proxy-network
+
+  # PostgreSQL Database
+  db:
+    image: postgres:15-alpine
+    restart: always
+    environment:
+      - POSTGRES_USER=llmproxy
+      - POSTGRES_PASSWORD=${DB_PASSWORD}
+      - POSTGRES_DB=litellm
+    volumes:
+      - ./data/postgres:/var/lib/postgresql/data
+    networks:
+      - llm-proxy-network
+
+  # Redis for caching (optional)
+  redis:
+    image: redis:7-alpine
+    restart: always
+    command: redis-server --requirepass ${REDIS_PASSWORD}
+    volumes:
+      - ./data/redis:/data
+    networks:
+      - llm-proxy-network
+
+  # Prometheus metrics (optional)
+  prometheus:
+    image: prom/prometheus:latest
+    restart: always
+    ports:
+      - "9090:9090"
+    volumes:
+      - ./config/prometheus.yml:/etc/prometheus/prometheus.yml:ro
+      - ./data/prometheus:/prometheus
+    command:
+      - '--config.file=/etc/prometheus/prometheus.yml'
+      - '--storage.tsdb.path=/prometheus'
+    networks:
+      - llm-proxy-network
+
+networks:
+  llm-proxy-network:
+    driver: bridge
