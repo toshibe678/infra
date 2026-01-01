@@ -1,72 +1,84 @@
 services:
-  otel-collector:
-    image: otel/opentelemetry-collector-contrib:latest
-    volumes:
-      - ./config/otel-collector.yml:/etc/otel-collector.yml:ro
-      - ./container_data/otel-collector:/var/lib/otelcol
-    command: ["--config=/etc/otel-collector.yml"]
-    ports:
-      - "4317:4317"
-      - "4318:4318"
-      - "9464:9464"
-    depends_on:
-      - loki
-      - tempo
-      - prometheus
+  # otel-collector:
+  #   image: otel/opentelemetry-collector-contrib:latest
+  #   volumes:
+  #     - ./config/otel-collector.yml:/etc/otel-collector.yml:ro
+  #   command: ["--config=/etc/otel-collector.yml"]
+  #   ports:
+  #     - "4317:4317"
+  #     - "4318:4318"
+  #     - "9464:9464"
+  #   depends_on:
+  #     - loki
+  #     - tempo
+  #     - prometheus
 
   prometheus:
     image: prom/prometheus:latest
+    environment:
+      - BASE_URL=${BASE_URL}
     volumes:
       - ./config/prometheus.yml:/etc/prometheus/prometheus.yml:ro
       - ./config/prom-rules.yml:/etc/prometheus/prom-rules.yml:ro
-      - ./container_data/prometheus:/prometheus
     command:
       - "--config.file=/etc/prometheus/prometheus.yml"
       - "--web.enable-lifecycle"
+      - "--web.external-url=${BASE_URL}/prometheus/"
+      - "--web.route-prefix=/"
     depends_on:
       - snmp-exporter
 
   alertmanager:
     image: prom/alertmanager:latest
+    environment:
+      - SLACK_WEBHOOK_URL=${SLACK_WEBHOOK_URL}
     volumes:
-      - ./config/alertmanager.yml:/etc/alertmanager/alertmanager.yml:ro
-      - ./container_data/alertmanager:/alertmanager
+      - ./config/alertmanager.yml.template:/etc/alertmanager/alertmanager.yml.template:ro
+      - ./config/alertmanager.yml:/etc/alertmanager/alertmanager.yml
+    entrypoint:
+      - /bin/sh
+      - -c
+      - |
+        envsubst < /etc/alertmanager/alertmanager.yml.template > /etc/alertmanager/alertmanager.yml
+        exec /bin/alertmanager --config.file=/etc/alertmanager/alertmanager.yml
 
-  loki:
-    image: grafana/loki:latest
-    volumes:
-      - ./config/loki-config.yml:/etc/loki/local-config.yml:ro
-      - ./container_data/loki:/loki
+  # loki:
+  #   image: grafana/loki:latest
+  #   volumes:
+  #     - ./config/loki-config.yml:/etc/loki/local-config.yml:ro
 
-  promtail:
-    image: grafana/promtail:latest
-    volumes:
-      - ./config/promtail-config.yml:/etc/promtail/promtail.yml:ro
-      - /var/log:/var/log
-    command: -config.file=/etc/promtail/promtail.yml
-    depends_on:
-      - loki
+  # promtail:
+  #   image: grafana/promtail:latest
+  #   volumes:
+  #     - ./config/promtail-config.yml:/etc/promtail/promtail.yml:ro
+  #     - /var/log:/var/log
+  #   command: -config.file=/etc/promtail/promtail.yml
+  #   depends_on:
+  #     - loki
 
-  tempo:
-    image: grafana/tempo:latest
-    volumes:
-      - ./config/tempo-config.yml:/etc/tempo/tempo.yml:ro
-      - ./container_data/tempo:/var/tempo
+  # tempo:
+  #   image: grafana/tempo:latest
+  #   volumes:
+  #     - ./config/tempo-config.yml:/etc/tempo/tempo.yml:ro
 
   grafana:
     image: grafana/grafana:latest
     container_name: grafana
     environment:
-      - GF_SECURITY_ADMIN_USER=admin
-      - GF_SECURITY_ADMIN_PASSWORD=admin
+      - GF_SECURITY_ADMIN_USER=${GRAFANA_ADMIN_USER:-admin}
+      - GF_SECURITY_ADMIN_PASSWORD=${GRAFANA_ADMIN_PASSWORD:-admin}
+      - GF_SERVER_ROOT_URL=${BASE_URL}/grafana/
+      - GF_SERVER_SERVE_FROM_SUB_PATH=true
+      - GF_DEFAULT_LANGUAGE=ja-JP
     volumes:
       - ./config/grafana-datasources.yml:/etc/grafana/provisioning/datasources/datasources.yml:ro
       - ./config/grafana-dashboards.yml:/etc/grafana/provisioning/dashboards/providers.yml:ro
-      - ./container_data/grafana:/var/lib/grafana
+      - ./dashboards:/etc/grafana/dashboards:ro
+      - grafana-data:/var/lib/grafana
     depends_on:
       - prometheus
-      - loki
-      - tempo
+      # - loki
+      # - tempo
 
   snmp-exporter:
     image: prom/snmp-exporter:latest
@@ -88,6 +100,9 @@ services:
       - grafana
       - prometheus
       - alertmanager
-      - loki
-      - tempo
+      # - loki
+      # - tempo
     restart: unless-stopped
+
+volumes:
+  grafana-data:
