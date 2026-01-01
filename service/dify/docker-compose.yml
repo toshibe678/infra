@@ -116,6 +116,20 @@ services:
     networks:
       - dify-network
 
+  # Node Exporter for system metrics
+  node-exporter:
+    image: prom/node-exporter:latest
+    container_name: dify-node-exporter
+    restart: always
+    expose:
+      - "9100"
+    command:
+      - '--path.rootfs=/host'
+    volumes:
+      - /:/host:ro,rslave
+    networks:
+      - dify-network
+
 networks:
   dify-network:
     driver: bridge

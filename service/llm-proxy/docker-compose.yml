@@ -68,6 +68,20 @@ services:
     networks:
       - llm-proxy-network
 
+  # Node Exporter for system metrics
+  node-exporter:
+    image: prom/node-exporter:latest
+    container_name: llm-proxy-node-exporter
+    restart: always
+    expose:
+      - "9100"
+    command:
+      - '--path.rootfs=/host'
+    volumes:
+      - /:/host:ro,rslave
+    networks:
+      - llm-proxy-network
+
   # Nginx Reverse Proxy
   nginx:
     image: nginx:alpine

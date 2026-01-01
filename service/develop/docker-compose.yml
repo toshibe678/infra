@@ -115,6 +115,20 @@ services:
     networks:
       - develop-network
 
+  # Node Exporter for system metrics
+  node-exporter:
+    image: prom/node-exporter:latest
+    container_name: develop-node-exporter
+    restart: always
+    expose:
+      - "9100"
+    command:
+      - '--path.rootfs=/host'
+    volumes:
+      - /:/host:ro,rslave
+    networks:
+      - develop-network
+
 networks:
   develop-network:
     driver: bridge

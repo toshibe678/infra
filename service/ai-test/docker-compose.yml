@@ -148,6 +148,20 @@ services:
     networks:
       - ai-test-network
 
+  # Node Exporter for system metrics
+  node-exporter:
+    image: prom/node-exporter:latest
+    container_name: ai-test-node-exporter
+    restart: always
+    expose:
+      - "9100"
+    command:
+      - '--path.rootfs=/host'
+    volumes:
+      - /:/host:ro,rslave
+    networks:
+      - ai-test-network
+
 networks:
   ai-test-network:
     driver: bridge

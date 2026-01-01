@@ -10,13 +10,71 @@ scrape_configs:
     static_configs:
       - targets: ['otel-collector:9464']
 
+  # Service Monitoring - Docker Containers
+  - job_name: 'dify'
+    static_configs:
+      - targets: ['dify.abe365.org:9090']
+        labels:
+          service: 'dify'
+          environment: 'production'
+
+  - job_name: 'llm-proxy'
+    static_configs:
+      - targets: ['llm-proxy.abe365.org:4000']
+        labels:
+          service: 'llm-proxy'
+          environment: 'production'
+    metrics_path: /metrics
+
+  - job_name: 'wgdashboard'
+    static_configs:
+      - targets: ['vpn-dev.abe365.org:9100']
+        labels:
+          service: 'wgdashboard'
+          environment: 'production'
+
+  - job_name: 'develop'
+    static_configs:
+      - targets: ['develop.abe365.org:9100']
+        labels:
+          service: 'develop'
+          environment: 'production'
+
+  - job_name: 'ai-test'
+    static_configs:
+      - targets: ['ai-test.abe365.org:11434']
+        labels:
+          service: 'ai-test'
+          environment: 'production'
+    metrics_path: /metrics
+
+  # Docker daemon metrics
+  - job_name: 'docker'
+    static_configs:
+      - targets: 
+        - 'dify.abe365.org:9323'
+        - 'vpn-dev.abe365.org:9323'
+        - 'llm-proxy.abe365.org:9323'
+        - 'develop.abe365.org:9323'
+        - 'ai-test.abe365.org:9323'
+
+  # Node Exporter for system metrics
+  - job_name: 'node-exporter'
+    static_configs:
+      - targets:
+        - 'dify.abe365.org:9100'
+        - 'vpn-dev.abe365.org:9100'
+        - 'llm-proxy.abe365.org:9100'
+        - 'develop.abe365.org:9100'
+        - 'ai-test.abe365.org:9100'
+
   # SNMP devices
   - job_name: 'snmp-network-devices'
     metrics_path: /snmp
     params:
       module: [if_mib]
     static_configs:
-      - targets: ['192.168.1.1', '192.168.1.2']
+      - targets: ['192.168.0.1', '192.168.0.200','192.168.0.201','192.168.0.210','192.168.0.211','192.168.0.212']
         labels:
           job: 'switch'
     relabel_configs:

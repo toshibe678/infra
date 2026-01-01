@@ -61,6 +61,10 @@ Ansible・Terraform・Docker・AWS CDK を中心に、構成管理・クラウ�
 # 📊 Progress — 進行状況とマイルストーン
 ## 完了
 * リポジトリ構造・Ansible/Terraform/Docker基盤整備
+* 2026-01-01 - サービス定義
+  - Dockerメトリクスの収集を追加し、各サービスにNode Exporterを統合。Prometheus設定を更新し、サービス監視ダッシュボードを作成。
+* リポジトリ構造・Ansible/Terraform/Docker基盤整備
+* リポジトリ構造・Ansible/Terraform/Docker基盤整備
 * ドキュメントテンプレート完成（Project Brief, System Patterns, Technical Context）
 * service/フォルダの4サービス実装完了（dify, llm-proxy, develop, ai-test）
   - 各サービスのdocker-compose.yml、README.md、.env.example作成
@@ -79,6 +83,12 @@ Ansible・Terraform・Docker・AWS CDK を中心に、構成管理・クラウ�
   - HTTPS強制リダイレクト
   - グローバルアクセス対応（CONOHA VPS）
 * 全サービスにnginxリバースプロキシ追加完了
+* Prometheus監視システム統合完了
+  - 各サービスにNode Exporter追加（システムメトリクス収集）
+  - LiteLLM metricsエンドポイント追加
+  - Prometheus設定に全サービスのscrape設定追加
+  - Grafana統合ダッシュボード作成（services-overview）
+  - Docker daemon metrics収集設定
 
 ## 進行中
 * AWS CDKによる追加リソース管理
@@ -120,7 +130,7 @@ Ansible・Terraform・Docker・AWS CDK を中心に、構成管理・クラウ�
 | サービス名 | サブドメイン | IPアドレス | 用途 |
 |-----------|------------|-----------|------|
 | Kubernetes Cluster | k8s1-3.abe365.org | 192.168.100.11-13 | k8sクラスタノード |
-| Monitoring | monitoring.abe365.org | 192.168.100.51 | Grafana/Prometheus監視基盤 |
+| Monitoring | monitoring.abe365.org | 192.168.100.51 | Grafana/Prometheus監視基盤（全サービス監視統合） |
 | Dify | dify.abe365.org | 192.168.100.52 | AIアプリケーション開発プラットフォーム |
 | VPN Dev | vpn-dev.abe365.org | 192.168.100.53 | WireGuard管理ダッシュボード（WGDashboard） |
 | LLM Proxy | llm-proxy.abe365.org | 192.168.100.54 | 統合LLM APIプロキシ（OpenAI/Anthropic/Azure/AWS Bedrock/GCP VertexAI対応、自動フォールオーバー機能付き） |
@@ -186,6 +196,7 @@ service/
 1. モジュール化：再利用性・責務分離・テスト容易化
 2. 自動化：手動操作削減・一貫した実行・冪等性
 3. セキュリティ：最小権限・暗号化・監査可能性
+4. 可観測性：メトリクス収集・ログ集約・分散トレーシング
 
 # ⚙️ Technical Context — 技術と開発環境
 ## 使用技術
@@ -197,6 +208,7 @@ service/
 | クラウド | AWS (Bedrock) / GCP (VertexAI)       | マルチクラウドLLM統合   |
 | LLMプロキシ | LiteLLM                              | 統一API・フォールオーバー |
 | セキュリティ | Let's Encrypt / nginx / Fail2Ban     | SSL自動更新・レート制限 |
+| 監視 | Prometheus / Grafana / Node Exporter | メトリクス収集・可視化 |
 | 開発言語 | Python / TypeScript                  | CLI + CDK実装     |
 
 ## 必須依存
