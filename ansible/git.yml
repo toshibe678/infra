@@ -25,6 +25,8 @@
         recurse: yes
       when: scripts_dir_stat.stat.exists
       tags: git_checkout
+      ignore_errors: yes
+      register: chmod_result
 
     - name: Clone scripts github repository
       become: yes
@@ -57,6 +59,8 @@
         recurse: yes
       when: infra_dir_stat.stat.exists
       tags: git_checkout
+      ignore_errors: yes
+      register: chmod_result
 
     - name: Clone infra github repository
       become: yes
