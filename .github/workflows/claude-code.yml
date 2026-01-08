@@ -1,0 +1,149 @@
+name: Claude Code Integration
+
+on:
+  workflow_dispatch:
+    inputs:
+      task:
+        description: 'Task description for Claude Code'
+        required: true
+        default: 'Review and suggest improvements'
+  pull_request:
+    types: [labeled]
+
+# Only run when 'claude-code' label is applied
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  claude-code-task:
+    # Run only if labeled with 'claude-code' or manually triggered
+    if: |
+      github.event_name == 'workflow_dispatch' ||
+      (github.event_name == 'pull_request' && contains(github.event.pull_request.labels.*.name, 'claude-code'))
+    
+    runs-on: self-hosted
+    timeout-minutes: 30
+    
+    permissions:
+      contents: write
+      pull-requests: write
+      issues: write
+    
+    env:
+      # LLM Proxy configuration
+      OPENAI_API_BASE: http://llm-proxy.abe365.org/v1
+      OPENAI_API_KEY: ${{ secrets.LITELLM_MASTER_KEY }}
+      # Claude model via LLM Proxy (Bedrock -> Vertex AI fallback)
+      CLAUDE_MODEL: claude-3-sonnet-fallback
+      # 日本語で応答
+      LANG: ja_JP.UTF-8
+    
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      
+      - name: Setup Python for Claude Code
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install openai anthropic
+      
+      - name: Test LLM Proxy connection
+        run: |
+          echo "Testing connection to LLM Proxy..."
+          curl -s -X GET http://llm-proxy.abe365.org/health || echo "Warning: LLM Proxy health check failed"
+          
+          # List available models
+          echo "Available models:"
+          curl -s -X GET http://llm-proxy.abe365.org/models \
+            -H "Authorization: Bearer ${{ secrets.LITELLM_MASTER_KEY }}" | jq -r '.data[].id' || echo "Warning: Could not list models"
+      
+      - name: Run Claude Code task
+        id: claude_task
+        run: |
+          python - <<'PYTHON_SCRIPT'
+          import os
+          import json
+          from openai import OpenAI
+          
+          # Configure OpenAI client to use LLM Proxy
+          client = OpenAI(
+              api_key=os.environ["OPENAI_API_KEY"],
+              base_url=os.environ["OPENAI_API_BASE"]
+          )
+          
+          # Get task description
+          task = os.environ.get("TASK_DESCRIPTION", "Review this repository and suggest improvements")
+          
+          # Get repository context (limited)
+          try:
+              with open("README.md", "r") as f:
+                  readme = f.read()[:2000]  # Limit size
+          except:
+              readme = "No README found"
+          
+          # Create prompt
+          prompt = f"""あなたはインフラストラクチャコードのエキスパートです。
+          以下のタスクを実行してください：
+
+          {task}
+
+          リポジトリのコンテキスト：
+          {readme}
+
+          日本語で簡潔に回答してください。"""
+          
+          # Call Claude via LLM Proxy
+          try:
+              response = client.chat.completions.create(
+                  model=os.environ["CLAUDE_MODEL"],
+                  messages=[
+                      {"role": "user", "content": prompt}
+                  ],
+                  max_tokens=2000,
+                  temperature=0.7
+              )
+              
+              result = response.choices[0].message.content
+              print("Claude's response:")
+              print(result)
+              
+              # Save to file for next step
+              with open("claude_response.txt", "w") as f:
+                  f.write(result)
+                  
+          except Exception as e:
+              print(f"Error calling Claude via LLM Proxy: {e}")
+              exit(1)
+          PYTHON_SCRIPT
+        env:
+          TASK_DESCRIPTION: ${{ github.event.inputs.task || 'Review this repository and suggest improvements' }}
+      
+      - name: Comment on PR (if applicable)
+        if: github.event_name == 'pull_request'
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const fs = require('fs');
+            const response = fs.readFileSync('claude_response.txt', 'utf8');
+            
+            await github.rest.issues.createComment({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              issue_number: context.issue.number,
+              body: `## 🤖 Claude Code Analysis\n\n${response}\n\n---\n*Powered by LLM Proxy (${process.env.CLAUDE_MODEL}) via ${process.env.OPENAI_API_BASE}*`
+            });
+      
+      - name: Upload Claude response
+        uses: actions/upload-artifact@v4
+        with:
+          name: claude-code-response
+          path: claude_response.txt
+          retention-days: 7

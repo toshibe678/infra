@@ -89,6 +89,13 @@ Ansible・Terraform・Docker・AWS CDK を中心に、構成管理・クラウ�
   - Prometheus設定に全サービスのscrape設定追加
   - Grafana統合ダッシュボード作成（services-overview）
   - Docker daemon metrics収集設定
+* Claude Code統合基盤構築完了（2026-01-08）
+  - セルフホストランナー向けClaude Code統合設定
+  - LLM Proxy経由でAWS Bedrock/GCP VertexAI利用
+  - GitHub Actions workflow作成（.github/workflows/claude-code.yml）
+  - Ansible playbook作成（ansible/claude_code_setup.yml）
+  - セキュリティとガバナンスを考慮した設計
+  - 完全なドキュメント整備（docs/CLAUDE_CODE_SETUP.md）
 
 ## 進行中
 * AWS CDKによる追加リソース管理
@@ -102,6 +109,7 @@ Ansible・Terraform・Docker・AWS CDK を中心に、構成管理・クラウ�
 * スケーラビリティ・監視体制確立（既存monitoring/siemとの統合）
 * バックアップとコスト最適化
 * Fail2Ban導入（wgdashboard、他サービス）
+* Claude Code統合の本格運用開始
 
 ## 学びと進化
 * 早期ドキュメント化の重要性

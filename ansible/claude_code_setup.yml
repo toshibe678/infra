@@ -1,0 +1,141 @@
+---
+- name: Setup Claude Code dependencies on self-hosted runners
+  hosts: 
+    - monitoring.abe365.org
+    - develop.abe365.org
+    - dify.abe365.org
+  become: true
+  become_user: root
+  gather_facts: yes
+  ignore_unreachable: true
+  
+  vars:
+    python_version: "3.11"
+    claude_code_packages:
+      - openai
+      - anthropic
+      - requests
+      - python-dotenv
+  
+  tasks:
+    - name: Update apt cache
+      apt:
+        update_cache: yes
+        cache_valid_time: 3600
+      when: ansible_os_family == "Debian"
+    
+    - name: Install Python 3.11 and pip
+      apt:
+        name:
+          - python3.11
+          - python3.11-venv
+          - python3-pip
+          - python3.11-dev
+        state: present
+      when: ansible_os_family == "Debian"
+    
+    - name: Ensure pip is upgraded
+      pip:
+        name: pip
+        state: latest
+        executable: pip3
+    
+    - name: Install Claude Code Python packages globally
+      pip:
+        name: "{{ claude_code_packages }}"
+        state: present
+        executable: pip3
+    
+    - name: Create Claude Code config directory for runner user
+      file:
+        path: "/home/{{ ansible_user }}/.config/claude-code"
+        state: directory
+        owner: "{{ ansible_user }}"
+        group: "{{ ansible_user }}"
+        mode: '0755'
+    
+    - name: Create Claude Code config template
+      copy:
+        dest: "/home/{{ ansible_user }}/.config/claude-code/config.yml"
+        owner: "{{ ansible_user }}"
+        group: "{{ ansible_user }}"
+        mode: '0600'
+        content: |
+          # Claude Code Configuration for LLM Proxy
+          llm_proxy:
+            endpoint: "http://llm-proxy.abe365.org/v1"
+            # API key should be set via environment variable: LITELLM_MASTER_KEY
+            model: "claude-3-sonnet-fallback"
+          
+          settings:
+            language: "ja"
+            timeout: 300
+            max_tokens: 4000
+    
+    - name: Install jq for JSON processing
+      apt:
+        name: jq
+        state: present
+      when: ansible_os_family == "Debian"
+    
+    - name: Test LLM Proxy connectivity from runner
+      uri:
+        url: "http://llm-proxy.abe365.org/health"
+        method: GET
+        timeout: 10
+      register: llm_proxy_health
+      ignore_errors: yes
+    
+    - name: Display LLM Proxy health check result
+      debug:
+        msg: "LLM Proxy health check: {{ 'SUCCESS' if llm_proxy_health.status == 200 else 'FAILED' }}"
+    
+    - name: Create Claude Code test script
+      copy:
+        dest: "/tmp/test_claude_code.py"
+        mode: '0755'
+        content: |
+          #!/usr/bin/env python3
+          import os
+          import sys
+          from openai import OpenAI
+          
+          # Test LLM Proxy connection
+          api_key = os.environ.get("LITELLM_MASTER_KEY", "test-key")
+          base_url = "http://llm-proxy.abe365.org/v1"
+          
+          print(f"Testing Claude Code integration...")
+          print(f"API Base URL: {base_url}")
+          print(f"API Key set: {'Yes' if api_key != 'test-key' else 'No (using test key)'}")
+          
+          try:
+              client = OpenAI(api_key=api_key, base_url=base_url)
+              
+              # Simple test
+              response = client.chat.completions.create(
+                  model="claude-3-sonnet-fallback",
+                  messages=[
+                      {"role": "user", "content": "Say 'Hello from Claude!' in Japanese"}
+                  ],
+                  max_tokens=50
+              )
+              
+              print(f"✓ Success! Claude responded: {response.choices[0].message.content}")
+              sys.exit(0)
+              
+          except Exception as e:
+              print(f"✗ Error: {e}")
+              sys.exit(1)
+    
+    - name: Display setup completion message
+      debug:
+        msg: |
+          Claude Code setup completed successfully!
+          
+          Next steps:
+          1. Set LITELLM_MASTER_KEY in GitHub Secrets
+          2. Test the integration with:
+             LITELLM_MASTER_KEY=your-key python3 /tmp/test_claude_code.py
+          3. Use the claude-code.yml workflow in GitHub Actions
+          
+          Documentation: docs/CLAUDE_CODE_SETUP.md
