@@ -69,7 +69,7 @@ nslookup vpn-dev.abe365.org
 
 ```bash
 cp .env.example .env
-vim .env  # 全ての認証情報を設定
+vim .env  # 認証情報と OTP 設定を変更
 ```
 
 **環境別設定**:
@@ -78,18 +78,17 @@ vim .env  # 全ての認証情報を設定
 # 開発環境（内部ネットワーク、HTTP）
 ENVIRONMENT=dev
 
-# Basic認証情報（nginx層）
-BASIC_AUTH_USERNAME=admin
-BASIC_AUTH_PASSWORD=your_secure_password
-
-# WGDashboard認証情報（アプリ層）
+# WGDashboard認証情報（アプリ層のみ）
 WGDASHBOARD_USERNAME=admin
-WGDASHBOARD_PASSWORD=another_secure_password
+WGDASHBOARD_PASSWORD=your_secure_password
+
+# OTP（ワンタイムパスワード）2FAを有効化（推奨）
+ENABLE_TOTP=true
 ```
 
-**認証の2層構造**:
-- **Basic認証**（nginx層）: 外部からのアクセスを最初に制限
-- **WGDashboard認証**（アプリ層）: アプリケーション本体のログイン
+**セキュリティ構成**:
+- nginx の Basic認証は削除（OTP で対応）
+- WGDashboard のアプリケーション層で認証 + OTP を実装
 
 # 本番環境（インターネット接続、HTTPS）
 ENVIRONMENT=prod
@@ -98,16 +97,12 @@ ENVIRONMENT=prod
 ### 2. 開発環境セットアップ（HTTP、SSLなし）
 
 ```bash
-# .envで全ての認証情報を設定
+# .envで認証情報を設定
 # - ENVIRONMENT=dev
-# - BASIC_AUTH_USERNAME / BASIC_AUTH_PASSWORD
 # - WGDASHBOARD_USERNAME / WGDASHBOARD_PASSWORD
+# - ENABLE_TOTP=true（OTP有効化）
 
-# Basic認証ファイルを自動生成（.env内の認証情報を使用）
-chmod +x create-htpasswd.sh
-./create-htpasswd.sh
-
-# サービス起動（certbotはスキップ）
+# サービス起動
 docker-compose up -d
 
 # ログ確認
@@ -119,27 +114,23 @@ docker-compose logs -f
 http://vpn-dev.abe365.org:80
 ```
 
-認証手順:
-1. Basic認証（nginx層）: `.env`の`BASIC_AUTH_*`で設定した認証情報
-2. WGDashboard認証（アプリ層）: `.env`の`WGDASHBOARD_*`で設定した認証情報
+**初回ログイン**:
+1. WGDashboard認証: `.env`で設定した`WGDASHBOARD_USERNAME`/`WGDASHBOARD_PASSWORD`
+2. OTP設定画面: QRコードをスキャンして認証器アプリに登録
 
 ### 3. 本番環境セットアップ（HTTPS、Let's Encrypt）
 
 ```bash
-# .envで全ての認証情報を設定
+# .envで認証情報を設定
 # - ENVIRONMENT=prod
-# - BASIC_AUTH_USERNAME / BASIC_AUTH_PASSWORD
 # - WGDASHBOARD_USERNAME / WGDASHBOARD_PASSWORD
+# - ENABLE_TOTP=true（OTP有効化）
 
 # Let's Encrypt SSL証明書の取得
 chmod +x init-letsencrypt.sh
 vim init-letsencrypt.sh
 # EMAIL="admin@example.com" を自分のメールアドレスに変更
 ./init-letsencrypt.sh
-
-# Basic認証ファイルを自動生成（.env内の認証情報を使用）
-chmod +x create-htpasswd.sh
-./create-htpasswd.sh
 
 # 全サービスを起動（certbotを含む）
 docker-compose --profile prod up -d
@@ -153,9 +144,9 @@ docker-compose logs -f
 https://vpn.toshi.click
 ```
 
-認証手順:
-1. Basic認証（nginx層）: `.env`の`BASIC_AUTH_*`で設定した認証情報
-2. WGDashboard認証（アプリ層）: `.env`の`WGDASHBOARD_*`で設定した認証情報
+**初回ログイン**:
+1. WGDashboard認証: `.env`で設定した`WGDASHBOARD_USERNAME`/`WGDASHBOARD_PASSWORD`
+2. OTP設定画面: QRコードをスキャンして認証器アプリに登録
 
 # 全サービスを起動（certbotを含む）
 docker-compose --profile prod up -d
@@ -178,25 +169,23 @@ https://vpn.toshi.click
 | 変数名 | 説明 | 必須 | デフォルト |
 |--------|------|------|-----------|
 | ENVIRONMENT | 環境の選択 (dev/prod) | × | dev |
-| BASIC_AUTH_USERNAME | Basic認証ユーザー名（nginx層） | × | admin |
-| BASIC_AUTH_PASSWORD | Basic認証パスワード（nginx層） | ✓ | - |
-| WGDASHBOARD_USERNAME | WGDashboard認証ユーザー名（アプリ層） | × | admin |
-| WGDASHBOARD_PASSWORD | WGDashboard認証パスワード（アプリ層） | ✓ | - |
+| WGDASHBOARD_USERNAME | WGDashboard認証ユーザー名 | × | admin |
+| WGDASHBOARD_PASSWORD | WGDashboard認証パスワード | ✓ | - |
+| ENABLE_TOTP | OTP 2FA有効化（推奨） | × | true |
 | TZ | タイムゾーン | × | Asia/Tokyo |
 
-**認証の2層構造**:
-1. **Basic認証（nginx層）**: `.env`で`BASIC_AUTH_*`を設定 → `create-htpasswd.sh`で自動生成
-2. **WGDashboard認証（アプリ層）**: `.env`で`WGDASHBOARD_*`を設定 → 環境変数`username`/`password`で自動設定
+**認証設定**:
+- nginx: Basic認証なし（OTP で直接保護）
+- WGDashboard: ユーザー名/パスワード + OTP 2FA
+- セキュリティ: OTP（Google Authenticator等）で強化
 
 **環境の詳細**:
 - `dev`: 開発環境（HTTP、内部ネットワーク）
   - nginxはHTTPで動作
   - certbotは起動しない
-  - SSLセキュリティヘッダーは最小限
 - `prod`: 本番環境（HTTPS、Let's Encrypt）
   - nginxはHTTPSで動作
   - certbotが自動更新を管理
-  - 厳格なセキュリティヘッダーを適用
 
 ## アクセス方法
 
@@ -206,9 +195,9 @@ https://vpn.toshi.click
 http://vpn-dev.abe365.org
 ```
 
-**認証手順**:
-1. **Basic認証**（nginx層）: `.env`で設定した`BASIC_AUTH_USERNAME`/`BASIC_AUTH_PASSWORD`
-2. **WGDashboard認証**（アプリ層）: `.env`で設定した`WGDASHBOARD_USERNAME`/`WGDASHBOARD_PASSWORD`
+**認証**:
+1. ユーザー名/パスワード: `.env`の`WGDASHBOARD_*`
+2. OTP コード: Google Authenticator 等で生成
 
 ### 本番環境
 
@@ -216,27 +205,9 @@ http://vpn-dev.abe365.org
 https://vpn.toshi.click
 ```
 
-**認証手順**:
-1. **Basic認証**（nginx層）: `.env`で設定した`BASIC_AUTH_USERNAME`/`BASIC_AUTH_PASSWORD`
-2. **WGDashboard認証**（アプリ層）: `.env`で設定した`WGDASHBOARD_USERNAME`/`WGDASHBOARD_PASSWORD`
-
-```
-http://vpn-dev.abe365.org
-```
-
-認証：
-1. Basic認証（create-htpasswd.shで設定）
-2. WGDashboard認証（.envで設定）
-
-### 本番環境
-
-```
-https://vpn.toshi.click
-```
-
-認証：
-1. Basic認証（create-htpasswd.shで設定）
-2. WGDashboard認証（.envで設定）
+**認証**:
+1. ユーザー名/パスワード: `.env`の`WGDASHBOARD_*`
+2. OTP コード: Google Authenticator 等で生成
 
 ## 機能
 
@@ -338,32 +309,36 @@ sudo systemctl restart wg-quick@wg0
 
 ## セキュリティ
 
-### 環境別のセキュリティ実装
+### 実装されているセキュリティ機能
+
+#### 認証と認可
+
+- **WGDashboard認証**: ユーザー名とパスワード
+- **OTP 2FA**: Google Authenticator や Microsoft Authenticator での二要素認証
+- **nginx**: Basic認証なし（OTP で直接保護）
 
 #### 開発環境（HTTP）
 
-- **Basic認証**: あり（create-htpasswd.shで設定）
-- **WGDashboard認証**: あり
+- **WGDashboard認証**: ユーザー名 + パスワード + OTP
 - **SSL/TLS**: なし（内部ネットワークのため）
-- **セキュリティヘッダー**: 最小限（フレーム保護、XSS保護等）
-- **レート制限**: あり
+- **セキュリティヘッダー**: 最小限
+- **レート制限**: 通常10req/s、ログイン3req/分
 - **用途**: ローカルネットワーク内での開発・管理
 
 #### 本番環境（HTTPS）
 
-- **Basic認証**: あり（create-htpasswd.shで設定）
-- **WGDashboard認証**: あり
+- **WGDashboard認証**: ユーザー名 + パスワード + OTP
 - **SSL/TLS**: Let's Encrypt（自動更新）
 - **セキュリティヘッダー**: 厳格（HSTS、CSP、OCSP Stapling等）
-- **レート制限**: あり
+- **レート制限**: 通常10req/s、ログイン3req/分
 - **HTTP強制リダイレクト**: HTTPS強制（HSTS有効）
-- **用途**: インターネット経由でのグローバルアクセス
 
 ### 本番環境で実装されているセキュリティ対策
 
-#### 1. **多層認証**
-- **Basic認証**（nginx層）: 不正アクセスの第一防御
-- **WGDashboard認証**: アプリケーション層の認証
+#### 1. **OTP による二要素認証**
+- Google Authenticator、Microsoft Authenticator 対応
+- バックアップコード発行
+- タイムベース（TOTP）実装
 
 #### 2. **SSL/TLS暗号化**
 - Let's Encrypt証明書（自動更新）
@@ -463,24 +438,7 @@ Cloudflare DNSでProxyを有効にすると：
 
 ### パスワード管理
 
-#### Basic認証パスワード変更（nginx層）
-
-```bash
-# .envファイルのBASIC_AUTH_PASSWORDを変更
-vim .env
-
-# create-htpasswd.shが.envから認証情報を自動読み込みして上書き
-./create-htpasswd.sh
-# "上書きしますか？" と聞かれたら y を入力
-
-# nginxを再起動
-docker-compose restart nginx
-```
-
-**重要**: create-htpasswd.shは `.env` 内の `BASIC_AUTH_USERNAME` と `BASIC_AUTH_PASSWORD` を使用して自動生成します。
-`.env` を変更してからスクリプトを実行してください。
-
-#### WGDashboardパスワード変更（アプリ層）
+#### WGDashboardパスワード変更
 
 ```bash
 # .envファイルを編集
@@ -503,6 +461,16 @@ rm -rf ./data/wgdashboard/*
 
 # 再起動（新しい認証情報で初期化）
 docker-compose restart wgdashboard
+```
+
+#### OTP設定変更
+
+OTP設定はWebインターフェースから管理します：
+
+```bash
+# Webインターフェースにログイン
+# Settings → Account → Two-Factor Authentication (TOTP)
+# 既存のOTPを無効化・再設定可能
 ```
 
 ### 定期的なセキュリティ確認
