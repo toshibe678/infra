@@ -6,7 +6,7 @@ ufw_rules:
   - { port: 80, rule: allow, comment: 'Allow HTTP' }
   - { port: 443, rule: allow, comment: 'Allow HTTPS' }
   - { port: 51820, proto: udp, rule: allow, comment: 'wireguard' }
-  - { port: 10086, rule: allow, comment: 'Allow wireguard Dashboard' }
+  - { from_ip: '127.0.0.0/8', port: 10086, rule: allow, comment: 'Allow wireguard Dashboard' }
 ufw_default_forward_policy: ACCEPT
 ufw_logging: low
 # ufw_applications:

@@ -24,9 +24,7 @@ services:
   nginx:
     image: nginx:alpine
     restart: always
-    ports:
-      - "80:80"
-      - "443:443"
+    network_mode: host  # wgdashboardもhostモードのため、Basic認証バイパス防止のためhostモードにする
     volumes:
       - ./nginx/nginx-${ENVIRONMENT:-dev}.conf:/etc/nginx/nginx.conf:ro
       - ./nginx/htpasswd:/etc/nginx/htpasswd:ro
@@ -34,13 +32,10 @@ services:
       - ./data/certbot/www:/var/www/certbot:ro
     depends_on:
       - wgdashboard
-    extra_hosts:
-      - "host.docker.internal:host-gateway"  # hostmodeのwgdashboardへアクセス    
     command: "/bin/sh -c 'while :; do sleep 6h & wait $${!}; nginx -s reload; done & nginx -g \"daemon off;\"'"
-    networks:
-      - wireguard-network
 
   # Certbot for Let's Encrypt SSL (prod environment only)
+  # Note: certbotはbridgeネットワーク、nginxはhostモードだがボリューム経由で証明書を共有
   certbot:
     image: certbot/certbot
     restart: unless-stopped
