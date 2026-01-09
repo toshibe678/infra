@@ -63,9 +63,9 @@ if [ -f "$SCRIPT_DIR/nginx/htpasswd" ]; then
 fi
 
 # Dockerでhtpasswdを生成（alpineイメージのapache2-utilsを使用）
-# パスワードをechoから直接渡す（インタラクティブ入力なし）
+# -b フラグでパスワードをコマンドライン引数として渡す（標準入力の問題を回避）
 echo -e "${GREEN}htpasswdファイルを生成中...${NC}"
-echo "$PASSWORD" | docker run --rm -i --entrypoint htpasswd httpd:2.4-alpine -c -B /dev/stdout "$USERNAME" > "$SCRIPT_DIR/nginx/htpasswd.tmp"
+docker run --rm --entrypoint htpasswd httpd:2.4-alpine -c -b -B /dev/stdout "$USERNAME" "$PASSWORD" > "$SCRIPT_DIR/nginx/htpasswd.tmp"
 
 if [ $? -eq 0 ]; then
     mv "$SCRIPT_DIR/nginx/htpasswd.tmp" "$SCRIPT_DIR/nginx/htpasswd"
