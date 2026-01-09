@@ -6,7 +6,7 @@ services:
     container_name: wgdashboard
     cap_add:
       - NET_ADMIN
-    network_mode: host
+    network_mode: host  # wg showコマンドでホストのWireGuard状態取得に必要
     environment:
       - TZ=${TZ:-Asia/Tokyo}
       - ENVIRONMENT=${ENVIRONMENT:-dev}
@@ -35,7 +35,7 @@ services:
     depends_on:
       - wgdashboard
     extra_hosts:
-      - "host.docker.internal:host-gateway"
+      - "host.docker.internal:host-gateway"  # hostmodeのwgdashboardへアクセス    
     command: "/bin/sh -c 'while :; do sleep 6h & wait $${!}; nginx -s reload; done & nginx -g \"daemon off;\"'"
     networks:
       - wireguard-network
