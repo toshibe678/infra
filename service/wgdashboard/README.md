@@ -86,8 +86,9 @@ ENVIRONMENT=prod
 
 ```bash
 # .envで ENVIRONMENT=dev を設定
+# WG_DASHBOARD_USERNAME と WG_DASHBOARD_PASSWORD も設定
 
-# Basic認証の設定（オプション）
+# Basic認証ファイルを自動生成（.env内の認証情報を使用）
 chmod +x create-htpasswd.sh
 ./create-htpasswd.sh
 
@@ -107,6 +108,7 @@ http://vpn-dev.abe365.org:80
 
 ```bash
 # .envで ENVIRONMENT=prod を設定
+# WG_DASHBOARD_USERNAME と WG_DASHBOARD_PASSWORD も設定
 
 # Let's Encrypt SSL証明書の取得
 chmod +x init-letsencrypt.sh
@@ -114,7 +116,7 @@ vim init-letsencrypt.sh
 # EMAIL="admin@example.com" を自分のメールアドレスに変更
 ./init-letsencrypt.sh
 
-# Basic認証の設定
+# Basic認証ファイルを自動生成（.env内の認証情報を使用）
 chmod +x create-htpasswd.sh
 ./create-htpasswd.sh
 
@@ -403,13 +405,19 @@ Cloudflare DNSでProxyを有効にすると：
 #### Basic認証パスワード変更
 
 ```bash
-# 既存ユーザーのパスワード変更
+# .envファイルのWG_DASHBOARD_PASSWORDを変更
+vim .env
+
+# create-htpasswd.shが.envから認証情報を自動読み込みして上書き
 ./create-htpasswd.sh
-# 同じユーザー名を入力して新しいパスワードを設定
+# "上書きしますか？" と聞かれたら y を入力
 
 # nginxを再起動
 docker-compose restart nginx
 ```
+
+**重要**: create-htpasswd.shは `.env` 内の `WG_DASHBOARD_USERNAME` と `WG_DASHBOARD_PASSWORD` を使用して自動生成します。
+`.env` を変更してからスクリプトを実行してください。
 
 #### WGDashboardパスワード変更
 
