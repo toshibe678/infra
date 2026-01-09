@@ -1,5 +1,3 @@
-version: '3.8'
-
 services:
   # WGDashboard - WireGuard Management Dashboard
   wgdashboard:
@@ -20,8 +18,6 @@ services:
       - ./data/wgdashboard:/opt/wireguarddashboard/src/db
       - ./data/wgdashboard/log:/opt/wireguarddashboard/src/log
     privileged: true
-    networks:
-      - wireguard-network
 
   # Nginx Reverse Proxy
   nginx:
