@@ -69,7 +69,7 @@ nslookup vpn-dev.abe365.org
 
 ```bash
 cp .env.example .env
-vim .env  # ENVIRONMENT を設定（'dev' または 'prod'）
+vim .env  # 全ての認証情報を設定
 ```
 
 **環境別設定**:
@@ -78,6 +78,19 @@ vim .env  # ENVIRONMENT を設定（'dev' または 'prod'）
 # 開発環境（内部ネットワーク、HTTP）
 ENVIRONMENT=dev
 
+# Basic認証情報（nginx層）
+BASIC_AUTH_USERNAME=admin
+BASIC_AUTH_PASSWORD=your_secure_password
+
+# WGDashboard認証情報（アプリ層）
+WGDASHBOARD_USERNAME=admin
+WGDASHBOARD_PASSWORD=another_secure_password
+```
+
+**認証の2層構造**:
+- **Basic認証**（nginx層）: 外部からのアクセスを最初に制限
+- **WGDashboard認証**（アプリ層）: アプリケーション本体のログイン
+
 # 本番環境（インターネット接続、HTTPS）
 ENVIRONMENT=prod
 ```
@@ -85,8 +98,10 @@ ENVIRONMENT=prod
 ### 2. 開発環境セットアップ（HTTP、SSLなし）
 
 ```bash
-# .envで ENVIRONMENT=dev を設定
-# WG_DASHBOARD_USERNAME と WG_DASHBOARD_PASSWORD も設定
+# .envで全ての認証情報を設定
+# - ENVIRONMENT=dev
+# - BASIC_AUTH_USERNAME / BASIC_AUTH_PASSWORD
+# - WGDASHBOARD_USERNAME / WGDASHBOARD_PASSWORD
 
 # Basic認証ファイルを自動生成（.env内の認証情報を使用）
 chmod +x create-htpasswd.sh
@@ -96,7 +111,7 @@ chmod +x create-htpasswd.sh
 docker-compose up -d
 
 # ログ確認
-docker-compose logs -f nginx
+docker-compose logs -f
 ```
 
 **アクセス方法**:
@@ -104,11 +119,17 @@ docker-compose logs -f nginx
 http://vpn-dev.abe365.org:80
 ```
 
+認証手順:
+1. Basic認証（nginx層）: `.env`の`BASIC_AUTH_*`で設定した認証情報
+2. WGDashboard認証（アプリ層）: `.env`の`WGDASHBOARD_*`で設定した認証情報
+
 ### 3. 本番環境セットアップ（HTTPS、Let's Encrypt）
 
 ```bash
-# .envで ENVIRONMENT=prod を設定
-# WG_DASHBOARD_USERNAME と WG_DASHBOARD_PASSWORD も設定
+# .envで全ての認証情報を設定
+# - ENVIRONMENT=prod
+# - BASIC_AUTH_USERNAME / BASIC_AUTH_PASSWORD
+# - WGDASHBOARD_USERNAME / WGDASHBOARD_PASSWORD
 
 # Let's Encrypt SSL証明書の取得
 chmod +x init-letsencrypt.sh
@@ -132,6 +153,22 @@ docker-compose logs -f
 https://vpn.toshi.click
 ```
 
+認証手順:
+1. Basic認証（nginx層）: `.env`の`BASIC_AUTH_*`で設定した認証情報
+2. WGDashboard認証（アプリ層）: `.env`の`WGDASHBOARD_*`で設定した認証情報
+
+# 全サービスを起動（certbotを含む）
+docker-compose --profile prod up -d
+
+# ログ確認
+docker-compose logs -f
+```
+
+**アクセス方法**:
+```
+https://vpn.toshi.click
+```
+
 ### 4. サービスの動作確認
 
 ## 環境変数
@@ -141,9 +178,15 @@ https://vpn.toshi.click
 | 変数名 | 説明 | 必須 | デフォルト |
 |--------|------|------|-----------|
 | ENVIRONMENT | 環境の選択 (dev/prod) | × | dev |
-| WG_DASHBOARD_USERNAME | ダッシュボードユーザー名 | × | admin |
-| WG_DASHBOARD_PASSWORD | ダッシュボードパスワード | ✓ | - |
+| BASIC_AUTH_USERNAME | Basic認証ユーザー名（nginx層） | × | admin |
+| BASIC_AUTH_PASSWORD | Basic認証パスワード（nginx層） | ✓ | - |
+| WGDASHBOARD_USERNAME | WGDashboard認証ユーザー名（アプリ層） | × | admin |
+| WGDASHBOARD_PASSWORD | WGDashboard認証パスワード（アプリ層） | ✓ | - |
 | TZ | タイムゾーン | × | Asia/Tokyo |
+
+**認証の2層構造**:
+1. **Basic認証（nginx層）**: `.env`で`BASIC_AUTH_*`を設定 → `create-htpasswd.sh`で自動生成
+2. **WGDashboard認証（アプリ層）**: `.env`で`WGDASHBOARD_*`を設定 → 環境変数`username`/`password`で自動設定
 
 **環境の詳細**:
 - `dev`: 開発環境（HTTP、内部ネットワーク）
@@ -158,6 +201,24 @@ https://vpn.toshi.click
 ## アクセス方法
 
 ### 開発環境
+
+```
+http://vpn-dev.abe365.org
+```
+
+**認証手順**:
+1. **Basic認証**（nginx層）: `.env`で設定した`BASIC_AUTH_USERNAME`/`BASIC_AUTH_PASSWORD`
+2. **WGDashboard認証**（アプリ層）: `.env`で設定した`WGDASHBOARD_USERNAME`/`WGDASHBOARD_PASSWORD`
+
+### 本番環境
+
+```
+https://vpn.toshi.click
+```
+
+**認証手順**:
+1. **Basic認証**（nginx層）: `.env`で設定した`BASIC_AUTH_USERNAME`/`BASIC_AUTH_PASSWORD`
+2. **WGDashboard認証**（アプリ層）: `.env`で設定した`WGDASHBOARD_USERNAME`/`WGDASHBOARD_PASSWORD`
 
 ```
 http://vpn-dev.abe365.org
@@ -402,10 +463,10 @@ Cloudflare DNSでProxyを有効にすると：
 
 ### パスワード管理
 
-#### Basic認証パスワード変更
+#### Basic認証パスワード変更（nginx層）
 
 ```bash
-# .envファイルのWG_DASHBOARD_PASSWORDを変更
+# .envファイルのBASIC_AUTH_PASSWORDを変更
 vim .env
 
 # create-htpasswd.shが.envから認証情報を自動読み込みして上書き
@@ -416,17 +477,31 @@ vim .env
 docker-compose restart nginx
 ```
 
-**重要**: create-htpasswd.shは `.env` 内の `WG_DASHBOARD_USERNAME` と `WG_DASHBOARD_PASSWORD` を使用して自動生成します。
+**重要**: create-htpasswd.shは `.env` 内の `BASIC_AUTH_USERNAME` と `BASIC_AUTH_PASSWORD` を使用して自動生成します。
 `.env` を変更してからスクリプトを実行してください。
 
-#### WGDashboardパスワード変更
+#### WGDashboardパスワード変更（アプリ層）
 
 ```bash
 # .envファイルを編集
 vim .env
-# WG_DASHBOARD_PASSWORDを変更
+# WGDASHBOARD_USERNAME / WGDASHBOARD_PASSWORD を変更
 
 # wgdashboardを再起動
+docker-compose restart wgdashboard
+```
+
+**注意**: WGDashboardは環境変数`username`/`password`で初回起動時にアカウントを作成します。
+変更した認証情報を反映するには、既存のデータベースをクリアして再起動する必要がある場合があります：
+
+```bash
+# データベースのバックアップ（念のため）
+cp -r ./data/wgdashboard ./data/wgdashboard.backup
+
+# データベースを削除（認証情報がリセットされる）
+rm -rf ./data/wgdashboard/*
+
+# 再起動（新しい認証情報で初期化）
 docker-compose restart wgdashboard
 ```
 

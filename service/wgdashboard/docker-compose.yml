@@ -10,8 +10,9 @@ services:
     environment:
       - TZ=${TZ:-Asia/Tokyo}
       - ENVIRONMENT=${ENVIRONMENT:-dev}
-      - WG_DASHBOARD_USERNAME=${WG_DASHBOARD_USERNAME:-admin}
-      - WG_DASHBOARD_PASSWORD=${WG_DASHBOARD_PASSWORD}
+      # WGDashboard Webインターフェース認証（公式環境変数）
+      - username=${WGDASHBOARD_USERNAME:-admin}
+      - password=${WGDASHBOARD_PASSWORD}
     volumes:
       # WireGuard設定ディレクトリをマウント（ホスト側で動作中のWireGuard）
       - /etc/wireguard:/etc/wireguard

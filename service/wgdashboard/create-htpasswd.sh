@@ -32,14 +32,14 @@ source "$SCRIPT_DIR/.env"
 set -e
 
 # 環境変数の取得
-USERNAME="${WG_DASHBOARD_USERNAME:-admin}"
-PASSWORD="${WG_DASHBOARD_PASSWORD}"
+USERNAME="${BASIC_AUTH_USERNAME:-admin}"
+PASSWORD="${BASIC_AUTH_PASSWORD}"
 
 # パスワードの確認
 if [ -z "$PASSWORD" ]; then
-    echo -e "${RED}エラー: .env内に WG_DASHBOARD_PASSWORD が設定されていません${NC}"
+    echo -e "${RED}エラー: .env内に BASIC_AUTH_PASSWORD が設定されていません${NC}"
     echo "例:"
-    echo "  WG_DASHBOARD_PASSWORD=your_secure_password"
+    echo "  BASIC_AUTH_PASSWORD=your_secure_password"
     exit 1
 fi
 
