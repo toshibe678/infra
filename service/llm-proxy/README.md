@@ -5,7 +5,26 @@ LLM API統合プロキシサーバー（LiteLLM）の構成
 ## 概要
 
 LiteLLMを使用した統一的なLLM APIプロキシサービスです。
-複数のLLMプロバイダー（OpenAI, Anthropic, Azure, など）を単一のインターフェースで利用できます。
+複数のLLMプロバイダー（OpenAI, Anthropic, Azure, AWS Bedrock, Google Cloud Vertex AI）を単一のインターフェースで利用できます。
+
+## 対応モデル
+
+### AWS Bedrock
+- **Amazon Nova シリーズ**: Nova Micro / Lite / Pro (v1)
+- **Amazon Nova 2 シリーズ**: Nova 2 Micro / Lite / Pro (v2)
+- **Claude 4.5**: Sonnet / Haiku / Opus
+- **Amazon Titan**: Text Express / Embed
+- **Cohere**: Command Text
+
+### Google Cloud Vertex AI
+- **Claude 4.5**: Sonnet / Haiku / Opus
+- **Gemini 2.0**: Flash / Flash Thinking (experimental)
+- **Gemini 1.5**: Pro / Flash / Flash-8B
+
+### フォールオーバー構成
+- **Claude 4.5 Sonnet**: Bedrock → Vertex AI
+- **Claude 4.5 Haiku**: Bedrock → Vertex AI
+- **Claude 4.5 Opus**: Bedrock → Vertex AI
 
 ## DNS設定
 
@@ -20,7 +39,6 @@ LiteLLMを使用した統一的なLLM APIプロキシサービスです。
 - **litellm**: LiteLLM プロキシサーバー
 - **db**: PostgreSQL データベース（使用履歴・設定保存）
 - **redis**: キャッシュ層（オプション）
-- **prometheus**: メトリクス収集（オプション）
 
 ## セットアップ手順
 
@@ -31,15 +49,7 @@ cp .env.example .env
 vim .env  # 必要な環境変数を設定
 ```
 
-### 2. LiteLLM設定ファイルの作成
-
-```bash
-mkdir -p config
-cp config/config.yaml.example config/config.yaml
-vim config/config.yaml  # LLMプロバイダー設定
-```
-
-### 3. GCPサービスアカウントの設定（VertexAI使用時）
+### 2. GCPサービスアカウントの設定（VertexAI使用時）
 
 ```bash
 # GCPコンソールからサービスアカウントJSONをダウンロード
@@ -63,20 +73,20 @@ cat config/gcp-credentials.json | base64 -w 0 > /tmp/gcp-creds-base64.txt
 echo "GOOGLE_APPLICATION_CREDENTIALS_JSON=$(cat /tmp/gcp-creds-base64.txt)" >> .env
 ```
 
-### 4. サービスの起動
+### 3. サービスの起動
 
 ```bash
 docker-compose up -d
 ```
 
-### 5. 動作確認
+### 4. 動作確認
 
 ```bash
 # ヘルスチェック
-curl http://llm-proxy.abe365.org:4000/health
+curl http://llm-proxy.abe365.org/health
 
 # モデル一覧
-curl http://llm-proxy.abe365.org:4000/models \
+curl http://llm-proxy.abe365.org/models \
   -H "Authorization: Bearer ${LITELLM_MASTER_KEY}"
 ```
 
@@ -98,49 +108,6 @@ curl http://llm-proxy.abe365.org:4000/models \
 | GOOGLE_APPLICATION_CREDENTIALS | GCPサービスアカウントJSONパス | △ |
 | DATABASE_URL | データベース接続URL | × |
 | LITELLM_LOG | ログレベル | × |
-
-## 設定例
-
-### config/config.yaml
-
-```yaml
-model_list:
-  - model_name: gpt-4
-    litellm_params:
-      model: azure/gpt-4
-      api_base: https://your-endpoint.openai.azure.com
-      api_key: os.environ/AZURE_API_KEY
-      api_version: "2023-05-15"
-  
-  - model_name: claude-3
-    litellm_params:
-      model: anthropic/claude-3-opus-20240229
-      api_key: os.environ/ANTHROPIC_API_KEY
-  
-  - model_name: bedrock-claude
-    litellm_params:
-      model: bedrock/anthropic.claude-3-sonnet-20240229-v1:0
-      aws_access_key_id: os.environ/AWS_ACCESS_KEY_ID
-      aws_secret_access_key: os.environ/AWS_SECRET_ACCESS_KEY
-      aws_region_name: os.environ/AWS_REGION_NAME
-  
-  - model_name: bedrock-titan
-    litellm_params:
-      model: bedrock/amazon.titan-text-express-v1
-      aws_access_key_id: os.environ/AWS_ACCESS_KEY_ID
-      aws_secret_access_key: os.environ/AWS_SECRET_ACCESS_KEY
-      aws_region_name: os.environ/AWS_REGION_NAME
-
-litellm_settings:
-  drop_params: true
-  set_verbose: false
-  cache: true
-  cache_params:
-    type: redis
-    host: redis
-    port: 6379
-    password: os.environ/REDIS_PASSWORD
-```
 
 ## API使用例
 
@@ -182,16 +149,22 @@ client = openai.OpenAI(
     base_url="http://llm-proxy.abe365.org:4000"
 )
 
-# Bedrock Claude
+# Claude 4.5 Sonnet
 response = client.chat.completions.create(
-    model="bedrock-claude",
+    model="bedrock-claude-4.5-sonnet",
     messages=[{"role": "user", "content": "Explain quantum computing"}]
 )
 
-# Bedrock Titan
+# Amazon Nova Pro
 response = client.chat.completions.create(
-    model="bedrock-titan",
+    model="bedrock-nova-pro",
     messages=[{"role": "user", "content": "Write a poem"}]
+)
+
+# Amazon Nova 2 Pro（最新世代）
+response = client.chat.completions.create(
+    model="bedrock-nova2-pro",
+    messages=[{"role": "user", "content": "Analyze this data"}]
 )
 ```
 
@@ -205,19 +178,25 @@ client = openai.OpenAI(
     base_url="http://llm-proxy.abe365.org:4000"
 )
 
-# Vertex AI Claude
+# Claude 4.5 Sonnet
 response = client.chat.completions.create(
-    model="vertex-claude-3-sonnet",
+    model="vertex-claude-4.5-sonnet",
     messages=[{"role": "user", "content": "Explain machine learning"}]
 )
 
-# Vertex AI Gemini Pro
+# Gemini 2.0 Flash（最新）
 response = client.chat.completions.create(
-    model="vertex-gemini-pro",
+    model="vertex-gemini-2.0-flash",
     messages=[{"role": "user", "content": "What is quantum computing?"}]
 )
 
-# Vertex AI Gemini 1.5 Pro (長いコンテキスト対応)
+# Gemini 2.0 Flash Thinking（推論特化・実験版）
+response = client.chat.completions.create(
+    model="vertex-gemini-2.0-flash-thinking",
+    messages=[{"role": "user", "content": "Solve this complex problem..."}]
+)
+
+# Gemini 1.5 Pro（長いコンテキスト対応）
 response = client.chat.completions.create(
     model="vertex-gemini-1.5-pro",
     messages=[{"role": "user", "content": "Analyze this document..."}]
@@ -238,15 +217,23 @@ client = openai.OpenAI(
 
 # 自動フォールオーバー: Bedrock -> Vertex AI
 # Bedrockでレート制限エラーが発生すると自動的にVertex AIに切り替わる
+
+# Claude 4.5 Sonnet
 response = client.chat.completions.create(
-    model="claude-3-sonnet-fallback",
+    model="claude-4.5-sonnet-fallback",
     messages=[{"role": "user", "content": "Explain AI safety"}]
 )
 
-# Opusモデルも同様
+# Claude 4.5 Haiku（高速版）
 response = client.chat.completions.create(
-    model="claude-3-opus-fallback",
-    messages=[{"role": "user", "content": "Write a technical analysis"}]
+    model="claude-4.5-haiku-fallback",
+    messages=[{"role": "user", "content": "Quick summary needed"}]
+)
+
+# Claude 4.5 Opus（最高性能版）
+response = client.chat.completions.create(
+    model="claude-4.5-opus-fallback",
+    messages=[{"role": "user", "content": "Write a detailed technical analysis"}]
 )
 ```
 
@@ -258,7 +245,6 @@ response = client.chat.completions.create(
 - **キャッシング**: Redisによるレスポンスキャッシュでコスト削減
 - **使用量追跡**: データベースでの詳細な使用履歴記録
 - **認証**: マスターキーによるAPI認証
-- **メトリクス**: Prometheusでのメトリクス収集・可視化
 - **レート制限**: ユーザー/キー単位での利用制限設定
 
 ## モニタリング
@@ -268,12 +254,6 @@ response = client.chat.completions.create(
 ```bash
 docker-compose logs -f litellm
 ```
-
-### Prometheusメトリクス
-
-- URL: http://llm-proxy.abe365.org:9090
-- メトリクスエンドポイント: http://llm-proxy.abe365.org:4000/metrics
-
 ## トラブルシューティング
 
 ### プロバイダー接続エラー

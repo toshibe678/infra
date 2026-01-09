@@ -1,56 +1,5 @@
-model_list:
-  # OpenAI Models
-  - model_name: gpt-4
-    litellm_params:
-      model: gpt-4
-      api_key: os.environ/OPENAI_API_KEY
-  
-  - model_name: gpt-3.5-turbo
-    litellm_params:
-      model: gpt-3.5-turbo
-      api_key: os.environ/OPENAI_API_KEY
-  
-  # Azure OpenAI Models
-  - model_name: azure-gpt-4
-    litellm_params:
-      model: azure/gpt-4
-      api_base: os.environ/AZURE_API_BASE
-      api_key: os.environ/AZURE_API_KEY
-      api_version: "2023-05-15"
-  
-  # Anthropic Models
-  - model_name: claude-3-opus
-    litellm_params:
-      model: anthropic/claude-3-opus-20240229
-      api_key: os.environ/ANTHROPIC_API_KEY
-  
-  - model_name: claude-3-sonnet
-    litellm_params:
-      model: anthropic/claude-3-sonnet-20240229
-      api_key: os.environ/ANTHROPIC_API_KEY
-  
+model_list: 
   # AWS Bedrock Models
-  - model_name: bedrock-claude-3-opus
-    litellm_params:
-      model: bedrock/anthropic.claude-3-opus-20240229-v1:0
-      aws_access_key_id: os.environ/AWS_ACCESS_KEY_ID
-      aws_secret_access_key: os.environ/AWS_SECRET_ACCESS_KEY
-      aws_region_name: os.environ/AWS_REGION_NAME
-  
-  - model_name: bedrock-claude-3-sonnet
-    litellm_params:
-      model: bedrock/anthropic.claude-3-sonnet-20240229-v1:0
-      aws_access_key_id: os.environ/AWS_ACCESS_KEY_ID
-      aws_secret_access_key: os.environ/AWS_SECRET_ACCESS_KEY
-      aws_region_name: os.environ/AWS_REGION_NAME
-  
-  - model_name: bedrock-claude-3-haiku
-    litellm_params:
-      model: bedrock/anthropic.claude-3-haiku-20240307-v1:0
-      aws_access_key_id: os.environ/AWS_ACCESS_KEY_ID
-      aws_secret_access_key: os.environ/AWS_SECRET_ACCESS_KEY
-      aws_region_name: os.environ/AWS_REGION_NAME
-  
   - model_name: bedrock-titan-text
     litellm_params:
       model: bedrock/amazon.titan-text-express-v1
@@ -64,21 +13,7 @@ model_list:
       aws_access_key_id: os.environ/AWS_ACCESS_KEY_ID
       aws_secret_access_key: os.environ/AWS_SECRET_ACCESS_KEY
       aws_region_name: os.environ/AWS_REGION_NAME
-  
-  - model_name: bedrock-llama2-13b
-    litellm_params:
-      model: bedrock/meta.llama2-13b-chat-v1
-      aws_access_key_id: os.environ/AWS_ACCESS_KEY_ID
-      aws_secret_access_key: os.environ/AWS_SECRET_ACCESS_KEY
-      aws_region_name: os.environ/AWS_REGION_NAME
-  
-  - model_name: bedrock-llama2-70b
-    litellm_params:
-      model: bedrock/meta.llama2-70b-chat-v1
-      aws_access_key_id: os.environ/AWS_ACCESS_KEY_ID
-      aws_secret_access_key: os.environ/AWS_SECRET_ACCESS_KEY
-      aws_region_name: os.environ/AWS_REGION_NAME
-  
+   
   - model_name: bedrock-cohere-command
     litellm_params:
       model: bedrock/cohere.command-text-v14
@@ -86,82 +21,174 @@ model_list:
       aws_secret_access_key: os.environ/AWS_SECRET_ACCESS_KEY
       aws_region_name: os.environ/AWS_REGION_NAME
   
-  - model_name: bedrock-ai21-jurassic
+  # AWS Bedrock - Amazon Nova Models
+  - model_name: bedrock-nova-micro
     litellm_params:
-      model: bedrock/ai21.j2-ultra-v1
+      model: bedrock/us.amazon.nova-micro-v1:0
       aws_access_key_id: os.environ/AWS_ACCESS_KEY_ID
       aws_secret_access_key: os.environ/AWS_SECRET_ACCESS_KEY
       aws_region_name: os.environ/AWS_REGION_NAME
   
-  # Google Cloud Vertex AI Models
-  - model_name: vertex-claude-3-opus
+  - model_name: bedrock-nova-lite
     litellm_params:
-      model: vertex_ai/claude-3-opus@20240229
+      model: bedrock/us.amazon.nova-lite-v1:0
+      aws_access_key_id: os.environ/AWS_ACCESS_KEY_ID
+      aws_secret_access_key: os.environ/AWS_SECRET_ACCESS_KEY
+      aws_region_name: os.environ/AWS_REGION_NAME
+  
+  - model_name: bedrock-nova-pro
+    litellm_params:
+      model: bedrock/us.amazon.nova-pro-v1:0
+      aws_access_key_id: os.environ/AWS_ACCESS_KEY_ID
+      aws_secret_access_key: os.environ/AWS_SECRET_ACCESS_KEY
+      aws_region_name: os.environ/AWS_REGION_NAME
+  
+  # AWS Bedrock - Amazon Nova 2 Models (2025年リリース予定)
+  - model_name: bedrock-nova2-micro
+    litellm_params:
+      model: bedrock/us.amazon.nova-micro-v2:0
+      aws_access_key_id: os.environ/AWS_ACCESS_KEY_ID
+      aws_secret_access_key: os.environ/AWS_SECRET_ACCESS_KEY
+      aws_region_name: os.environ/AWS_REGION_NAME
+  
+  - model_name: bedrock-nova2-lite
+    litellm_params:
+      model: bedrock/us.amazon.nova-lite-v2:0
+      aws_access_key_id: os.environ/AWS_ACCESS_KEY_ID
+      aws_secret_access_key: os.environ/AWS_SECRET_ACCESS_KEY
+      aws_region_name: os.environ/AWS_REGION_NAME
+  
+  - model_name: bedrock-nova2-pro
+    litellm_params:
+      model: bedrock/us.amazon.nova-pro-v2:0
+      aws_access_key_id: os.environ/AWS_ACCESS_KEY_ID
+      aws_secret_access_key: os.environ/AWS_SECRET_ACCESS_KEY
+      aws_region_name: os.environ/AWS_REGION_NAME
+  
+  # AWS Bedrock - Claude 4.5 Models
+  - model_name: bedrock-claude-4.5-sonnet
+    litellm_params:
+      model: bedrock/anthropic.claude-sonnet-4-5-v1:0
+      aws_access_key_id: os.environ/AWS_ACCESS_KEY_ID
+      aws_secret_access_key: os.environ/AWS_SECRET_ACCESS_KEY
+      aws_region_name: os.environ/AWS_REGION_NAME
+  
+  - model_name: bedrock-claude-4.5-haiku
+    litellm_params:
+      model: bedrock/anthropic.claude-haiku-4-5-v1:0
+      aws_access_key_id: os.environ/AWS_ACCESS_KEY_ID
+      aws_secret_access_key: os.environ/AWS_SECRET_ACCESS_KEY
+      aws_region_name: os.environ/AWS_REGION_NAME
+  
+  - model_name: bedrock-claude-4.5-opus
+    litellm_params:
+      model: bedrock/anthropic.claude-opus-4-5-v1:0
+      aws_access_key_id: os.environ/AWS_ACCESS_KEY_ID
+      aws_secret_access_key: os.environ/AWS_SECRET_ACCESS_KEY
+      aws_region_name: os.environ/AWS_REGION_NAME
+  
+  # Google Cloud Vertex AI - Claude 4.5 Models
+  - model_name: vertex-claude-4.5-sonnet
+    litellm_params:
+      model: vertex_ai/claude-sonnet-4-5@20250101
       vertex_project: os.environ/GCP_PROJECT_ID
       vertex_location: os.environ/VERTEX_LOCATION
       vertex_credentials: os.environ/GOOGLE_APPLICATION_CREDENTIALS
   
-  - model_name: vertex-claude-3-sonnet
+  - model_name: vertex-claude-4.5-haiku
     litellm_params:
-      model: vertex_ai/claude-3-sonnet@20240229
+      model: vertex_ai/claude-haiku-4-5@20250101
       vertex_project: os.environ/GCP_PROJECT_ID
       vertex_location: os.environ/VERTEX_LOCATION
       vertex_credentials: os.environ/GOOGLE_APPLICATION_CREDENTIALS
   
-  - model_name: vertex-claude-3-haiku
+  - model_name: vertex-claude-4.5-opus
     litellm_params:
-      model: vertex_ai/claude-3-haiku@20240307
+      model: vertex_ai/claude-opus-4-5@20250101
       vertex_project: os.environ/GCP_PROJECT_ID
       vertex_location: os.environ/VERTEX_LOCATION
       vertex_credentials: os.environ/GOOGLE_APPLICATION_CREDENTIALS
   
-  - model_name: vertex-gemini-pro
+  # Google Cloud Vertex AI - Gemini Models
+  - model_name: vertex-gemini-2.0-flash
     litellm_params:
-      model: vertex_ai/gemini-pro
+      model: vertex_ai/gemini-2.0-flash-exp
       vertex_project: os.environ/GCP_PROJECT_ID
       vertex_location: os.environ/VERTEX_LOCATION
       vertex_credentials: os.environ/GOOGLE_APPLICATION_CREDENTIALS
   
-  - model_name: vertex-gemini-pro-vision
+  - model_name: vertex-gemini-2.0-flash-thinking
     litellm_params:
-      model: vertex_ai/gemini-pro-vision
+      model: vertex_ai/gemini-2.0-flash-thinking-exp
       vertex_project: os.environ/GCP_PROJECT_ID
       vertex_location: os.environ/VERTEX_LOCATION
       vertex_credentials: os.environ/GOOGLE_APPLICATION_CREDENTIALS
   
   - model_name: vertex-gemini-1.5-pro
     litellm_params:
-      model: vertex_ai/gemini-1.5-pro-preview-0409
+      model: vertex_ai/gemini-1.5-pro-002
+      vertex_project: os.environ/GCP_PROJECT_ID
+      vertex_location: os.environ/VERTEX_LOCATION
+      vertex_credentials: os.environ/GOOGLE_APPLICATION_CREDENTIALS
+  
+  - model_name: vertex-gemini-1.5-flash
+    litellm_params:
+      model: vertex_ai/gemini-1.5-flash-002
+      vertex_project: os.environ/GCP_PROJECT_ID
+      vertex_location: os.environ/VERTEX_LOCATION
+      vertex_credentials: os.environ/GOOGLE_APPLICATION_CREDENTIALS
+  
+  - model_name: vertex-gemini-1.5-flash-8b
+    litellm_params:
+      model: vertex_ai/gemini-1.5-flash-8b
       vertex_project: os.environ/GCP_PROJECT_ID
       vertex_location: os.environ/VERTEX_LOCATION
       vertex_credentials: os.environ/GOOGLE_APPLICATION_CREDENTIALS
   
   # Fallback Configuration: Bedrock -> Vertex AI
   # 同じmodel_nameで複数定義すると自動的にフォールオーバー
-  - model_name: claude-3-sonnet-fallback
+  
+  # Claude 4.5 Sonnet Fallback
+  - model_name: claude-4.5-sonnet-fallback
     litellm_params:
-      model: bedrock/anthropic.claude-3-sonnet-20240229-v1:0
+      model: bedrock/anthropic.claude-sonnet-4-5-v1:0
       aws_access_key_id: os.environ/AWS_ACCESS_KEY_ID
       aws_secret_access_key: os.environ/AWS_SECRET_ACCESS_KEY
       aws_region_name: os.environ/AWS_REGION_NAME
   
-  - model_name: claude-3-sonnet-fallback
+  - model_name: claude-4.5-sonnet-fallback
     litellm_params:
-      model: vertex_ai/claude-3-sonnet@20240229
+      model: vertex_ai/claude-sonnet-4-5@20250101
       vertex_project: os.environ/GCP_PROJECT_ID
       vertex_location: os.environ/VERTEX_LOCATION
       vertex_credentials: os.environ/GOOGLE_APPLICATION_CREDENTIALS
   
-  - model_name: claude-3-opus-fallback
+  # Claude 4.5 Haiku Fallback
+  - model_name: claude-4.5-haiku-fallback
     litellm_params:
-      model: bedrock/anthropic.claude-3-opus-20240229-v1:0
+      model: bedrock/anthropic.claude-haiku-4-5-v1:0
       aws_access_key_id: os.environ/AWS_ACCESS_KEY_ID
       aws_secret_access_key: os.environ/AWS_SECRET_ACCESS_KEY
       aws_region_name: os.environ/AWS_REGION_NAME
   
-  - model_name: claude-3-opus-fallback
+  - model_name: claude-4.5-haiku-fallback
     litellm_params:
-      model: vertex_ai/claude-3-opus@20240229
+      model: vertex_ai/claude-haiku-4-5@20250101
+      vertex_project: os.environ/GCP_PROJECT_ID
+      vertex_location: os.environ/VERTEX_LOCATION
+      vertex_credentials: os.environ/GOOGLE_APPLICATION_CREDENTIALS
+  
+  # Claude 4.5 Opus Fallback
+  - model_name: claude-4.5-opus-fallback
+    litellm_params:
+      model: bedrock/anthropic.claude-opus-4-5-v1:0
+      aws_access_key_id: os.environ/AWS_ACCESS_KEY_ID
+      aws_secret_access_key: os.environ/AWS_SECRET_ACCESS_KEY
+      aws_region_name: os.environ/AWS_REGION_NAME
+  
+  - model_name: claude-4.5-opus-fallback
+    litellm_params:
+      model: vertex_ai/claude-opus-4-5@20250101
       vertex_project: os.environ/GCP_PROJECT_ID
       vertex_location: os.environ/VERTEX_LOCATION
       vertex_credentials: os.environ/GOOGLE_APPLICATION_CREDENTIALS
@@ -197,8 +224,9 @@ litellm_settings:
   
   # フォールバック設定
   fallbacks: [
-    {"claude-3-sonnet-fallback": ["bedrock/anthropic.claude-3-sonnet-20240229-v1:0", "vertex_ai/claude-3-sonnet@20240229"]},
-    {"claude-3-opus-fallback": ["bedrock/anthropic.claude-3-opus-20240229-v1:0", "vertex_ai/claude-3-opus@20240229"]}
+    {"claude-4.5-sonnet-fallback": ["bedrock/anthropic.claude-sonnet-4-5-v1:0", "vertex_ai/claude-sonnet-4-5@20250101"]},
+    {"claude-4.5-haiku-fallback": ["bedrock/anthropic.claude-haiku-4-5-v1:0", "vertex_ai/claude-haiku-4-5@20250101"]},
+    {"claude-4.5-opus-fallback": ["bedrock/anthropic.claude-opus-4-5-v1:0", "vertex_ai/claude-opus-4-5@20250101"]}
   ]
   
   # リトライ時のフォールバック有効化

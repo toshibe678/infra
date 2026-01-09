@@ -1,5 +1,3 @@
-version: '3.8'
-
 services:
   # LiteLLM Proxy Server
   litellm:
@@ -53,21 +51,6 @@ services:
     networks:
       - llm-proxy-network
 
-  # Prometheus metrics (optional)
-  prometheus:
-    image: prom/prometheus:latest
-    restart: always
-    expose:
-      - "9090"
-    volumes:
-      - ./config/prometheus.yml:/etc/prometheus/prometheus.yml:ro
-      - ./data/prometheus:/prometheus
-    command:
-      - '--config.file=/etc/prometheus/prometheus.yml'
-      - '--storage.tsdb.path=/prometheus'
-    networks:
-      - llm-proxy-network
-
   # Node Exporter for system metrics
   node-exporter:
     image: prom/node-exporter:latest
@@ -77,8 +60,14 @@ services:
       - "9100"
     command:
       - '--path.rootfs=/host'
+      - '--path.procfs=/host/proc'
+      - '--path.sysfs=/host/sys'
+      - '--collector.filesystem.mount-points-exclude=^/(sys|proc|dev|host|etc)($$|/)'
     volumes:
-      - /:/host:ro,rslave
+      - /proc:/host/proc:ro
+      - /sys:/host/sys:ro
+      - /:/host:ro
+    pid: host
     networks:
       - llm-proxy-network
 
@@ -94,7 +83,6 @@ services:
       - ./nginx/ssl:/etc/nginx/ssl:ro
     depends_on:
       - litellm
-      - prometheus
     networks:
       - llm-proxy-network
 
