@@ -87,3 +87,8 @@ generator generate を実行すると、snmp.yml が生成されます。
 生成された snmp.yml を Prometheus スタックに組み込み、SNMP Exporter が参照する設定として利用します。
 
 生成後は Prometheus にて SNMP Exporter のエンドポイントをスクレイプする構成を追加してください。
+
+
+
+# llm proxyの監視サンプル
+Sample PromQL for Grafana: sum by(requested_model)(rate(litellm_proxy_total_requests_metric[5m])), sum(rate(litellm_spend_metric[5m])), sum by(requested_model)(rate(litellm_total_tokens_metric[5m])).

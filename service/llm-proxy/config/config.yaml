@@ -197,6 +197,15 @@ model_list:
 litellm_settings:
   # パラメータのドロップを許可（プロバイダー間の互換性向上）
   drop_params: true
+
+  # Prometheusメトリクスを有効化
+  callbacks:
+    - prometheus
+  # 内部ネットワークからの監視なので認証不要
+  require_auth_for_metrics_endpoint: false
+  # 起動時に予算系メトリクスを初期化（ダッシュボードの空洞期間防止）
+  prometheus_initialize_budget_metrics: true
+  # ラベル制限は未指定（LiteLLMデフォルトに委譲）
   
   # 詳細ログの設定
   set_verbose: false
