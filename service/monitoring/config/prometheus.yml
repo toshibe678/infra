@@ -5,22 +5,17 @@ rule_files:
   - /etc/prometheus/prom-rules.yml
 
 scrape_configs:
-  # OTel Collector
-  - job_name: 'otel-collector'
-    static_configs:
-      - targets: ['otel-collector:9464']
-
   # Service Monitoring - Docker Containers
   - job_name: 'dify'
     static_configs:
-      - targets: ['dify.abe365.org:9090']
+      - targets: ['dify.abe365.org']
         labels:
           service: 'dify'
           environment: 'production'
 
   - job_name: 'llm-proxy'
     static_configs:
-      - targets: ['llm-proxy.abe365.org:4000']
+      - targets: ['llm-proxy.abe365.org']
         labels:
           service: 'llm-proxy'
           environment: 'production'
@@ -28,7 +23,7 @@ scrape_configs:
 
   - job_name: 'wgdashboard'
     static_configs:
-      - targets: ['vpn-dev.abe365.org:9100']
+      - targets: ['vpn-dev.abe365.org']
         labels:
           service: 'wgdashboard'
           environment: 'production'
