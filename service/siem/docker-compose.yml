@@ -24,6 +24,8 @@ services:
       interval: 10s
       timeout: 5s
       retries: 10
+    networks:
+      - siem-network
 
   kibana:
     image: docker.elastic.co/kibana/kibana:${STACK_VERSION:-9.1.2}
@@ -34,6 +36,8 @@ services:
       - elasticsearch
     ports:
       - "5601:5601"
+    networks:
+      - siem-network
 
   logstash:
     image: docker.elastic.co/logstash/logstash:${STACK_VERSION:-9.1.2}
@@ -49,6 +53,32 @@ services:
       - "9600:9600"    # Logstashモニタリング API
     depends_on:
       - elasticsearch
+    networks:
+      - siem-network
+
+  # Node Exporter for system metrics
+  node-exporter:
+    image: prom/node-exporter:latest
+    container_name: wgdashboard-node-exporter
+    restart: always
+    ports:
+      - "9100:9100"
+    command:
+      - '--path.rootfs=/host'
+      - '--path.procfs=/host/proc'
+      - '--path.sysfs=/host/sys'
+      - '--collector.filesystem.mount-points-exclude=^/(sys|proc|dev|host|etc)($$|/)'
+    volumes:
+      - /proc:/host/proc:ro
+      - /sys:/host/sys:ro
+      - /:/host:ro
+    pid: host
+    networks:
+      - siem-network
+
+networks:
+  siem-network:
+    driver: bridge
 
 volumes:
   esdata:

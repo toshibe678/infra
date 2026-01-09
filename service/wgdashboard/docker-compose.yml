@@ -20,6 +20,8 @@ services:
       - ./data/wgdashboard:/opt/wireguarddashboard/src/db
       - ./data/wgdashboard/log:/opt/wireguarddashboard/src/log
     privileged: true
+    networks:
+      - wireguard-network
 
   # Nginx Reverse Proxy
   nginx:
@@ -39,6 +41,8 @@ services:
     extra_hosts:
       - "host.docker.internal:host-gateway"
     command: "/bin/sh -c 'while :; do sleep 6h & wait $${!}; nginx -s reload; done & nginx -g \"daemon off;\"'"
+    networks:
+      - wireguard-network
 
   # Certbot for Let's Encrypt SSL
   certbot:
@@ -48,6 +52,8 @@ services:
       - ./data/certbot/conf:/etc/letsencrypt
       - ./data/certbot/www:/var/www/certbot
     entrypoint: "/bin/sh -c 'trap exit TERM; while :; do certbot renew; sleep 12h & wait $${!}; done;'"
+    networks:
+      - wireguard-network
 
   # Node Exporter for system metrics
   node-exporter:
@@ -58,5 +64,17 @@ services:
       - "9100:9100"
     command:
       - '--path.rootfs=/host'
+      - '--path.procfs=/host/proc'
+      - '--path.sysfs=/host/sys'
+      - '--collector.filesystem.mount-points-exclude=^/(sys|proc|dev|host|etc)($$|/)'
     volumes:
-      - /:/host:ro,rslave
+      - /proc:/host/proc:ro
+      - /sys:/host/sys:ro
+      - /:/host:ro
+    pid: host
+    networks:
+      - wireguard-network
+
+networks:
+  wireguard-network:
+    driver: bridge

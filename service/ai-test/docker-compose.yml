@@ -153,12 +153,17 @@ services:
     image: prom/node-exporter:latest
     container_name: ai-test-node-exporter
     restart: always
-    expose:
-      - "9100"
+    ports:
+      - "9100:9100"
     command:
       - '--path.rootfs=/host'
+      - '--path.procfs=/host/proc'
+      - '--path.sysfs=/host/sys'
+      - '--collector.filesystem.mount-points-exclude=^/(sys|proc|dev|host|etc)($$|/)'
     volumes:
-      - /:/host:ro,rslave
+      - /proc:/host/proc:ro
+      - /sys:/host/sys:ro
+      - /:/host:ro
     networks:
       - ai-test-network
 
