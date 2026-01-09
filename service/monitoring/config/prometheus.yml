@@ -5,14 +5,6 @@ rule_files:
   - /etc/prometheus/prom-rules.yml
 
 scrape_configs:
-  # Service Monitoring - Docker Containers
-  - job_name: 'dify'
-    static_configs:
-      - targets: ['dify.abe365.org']
-        labels:
-          service: 'dify'
-          environment: 'production'
-
   - job_name: 'llm-proxy'
     static_configs:
       - targets: ['llm-proxy.abe365.org']
@@ -21,33 +13,11 @@ scrape_configs:
           environment: 'production'
     metrics_path: /metrics
 
-  - job_name: 'wgdashboard'
-    static_configs:
-      - targets: ['vpn-dev.abe365.org']
-        labels:
-          service: 'wgdashboard'
-          environment: 'production'
-
-  - job_name: 'develop'
-    static_configs:
-      - targets: ['develop.abe365.org:9100']
-        labels:
-          service: 'develop'
-          environment: 'production'
-
-  - job_name: 'ai-test'
-    static_configs:
-      - targets: ['ai-test.abe365.org:11434']
-        labels:
-          service: 'ai-test'
-          environment: 'production'
-    metrics_path: /metrics
-
   # Docker daemon metrics
   - job_name: 'docker'
     static_configs:
       - targets: 
-        - 'monitoring.abe365.org:9100'
+        - 'monitoring.abe365.org:9323'
         - 'dify.abe365.org:9323'
         - 'vpn-dev.abe365.org:9323'
         - 'llm-proxy.abe365.org:9323'
