@@ -1,25 +1,31 @@
 # WGDashboard - WireGuard Management Dashboard
 
-WireGuard VPNの管理ダッシュボード（グローバルアクセス対応・Let's Encrypt SSL自動更新）
+WireGuard VPNの管理ダッシュボード（環境別設定対応・開発環境はHTTP、本番環境はLet's Encrypt SSL）
 
 ## 概要
 
 WGDashboardは、WireGuardの設定を視覚的に管理できるWebベースのダッシュボードです。
 ホスト側で動作しているWireGuardの設定を直接管理します。
 
+**環境別対応**：
+- **開発環境** (`vpn-dev.abe365.org`): HTTP通信、内部ネットワークのみ、SSL無し
+- **本番環境** (`vpn.toshi.click`): HTTPS通信、Let's Encrypt自動SSL更新、グローバルアクセス対応
+
 **セキュリティ機能**：
-- Let's Encrypt自動SSL証明書更新
+- 環境別のSSL設定（本番環境のみLet's Encrypt）
 - Basic認証による二段階認証
 - レート制限（DDoS対策）
-- セキュリティヘッダー（HSTS、CSP等）
-- HTTPS強制リダイレクト
+- セキュリティヘッダー（本番環境は厳格）
+- HTTPS強制リダイレクト（本番環境のみ）
 
-## DNS設定
+## DNS設定と環境区分
 
-- **ドメイン**: vpn-dev.abe365.org
-- **IPアドレス**: CONOHA VPSのグローバルIP
-- **DNS管理**: Cloudflare (cloudflere/records.tf)
-- **アクセス**: グローバルからHTTPSでアクセス可能
+| 環境 | ドメイン | SSL | アクセス |
+|------|---------|-----|--------|
+| 開発 | vpn-dev.abe365.org | 無し（HTTP） | 内部ネットワークのみ |
+| 本番 | vpn.toshi.click | あり（Let's Encrypt） | グローバル（HTTPS） |
+
+**DNS管理**: Cloudflare (cloudflere/records.tf)
 
 ## サービス構成
 
@@ -63,60 +69,68 @@ nslookup vpn-dev.abe365.org
 
 ```bash
 cp .env.example .env
-vim .env  # 必要な環境変数を設定
+vim .env  # ENVIRONMENT を設定（'dev' または 'prod'）
 ```
 
-### 2. Let's Encrypt SSL証明書の取得
+**環境別設定**:
 
-```bash
-# 初期セットアップスクリプトに実行権限を付与
-chmod +x init-letsencrypt.sh
+```dotenv
+# 開発環境（内部ネットワーク、HTTP）
+ENVIRONMENT=dev
 
-# スクリプトを編集してメールアドレスを設定
-vim init-letsencrypt.sh
-# EMAIL="admin@abe365.org" を自分のメールアドレスに変更
-
-# SSL証明書を取得（初回のみ）
-./init-letsencrypt.sh
+# 本番環境（インターネット接続、HTTPS）
+ENVIRONMENT=prod
 ```
 
-**重要**: 初回は必ずテストモード（STAGING=1）で動作確認してください。
-Let's Encryptには週5回までの制限があります。
-
-### 3. Basic認証の設定
+### 2. 開発環境セットアップ（HTTP、SSLなし）
 
 ```bash
-# Basic認証ユーザー作成スクリプトに実行権限を付与
+# .envで ENVIRONMENT=dev を設定
+
+# Basic認証の設定（オプション）
 chmod +x create-htpasswd.sh
-
-# Basic認証ユーザーを作成
 ./create-htpasswd.sh
-# ユーザー名とパスワードを入力
 
-# nginxを再起動
-docker-compose restart nginx
-```
-
-### 4. サービスの起動
-
-```bash
-# 全サービスを起動
+# サービス起動（certbotはスキップ）
 docker-compose up -d
 
-# ログを確認
+# ログ確認
+docker-compose logs -f nginx
+```
+
+**アクセス方法**:
+```
+http://vpn-dev.abe365.org:80
+```
+
+### 3. 本番環境セットアップ（HTTPS、Let's Encrypt）
+
+```bash
+# .envで ENVIRONMENT=prod を設定
+
+# Let's Encrypt SSL証明書の取得
+chmod +x init-letsencrypt.sh
+vim init-letsencrypt.sh
+# EMAIL="admin@example.com" を自分のメールアドレスに変更
+./init-letsencrypt.sh
+
+# Basic認証の設定
+chmod +x create-htpasswd.sh
+./create-htpasswd.sh
+
+# 全サービスを起動（certbotを含む）
+docker-compose --profile prod up -d
+
+# ログ確認
 docker-compose logs -f
 ```
 
-### 5. アクセス確認
-
-```bash
-# HTTPSでアクセス
-https://vpn-dev.abe365.org
-
-# 認証情報
-# 1段階目: Basic認証（./create-htpasswd.shで設定したユーザー名/パスワード）
-# 2段階目: WGDashboard認証（.envで設定したWG_DASHBOARD_USERNAME/PASSWORD）
+**アクセス方法**:
 ```
+https://vpn.toshi.click
+```
+
+### 4. サービスの動作確認
 
 ## 環境変数
 
@@ -124,15 +138,42 @@ https://vpn-dev.abe365.org
 
 | 変数名 | 説明 | 必須 | デフォルト |
 |--------|------|------|-----------|
+| ENVIRONMENT | 環境の選択 (dev/prod) | × | dev |
 | WG_DASHBOARD_USERNAME | ダッシュボードユーザー名 | × | admin |
 | WG_DASHBOARD_PASSWORD | ダッシュボードパスワード | ✓ | - |
 | TZ | タイムゾーン | × | Asia/Tokyo |
 
+**環境の詳細**:
+- `dev`: 開発環境（HTTP、内部ネットワーク）
+  - nginxはHTTPで動作
+  - certbotは起動しない
+  - SSLセキュリティヘッダーは最小限
+- `prod`: 本番環境（HTTPS、Let's Encrypt）
+  - nginxはHTTPSで動作
+  - certbotが自動更新を管理
+  - 厳格なセキュリティヘッダーを適用
+
 ## アクセス方法
 
-サービス起動後、以下のURLでアクセス可能です：
+### 開発環境
 
-- **Dashboard**: http://vpn-dev.abe365.org
+```
+http://vpn-dev.abe365.org
+```
+
+認証：
+1. Basic認証（create-htpasswd.shで設定）
+2. WGDashboard認証（.envで設定）
+
+### 本番環境
+
+```
+https://vpn.toshi.click
+```
+
+認証：
+1. Basic認証（create-htpasswd.shで設定）
+2. WGDashboard認証（.envで設定）
 
 ## 機能
 
@@ -170,17 +211,40 @@ https://vpn-dev.abe365.org
 
 ## トラブルシューティング
 
+### 環境確認
+
+```bash
+# 現在の環境を確認
+cat .env | grep ENVIRONMENT
+
+# 使用されているnginx設定ファイルを確認
+docker-compose exec nginx cat /etc/nginx/nginx.conf | head -20
+```
+
 ### ダッシュボードにアクセスできない
 
+**開発環境（HTTP）**:
 ```bash
 # コンテナの状態確認
 docker-compose ps
 
-# ログの確認
-docker-compose logs wgdashboard
-
 # nginxログの確認
 docker-compose logs nginx
+
+# ポート80が使用可能か確認
+sudo netstat -tlnp | grep :80
+```
+
+**本番環境（HTTPS）**:
+```bash
+# SSL証明書が取得できているか確認
+ls -la ./data/certbot/conf/live/
+
+# 証明書の有効期限確認
+openssl x509 -in ./data/certbot/conf/live/vpn.toshi.click/cert.pem -noout -dates
+
+# certbotのログを確認
+docker-compose logs certbot
 ```
 
 ### WireGuard設定が表示されない
@@ -211,7 +275,28 @@ sudo systemctl restart wg-quick@wg0
 
 ## セキュリティ
 
-### 実装されているセキュリティ対策
+### 環境別のセキュリティ実装
+
+#### 開発環境（HTTP）
+
+- **Basic認証**: あり（create-htpasswd.shで設定）
+- **WGDashboard認証**: あり
+- **SSL/TLS**: なし（内部ネットワークのため）
+- **セキュリティヘッダー**: 最小限（フレーム保護、XSS保護等）
+- **レート制限**: あり
+- **用途**: ローカルネットワーク内での開発・管理
+
+#### 本番環境（HTTPS）
+
+- **Basic認証**: あり（create-htpasswd.shで設定）
+- **WGDashboard認証**: あり
+- **SSL/TLS**: Let's Encrypt（自動更新）
+- **セキュリティヘッダー**: 厳格（HSTS、CSP、OCSP Stapling等）
+- **レート制限**: あり
+- **HTTP強制リダイレクト**: HTTPS強制（HSTS有効）
+- **用途**: インターネット経由でのグローバルアクセス
+
+### 本番環境で実装されているセキュリティ対策
 
 #### 1. **多層認証**
 - **Basic認証**（nginx層）: 不正アクセスの第一防御
