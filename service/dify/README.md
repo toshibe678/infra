@@ -134,3 +134,13 @@ docker-compose up -d
 
 - [Dify公式ドキュメント](https://docs.dify.ai/)
 - [Dify GitHub](https://github.com/langgenius/dify)
+
+# Dify初期起動時のコマンド
+```bash
+# .env.example から .env を作成し、SECRET_KEY を設定する
+cp .env.example dify/docker/.env
+# SECRET_KEYを直接dify/docker/.envに書き込む
+openssl rand -base64 42 | sed 's/^/SECRET_KEY=/' >> dify/docker/.env
+cd dify/docker
+docker compose up -d
+```
