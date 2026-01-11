@@ -137,10 +137,17 @@ docker-compose up -d
 
 # Dify初期起動時のコマンド
 ```bash
+git submodule init
 # .env.example から .env を作成し、SECRET_KEY を設定する
 cp .env.example dify/docker/.env
-# SECRET_KEYを直接dify/docker/.envに書き込む
-openssl rand -base64 42 | sed 's/^/SECRET_KEY=/' >> dify/docker/.env
+sed -i "s|^SECRET_KEY=.*|SECRET_KEY=$(openssl rand -base64 42)|" dify/docker/.env
 cd dify/docker
 docker compose up -d
 ```
+
+# サブモジュール系コマンド
+| コマンド | 用途 |
+|--------|------|
+| git submodule init | .gitmodules の設定に基づきローカルの参照を初期化する |
+| git submodule update | 指定されたコミットハッシュの内容を実際にチェックアウトする |
+| git submodule update --init --recursive | 初期化と更新を同時に行い、dify内のサブモジュールも再帰的に取得する |
