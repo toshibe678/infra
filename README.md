@@ -47,4 +47,5 @@ cd monitoring && docker-compose up -d
 
 ## ドキュメント
 - **AI エージェント向け**: [AGENTS.md](AGENTS.md) - プロジェクト全体のコンテキスト
+- **Claude Code 統合**: [docs/CLAUDE_CODE_SETUP.md](docs/CLAUDE_CODE_SETUP.md) - セルフホストランナーでのClaude Code利用ガイド
 - **GitHub Copilot向け**: [.github/copilot-instructions.md](.github/copilot-instructions.md) - 開発ガイドライン
