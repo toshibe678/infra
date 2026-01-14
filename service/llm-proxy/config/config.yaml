@@ -1,22 +1,9 @@
 model_list: 
   # AWS Bedrock Models
-  - model_name: bedrock-titan-text
-    litellm_params:
-      model: bedrock/amazon.titan-text-express-v1
-      aws_access_key_id: os.environ/AWS_ACCESS_KEY_ID
-      aws_secret_access_key: os.environ/AWS_SECRET_ACCESS_KEY
-      aws_region_name: os.environ/AWS_REGION_NAME
-  
+ 
   - model_name: bedrock-titan-embed
     litellm_params:
-      model: bedrock/amazon.titan-embed-text-v1
-      aws_access_key_id: os.environ/AWS_ACCESS_KEY_ID
-      aws_secret_access_key: os.environ/AWS_SECRET_ACCESS_KEY
-      aws_region_name: os.environ/AWS_REGION_NAME
-   
-  - model_name: bedrock-cohere-command
-    litellm_params:
-      model: bedrock/cohere.command-text-v14
+      model: bedrock/amazon.titan-embed-text-v2:0
       aws_access_key_id: os.environ/AWS_ACCESS_KEY_ID
       aws_secret_access_key: os.environ/AWS_SECRET_ACCESS_KEY
       aws_region_name: os.environ/AWS_REGION_NAME
@@ -24,26 +11,26 @@ model_list:
   # AWS Bedrock - Amazon Nova Models
   - model_name: bedrock-nova-micro
     litellm_params:
-      model: bedrock/us.amazon.nova-micro-v1:0
+      model: bedrock/amazon.nova-micro-v1:0
       aws_access_key_id: os.environ/AWS_ACCESS_KEY_ID
       aws_secret_access_key: os.environ/AWS_SECRET_ACCESS_KEY
       aws_region_name: os.environ/AWS_REGION_NAME
   
   - model_name: bedrock-nova-lite
     litellm_params:
-      model: bedrock/us.amazon.nova-lite-v1:0
+      model: bedrock/amazon.nova-lite-v1:0
       aws_access_key_id: os.environ/AWS_ACCESS_KEY_ID
       aws_secret_access_key: os.environ/AWS_SECRET_ACCESS_KEY
       aws_region_name: os.environ/AWS_REGION_NAME
   
   - model_name: bedrock-nova-pro
     litellm_params:
-      model: bedrock/us.amazon.nova-pro-v1:0
+      model: bedrock/amazon.nova-pro-v1:0
       aws_access_key_id: os.environ/AWS_ACCESS_KEY_ID
       aws_secret_access_key: os.environ/AWS_SECRET_ACCESS_KEY
       aws_region_name: os.environ/AWS_REGION_NAME
   
-  # AWS Bedrock - Amazon Nova 2 Models (2025年リリース予定)
+  # AWS Bedrock - Amazon Nova 2 Models
   - model_name: bedrock-nova2-micro
     litellm_params:
       model: bedrock/us.amazon.nova-micro-v2:0
@@ -53,14 +40,14 @@ model_list:
   
   - model_name: bedrock-nova2-lite
     litellm_params:
-      model: bedrock/us.amazon.nova-lite-v2:0
+      model: bedrock/amazon.nova-2-lite-v1:0
       aws_access_key_id: os.environ/AWS_ACCESS_KEY_ID
       aws_secret_access_key: os.environ/AWS_SECRET_ACCESS_KEY
       aws_region_name: os.environ/AWS_REGION_NAME
   
-  - model_name: bedrock-nova2-pro
+  - model_name: bedrock-nova2-sonic
     litellm_params:
-      model: bedrock/us.amazon.nova-pro-v2:0
+      model: bedrock/amazon.nova-2-sonic-v1:0
       aws_access_key_id: os.environ/AWS_ACCESS_KEY_ID
       aws_secret_access_key: os.environ/AWS_SECRET_ACCESS_KEY
       aws_region_name: os.environ/AWS_REGION_NAME
@@ -68,21 +55,21 @@ model_list:
   # AWS Bedrock - Claude 4.5 Models
   - model_name: bedrock-claude-4.5-sonnet
     litellm_params:
-      model: bedrock/anthropic.claude-sonnet-4-5-v1:0
+      model: bedrock/anthropic.claude-sonnet-4-5-20250929-v1:0
       aws_access_key_id: os.environ/AWS_ACCESS_KEY_ID
       aws_secret_access_key: os.environ/AWS_SECRET_ACCESS_KEY
       aws_region_name: os.environ/AWS_REGION_NAME
   
   - model_name: bedrock-claude-4.5-haiku
     litellm_params:
-      model: bedrock/anthropic.claude-haiku-4-5-v1:0
+      model: bedrock/anthropic.claude-haiku-4-5-20251001-v1:0
       aws_access_key_id: os.environ/AWS_ACCESS_KEY_ID
       aws_secret_access_key: os.environ/AWS_SECRET_ACCESS_KEY
       aws_region_name: os.environ/AWS_REGION_NAME
   
   - model_name: bedrock-claude-4.5-opus
     litellm_params:
-      model: bedrock/anthropic.claude-opus-4-5-v1:0
+      model: bedrock/anthropic.claude-opus-4-5-20251101-v1:0
       aws_access_key_id: os.environ/AWS_ACCESS_KEY_ID
       aws_secret_access_key: os.environ/AWS_SECRET_ACCESS_KEY
       aws_region_name: os.environ/AWS_REGION_NAME
@@ -147,11 +134,10 @@ model_list:
   
   # Fallback Configuration: Bedrock -> Vertex AI
   # 同じmodel_nameで複数定義すると自動的にフォールオーバー
-  
   # Claude 4.5 Sonnet Fallback
   - model_name: claude-4.5-sonnet-fallback
     litellm_params:
-      model: bedrock/anthropic.claude-sonnet-4-5-v1:0
+      model: bedrock/anthropic.claude-sonnet-4-5-20250929-v1:0
       aws_access_key_id: os.environ/AWS_ACCESS_KEY_ID
       aws_secret_access_key: os.environ/AWS_SECRET_ACCESS_KEY
       aws_region_name: os.environ/AWS_REGION_NAME
@@ -166,7 +152,7 @@ model_list:
   # Claude 4.5 Haiku Fallback
   - model_name: claude-4.5-haiku-fallback
     litellm_params:
-      model: bedrock/anthropic.claude-haiku-4-5-v1:0
+      model: bedrock/anthropic.claude-haiku-4-5-20251001-v1:0
       aws_access_key_id: os.environ/AWS_ACCESS_KEY_ID
       aws_secret_access_key: os.environ/AWS_SECRET_ACCESS_KEY
       aws_region_name: os.environ/AWS_REGION_NAME
@@ -181,7 +167,7 @@ model_list:
   # Claude 4.5 Opus Fallback
   - model_name: claude-4.5-opus-fallback
     litellm_params:
-      model: bedrock/anthropic.claude-opus-4-5-v1:0
+      model: bedrock/anthropic.claude-opus-4-5-20251101-v1:0
       aws_access_key_id: os.environ/AWS_ACCESS_KEY_ID
       aws_secret_access_key: os.environ/AWS_SECRET_ACCESS_KEY
       aws_region_name: os.environ/AWS_REGION_NAME
