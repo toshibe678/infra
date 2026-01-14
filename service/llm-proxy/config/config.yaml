@@ -11,24 +11,21 @@ model_list:
   # AWS Bedrock - Amazon Nova Models
   - model_name: bedrock-nova-micro
     litellm_params:
-      model: bedrock/us.amazon.nova-micro-v1:0
-      model_id: os.environ/BEDROCK_NOVA_MICRO_ARN
+      model: os.environ/BEDROCK_NOVA_MICRO_ARN
       aws_access_key_id: os.environ/AWS_ACCESS_KEY_ID
       aws_secret_access_key: os.environ/AWS_SECRET_ACCESS_KEY
       aws_region_name: os.environ/AWS_REGION_NAME
   
   - model_name: bedrock-nova-lite
     litellm_params:
-      model: bedrock/us.amazon.nova-lite-v1:0
-      model_id: os.environ/BEDROCK_NOVA_LITE_ARN
+      model: os.environ/BEDROCK_NOVA_LITE_ARN
       aws_access_key_id: os.environ/AWS_ACCESS_KEY_ID
       aws_secret_access_key: os.environ/AWS_SECRET_ACCESS_KEY
       aws_region_name: os.environ/AWS_REGION_NAME
   
   - model_name: bedrock-nova-pro
     litellm_params:
-      model: bedrock/us.amazon.nova-pro-v1:0
-      model_id: os.environ/BEDROCK_NOVA_PRO_ARN
+      model: os.environ/BEDROCK_NOVA_PRO_ARN
       aws_access_key_id: os.environ/AWS_ACCESS_KEY_ID
       aws_secret_access_key: os.environ/AWS_SECRET_ACCESS_KEY
       aws_region_name: os.environ/AWS_REGION_NAME
@@ -37,15 +34,13 @@ model_list:
   - model_name: bedrock-nova2-micro
     litellm_params:
       model: bedrock/us.amazon.nova-micro-v2:0
-      # model_id: 
       aws_access_key_id: os.environ/AWS_ACCESS_KEY_ID
       aws_secret_access_key: os.environ/AWS_SECRET_ACCESS_KEY
       aws_region_name: os.environ/AWS_REGION_NAME
   
   - model_name: bedrock-nova2-lite
     litellm_params:
-      model: bedrock/us.amazon.nova-2-lite-v1:0
-      model_id: os.environ/BEDROCK_NOVA2_LITE_ARN
+      model: os.environ/BEDROCK_NOVA2_LITE_ARN
       aws_access_key_id: os.environ/AWS_ACCESS_KEY_ID
       aws_secret_access_key: os.environ/AWS_SECRET_ACCESS_KEY
       aws_region_name: os.environ/AWS_REGION_NAME
@@ -53,7 +48,6 @@ model_list:
   - model_name: bedrock-nova2-sonic
     litellm_params:
       model: bedrock/us.amazon.nova-2-sonic-v1:0
-      # model_id: 
       aws_access_key_id: os.environ/AWS_ACCESS_KEY_ID
       aws_secret_access_key: os.environ/AWS_SECRET_ACCESS_KEY
       aws_region_name: os.environ/AWS_REGION_NAME
@@ -61,24 +55,21 @@ model_list:
   # AWS Bedrock - Claude 4.5 Models
   - model_name: bedrock-claude-4.5-sonnet
     litellm_params:
-      model: bedrock/global.anthropic.claude-sonnet-4-5-20250929-v1:0
-      model_id: os.environ/BEDROCK_CLAUDE_SONNET_4_5_ARN
+      model: os.environ/BEDROCK_CLAUDE_SONNET_4_5_ARN
       aws_access_key_id: os.environ/AWS_ACCESS_KEY_ID
       aws_secret_access_key: os.environ/AWS_SECRET_ACCESS_KEY
       aws_region_name: os.environ/AWS_REGION_NAME
   
   - model_name: bedrock-claude-4.5-haiku
     litellm_params:
-      model: bedrock/global.anthropic.claude-haiku-4-5-20251001-v1:0
-      model_id: os.environ/BEDROCK_CLAUDE_HAIKU_4_5_ARN
+      model: os.environ/BEDROCK_CLAUDE_HAIKU_4_5_ARN
       aws_access_key_id: os.environ/AWS_ACCESS_KEY_ID
       aws_secret_access_key: os.environ/AWS_SECRET_ACCESS_KEY
       aws_region_name: os.environ/AWS_REGION_NAME
   
   - model_name: bedrock-claude-4.5-opus
     litellm_params:
-      model: bedrock/global.anthropic.claude-opus-4-5-20251101-v1:0
-      model_id: os.environ/BEDROCK_CLAUDE_OPUS_4_5_ARN
+      model: os.environ/BEDROCK_CLAUDE_OPUS_4_5_ARN
       aws_access_key_id: os.environ/AWS_ACCESS_KEY_ID
       aws_secret_access_key: os.environ/AWS_SECRET_ACCESS_KEY
       aws_region_name: os.environ/AWS_REGION_NAME
@@ -121,8 +112,7 @@ model_list:
   # Claude 4.5 Sonnet Fallback
   - model_name: claude-4.5-sonnet-fallback
     litellm_params:
-      model: bedrock/global.anthropic.claude-sonnet-4-5-20250929-v1:0
-      model_id: os.environ/BEDROCK_CLAUDE_SONNET_4_5_ARN
+      model: os.environ/BEDROCK_CLAUDE_SONNET_4_5_ARN
       aws_access_key_id: os.environ/AWS_ACCESS_KEY_ID
       aws_secret_access_key: os.environ/AWS_SECRET_ACCESS_KEY
       aws_region_name: os.environ/AWS_REGION_NAME
