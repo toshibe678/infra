@@ -77,60 +77,40 @@ model_list:
   # Google Cloud Vertex AI - Claude 4.5 Models
   - model_name: vertex-claude-4.5-sonnet
     litellm_params:
-      model: vertex_ai/claude-sonnet-4-5@20250101
-      vertex_project: os.environ/GCP_PROJECT_ID
-      vertex_location: os.environ/VERTEX_LOCATION
-      vertex_credentials: os.environ/GOOGLE_APPLICATION_CREDENTIALS
-  
-  - model_name: vertex-claude-4.5-haiku
-    litellm_params:
-      model: vertex_ai/claude-haiku-4-5@20250101
-      vertex_project: os.environ/GCP_PROJECT_ID
-      vertex_location: os.environ/VERTEX_LOCATION
-      vertex_credentials: os.environ/GOOGLE_APPLICATION_CREDENTIALS
-  
-  - model_name: vertex-claude-4.5-opus
-    litellm_params:
-      model: vertex_ai/claude-opus-4-5@20250101
+      model: vertex_ai/claude-sonnet-4-5@20250929
       vertex_project: os.environ/GCP_PROJECT_ID
       vertex_location: os.environ/VERTEX_LOCATION
       vertex_credentials: os.environ/GOOGLE_APPLICATION_CREDENTIALS
   
   # Google Cloud Vertex AI - Gemini Models
-  - model_name: vertex-gemini-2.0-flash
+  - model_name: vertex-gemini-2.5-flash
     litellm_params:
-      model: vertex_ai/gemini-2.0-flash-exp
+      model: vertex_ai/gemini-2.5-flash
       vertex_project: os.environ/GCP_PROJECT_ID
       vertex_location: os.environ/VERTEX_LOCATION
       vertex_credentials: os.environ/GOOGLE_APPLICATION_CREDENTIALS
   
-  - model_name: vertex-gemini-2.0-flash-thinking
+  - model_name: vertex-gemini-2.5-pro
     litellm_params:
-      model: vertex_ai/gemini-2.0-flash-thinking-exp
+      model: vertex_ai/gemini-2.5-pro
       vertex_project: os.environ/GCP_PROJECT_ID
       vertex_location: os.environ/VERTEX_LOCATION
       vertex_credentials: os.environ/GOOGLE_APPLICATION_CREDENTIALS
   
-  - model_name: vertex-gemini-1.5-pro
+  - model_name: vertex-gemini-3-pro-preview
     litellm_params:
-      model: vertex_ai/gemini-1.5-pro-002
+      model: vertex_ai/gemini-3-pro-preview
       vertex_project: os.environ/GCP_PROJECT_ID
       vertex_location: os.environ/VERTEX_LOCATION
       vertex_credentials: os.environ/GOOGLE_APPLICATION_CREDENTIALS
   
-  - model_name: vertex-gemini-1.5-flash
+  - model_name: vertex-gemini-3-flash-preview
     litellm_params:
-      model: vertex_ai/gemini-1.5-flash-002
+      model: vertex_ai/gemini-3-flash-preview
       vertex_project: os.environ/GCP_PROJECT_ID
       vertex_location: os.environ/VERTEX_LOCATION
       vertex_credentials: os.environ/GOOGLE_APPLICATION_CREDENTIALS
-  
-  - model_name: vertex-gemini-1.5-flash-8b
-    litellm_params:
-      model: vertex_ai/gemini-1.5-flash-8b
-      vertex_project: os.environ/GCP_PROJECT_ID
-      vertex_location: os.environ/VERTEX_LOCATION
-      vertex_credentials: os.environ/GOOGLE_APPLICATION_CREDENTIALS
+
   
   # Fallback Configuration: Bedrock -> Vertex AI
   # 同じmodel_nameで複数定義すると自動的にフォールオーバー
@@ -144,37 +124,7 @@ model_list:
   
   - model_name: claude-4.5-sonnet-fallback
     litellm_params:
-      model: vertex_ai/claude-sonnet-4-5@20250101
-      vertex_project: os.environ/GCP_PROJECT_ID
-      vertex_location: os.environ/VERTEX_LOCATION
-      vertex_credentials: os.environ/GOOGLE_APPLICATION_CREDENTIALS
-  
-  # Claude 4.5 Haiku Fallback
-  - model_name: claude-4.5-haiku-fallback
-    litellm_params:
-      model: bedrock/anthropic.claude-haiku-4-5-20251001-v1:0
-      aws_access_key_id: os.environ/AWS_ACCESS_KEY_ID
-      aws_secret_access_key: os.environ/AWS_SECRET_ACCESS_KEY
-      aws_region_name: os.environ/AWS_REGION_NAME
-  
-  - model_name: claude-4.5-haiku-fallback
-    litellm_params:
-      model: vertex_ai/claude-haiku-4-5@20250101
-      vertex_project: os.environ/GCP_PROJECT_ID
-      vertex_location: os.environ/VERTEX_LOCATION
-      vertex_credentials: os.environ/GOOGLE_APPLICATION_CREDENTIALS
-  
-  # Claude 4.5 Opus Fallback
-  - model_name: claude-4.5-opus-fallback
-    litellm_params:
-      model: bedrock/anthropic.claude-opus-4-5-20251101-v1:0
-      aws_access_key_id: os.environ/AWS_ACCESS_KEY_ID
-      aws_secret_access_key: os.environ/AWS_SECRET_ACCESS_KEY
-      aws_region_name: os.environ/AWS_REGION_NAME
-  
-  - model_name: claude-4.5-opus-fallback
-    litellm_params:
-      model: vertex_ai/claude-opus-4-5@20250101
+      model: vertex_ai/claude-sonnet-4-5@20250929
       vertex_project: os.environ/GCP_PROJECT_ID
       vertex_location: os.environ/VERTEX_LOCATION
       vertex_credentials: os.environ/GOOGLE_APPLICATION_CREDENTIALS
