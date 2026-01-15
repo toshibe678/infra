@@ -1,6 +1,32 @@
 model_list: 
+  # Local Free Ollama Models
+  - model_name: rtx5070ti-qwen3-8b  # 任意の識別名
+    litellm_params:
+      model: ollama/qwen3:8b    # 「ollama/モデル名」の形式
+      api_base: http://toshi-gamepc.abe365.org:11434
+      timeout: 300
+  - model_name: rtx5070ti-gemma3-12b  # 任意の識別名
+    litellm_params:
+      model: ollama/gemma3:12b   # 「ollama/モデル名」の形式
+      api_base: http://toshi-gamepc.abe365.org:11434
+      timeout: 300
+  - model_name: rtx5070ti-deepseek-r1-8b  # 任意の識別名
+    litellm_params:
+      model: ollama/deepseek-r1:8b   # 「ollama/モデル名」の形式
+      api_base: http://toshi-gamepc.abe365.org:11434
+      timeout: 300
+  - model_name: rtx5070ti-qwen3-coder-30b  # 任意の識別名
+    litellm_params:
+      model: ollama/qwen3-coder:30b    # 「ollama/モデル名」の形式
+      api_base: http://toshi-gamepc.abe365.org:11434
+      timeout: 300
+  - model_name: rtx5070ti-gpt-oss-20b  # 任意の識別名
+    litellm_params:
+      model: ollama/gpt-oss:20b   # 「ollama/モデル名」の形式
+      api_base: http://toshi-gamepc.abe365.org:11434
+      timeout: 300
+      
   # AWS Bedrock Models
- 
   - model_name: bedrock-titan-embed
     litellm_params:
       model: bedrock/amazon.titan-embed-text-v2:0
