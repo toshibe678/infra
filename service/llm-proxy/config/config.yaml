@@ -27,13 +27,28 @@ model_list:
       timeout: 300
       
   # AWS Bedrock Models
+  ## 埋め込みモデル
   - model_name: bedrock-titan-embed
     litellm_params:
       model: bedrock/amazon.titan-embed-text-v2:0
       aws_access_key_id: os.environ/AWS_ACCESS_KEY_ID
       aws_secret_access_key: os.environ/AWS_SECRET_ACCESS_KEY
       aws_region_name: os.environ/AWS_REGION_NAME
-  
+  ## Rerank モデル
+  - model_name: bedrock-cohere-rerank-v3-5
+    litellm_params:
+      model: bedrock/cohere.rerank-v3-5:0
+      aws_access_key_id: os.environ/AWS_ACCESS_KEY_ID
+      aws_secret_access_key: os.environ/AWS_SECRET_ACCESS_KEY
+      aws_region_name: os.environ/AWS_REGION_NAME
+  ## 音声-to-テキストモデル テキスト-to-音声モデル
+  - model_name: bedrock-nova2-sonic
+    litellm_params:
+      model: bedrock/us.amazon.nova-2-sonic-v1:0
+      aws_access_key_id: os.environ/AWS_ACCESS_KEY_ID
+      aws_secret_access_key: os.environ/AWS_SECRET_ACCESS_KEY
+      aws_region_name: os.environ/AWS_REGION_NAME
+
   # AWS Bedrock - Amazon Nova Models
   - model_name: bedrock-nova-micro
     litellm_params:
@@ -70,13 +85,7 @@ model_list:
       aws_access_key_id: os.environ/AWS_ACCESS_KEY_ID
       aws_secret_access_key: os.environ/AWS_SECRET_ACCESS_KEY
       aws_region_name: os.environ/AWS_REGION_NAME
-  
-  - model_name: bedrock-nova2-sonic
-    litellm_params:
-      model: bedrock/us.amazon.nova-2-sonic-v1:0
-      aws_access_key_id: os.environ/AWS_ACCESS_KEY_ID
-      aws_secret_access_key: os.environ/AWS_SECRET_ACCESS_KEY
-      aws_region_name: os.environ/AWS_REGION_NAME
+
   
   # AWS Bedrock - Claude 4.5 Models
   - model_name: bedrock-claude-4.5-sonnet
