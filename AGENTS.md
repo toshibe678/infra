@@ -96,6 +96,14 @@ Ansible・Terraform・Docker・AWS CDK を中心に、構成管理・クラウ�
   - トークン認証、レート制限（10req/s）、セキュリティヘッダー実装
   - Node Exporter統合（Prometheus監視対応）
   - Cloudflare DNS設定追加（mcp.abe365.org → 192.168.100.57）
+* vpn-proxy: VPN接続サーバーから拠点内非VPN接続サーバーへのリバースプロキシ実装完了
+  - Nginxリバースプロキシによる複数バックエンドサーバーへのルーティング
+  - ホスト名ベースルーティング対応（develop-proxy.vpn.local、monitoring-proxy.vpn.local等）
+  - WebSocket対応（双方向通信）
+  - Node Exporter統合（Prometheus監視対応）
+  - レート制限（10req/s、厳格制限3req/s）、セキュリティヘッダー実装
+  - NAT越し環境に最適化（HTTP通信のみ、WireGuard VPN暗号化済み）
+  - 環境別設定（dev/prod）対応
 
 ## 進行中
 * AWS CDKによる追加リソース管理
@@ -144,6 +152,7 @@ Ansible・Terraform・Docker・AWS CDK を中心に、構成管理・クラウ�
 | Develop | develop.abe365.org | 192.168.100.55 | 開発環境 |
 | AI Test | ai-test.abe365.org | 192.168.100.56 | AI実験環境 |
 | MCP Servers | mcp.abe365.org | 192.168.100.57 | Model Context Protocol統合サーバー（Git/GitHub/Filesystem/PostgreSQL/Fetch/Playwright統合） |
+| VPN Proxy | vpn-proxy.vpn.local (VPN内部) | 10.0.0.x | VPN接続から拠点内非VPN接続サーバーへのリバースプロキシ（開発・監視・AI実験環境等へのアクセスを中継） |
 
 ### サービスフォルダ構造
 ```
@@ -189,6 +198,17 @@ service/
     ├── AGENTS.md
     └── nginx/
         └── nginx.conf
+└── vpn-proxy/        # ✓完成：VPN接続から拠点内非VPN接続サーバーへのプロキシ
+    ├── docker-compose.yml
+    ├── README.md
+    ├── .env.example
+    ├── .gitignore
+    ├── AGENTS.md
+    └── nginx/
+        ├── nginx.conf
+        └── conf.d/
+            ├── default.conf
+            └── proxy-backends.conf.example
 ```
 
 ### サービス定義の原則
