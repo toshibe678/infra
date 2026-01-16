@@ -1,0 +1,180 @@
+services:
+  # Nginx Reverse Proxy
+  nginx:
+    image: nginx:alpine
+    restart: always
+    ports:
+      - "80:80"
+    volumes:
+      - ./nginx/nginx.conf:/etc/nginx/nginx.conf:ro
+      - ./logs/nginx:/var/log/nginx
+    depends_on:
+      - mcp-gateway
+      - mcp-git
+      - mcp-github
+      - mcp-filesystem
+      - mcp-postgres
+      - mcp-fetch
+    networks:
+      - mcp-network
+
+  # MCP Gateway - Router for all MCP servers
+  mcp-gateway:
+    image: node:20-alpine
+    restart: always
+    working_dir: /app
+    expose:
+      - "3000"
+    environment:
+      - NODE_ENV=${NODE_ENV:-production}
+      - PORT=3000
+      - DATABASE_URL=${DATABASE_URL:-postgresql://mcpuser:${DB_PASSWORD}@db:5432/mcpdb}
+      - REDIS_URL=${REDIS_URL:-redis://:${REDIS_PASSWORD}@redis:6379}
+      - MCP_GIT_URL=http://mcp-git:3001
+      - MCP_GITHUB_URL=http://mcp-github:3002
+      - MCP_FILESYSTEM_URL=http://mcp-filesystem:3003
+      - MCP_POSTGRES_URL=http://mcp-postgres:3004
+      - MCP_FETCH_URL=http://mcp-fetch:3005
+      - AUTH_TOKEN=${AUTH_TOKEN}
+    volumes:
+      - ./gateway:/app
+      - ./logs/gateway:/app/logs
+    command: sh -c "npm install && npm start"
+    depends_on:
+      - db
+      - redis
+    networks:
+      - mcp-network
+
+  # Git MCP Server
+  mcp-git:
+    image: node:20-alpine
+    restart: always
+    working_dir: /app
+    expose:
+      - "3001"
+    environment:
+      - PORT=3001
+      - ALLOWED_REPOS=${GIT_ALLOWED_REPOS:-/repos}
+    volumes:
+      - ./repos:/repos:ro
+      - ./mcp-servers/git:/app
+    command: sh -c "npx -y @modelcontextprotocol/server-git"
+    networks:
+      - mcp-network
+
+  # GitHub MCP Server
+  mcp-github:
+    image: node:20-alpine
+    restart: always
+    working_dir: /app
+    expose:
+      - "3002"
+    environment:
+      - PORT=3002
+      - GITHUB_TOKEN=${GITHUB_TOKEN}
+      - GITHUB_PERSONAL_ACCESS_TOKEN=${GITHUB_PERSONAL_ACCESS_TOKEN}
+    command: sh -c "npx -y @modelcontextprotocol/server-github"
+    networks:
+      - mcp-network
+
+  # Filesystem MCP Server
+  mcp-filesystem:
+    image: node:20-alpine
+    restart: always
+    working_dir: /app
+    expose:
+      - "3003"
+    environment:
+      - PORT=3003
+      - ALLOWED_PATHS=${FILESYSTEM_ALLOWED_PATHS:-/workspace}
+    volumes:
+      - ./workspace:/workspace
+    command: sh -c "npx -y @modelcontextprotocol/server-filesystem /workspace"
+    networks:
+      - mcp-network
+
+  # PostgreSQL MCP Server
+  mcp-postgres:
+    image: node:20-alpine
+    restart: always
+    working_dir: /app
+    expose:
+      - "3004"
+    environment:
+      - PORT=3004
+      - POSTGRES_URL=${POSTGRES_MCP_URL}
+    command: sh -c "npx -y @modelcontextprotocol/server-postgres"
+    depends_on:
+      - db
+    networks:
+      - mcp-network
+
+  # Fetch MCP Server
+  mcp-fetch:
+    image: node:20-alpine
+    restart: always
+    working_dir: /app
+    expose:
+      - "3005"
+    environment:
+      - PORT=3005
+      - USER_AGENT=${FETCH_USER_AGENT:-MCP-Fetch/1.0}
+    command: sh -c "npx -y @modelcontextprotocol/server-fetch"
+    networks:
+      - mcp-network
+
+  # Playwright MCP Server
+  mcp-playwright:
+    image: mcr.microsoft.com/playwright:latest
+    restart: always
+    working_dir: /app
+    expose:
+      - "3006"
+    environment:
+      - PORT=3006
+    volumes:
+      - ./mcp-servers/playwright:/app
+    command: sh -c "npm install && npm start"
+    networks:
+      - mcp-network
+
+  # PostgreSQL Database
+  db:
+    image: postgres:15-alpine
+    restart: always
+    environment:
+      - POSTGRES_USER=${DB_USER:-mcpuser}
+      - POSTGRES_PASSWORD=${DB_PASSWORD}
+      - POSTGRES_DB=${DB_NAME:-mcpdb}
+    volumes:
+      - ./data/postgres:/var/lib/postgresql/data
+    networks:
+      - mcp-network
+
+  # Redis Cache
+  redis:
+    image: redis:7-alpine
+    restart: always
+    command: redis-server --requirepass ${REDIS_PASSWORD}
+    volumes:
+      - ./data/redis:/data
+    networks:
+      - mcp-network
+
+  # Node Exporter - System metrics
+  node-exporter:
+    image: prom/node-exporter:latest
+    restart: always
+    expose:
+      - "9100"
+    command:
+      - '--path.rootfs=/host'
+    volumes:
+      - /:/host:ro,rslave
+    networks:
+      - mcp-network
+
+networks:
+  mcp-network:
+    driver: bridge

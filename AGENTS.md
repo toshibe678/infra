@@ -89,6 +89,13 @@ Ansible・Terraform・Docker・AWS CDK を中心に、構成管理・クラウ�
   - Prometheus設定に全サービスのscrape設定追加
   - Grafana統合ダッシュボード作成（services-overview）
   - Docker daemon metrics収集設定
+* mcp-servers: Model Context Protocol統合サーバー実装完了
+  - 複数のMCPサーバー（Git/GitHub/Filesystem/PostgreSQL/Fetch/Playwright）を統合
+  - Nginxリバースプロキシでルーティング（統合Gateway + 個別アクセス対応）
+  - PostgreSQL・Redisによるメタデータ・キャッシュ管理
+  - トークン認証、レート制限（10req/s）、セキュリティヘッダー実装
+  - Node Exporter統合（Prometheus監視対応）
+  - Cloudflare DNS設定追加（mcp.abe365.org → 192.168.100.57）
 
 ## 進行中
 * AWS CDKによる追加リソース管理
@@ -136,6 +143,7 @@ Ansible・Terraform・Docker・AWS CDK を中心に、構成管理・クラウ�
 | LLM Proxy | llm-proxy.abe365.org | 192.168.100.54 | 統合LLM APIプロキシ（OpenAI/Anthropic/Azure/AWS Bedrock/GCP VertexAI対応、自動フォールオーバー機能付き） |
 | Develop | develop.abe365.org | 192.168.100.55 | 開発環境 |
 | AI Test | ai-test.abe365.org | 192.168.100.56 | AI実験環境 |
+| MCP Servers | mcp.abe365.org | 192.168.100.57 | Model Context Protocol統合サーバー（Git/GitHub/Filesystem/PostgreSQL/Fetch/Playwright統合） |
 
 ### サービスフォルダ構造
 ```
@@ -169,10 +177,18 @@ service/
 │   ├── docker-compose.yml
 │   ├── README.md
 │   └── .env.example
-└── ai-test/          # ✓完成：AI/ML実験環境
+├── ai-test/          # ✓完成：AI/ML実験環境
+│   ├── docker-compose.yml
+│   ├── README.md
+│   └── .env.example
+└── mcp-servers/      # ✓完成：Model Context Protocol統合サーバー
     ├── docker-compose.yml
     ├── README.md
-    └── .env.example
+    ├── .env.example
+    ├── .gitignore
+    ├── AGENTS.md
+    └── nginx/
+        └── nginx.conf
 ```
 
 ### サービス定義の原則
