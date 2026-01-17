@@ -114,7 +114,7 @@ resource "cloudflare_record" "infra2" {
 resource "cloudflare_record" "k8s1" {
   name    = "k8s1"                           # サブドメイン名
   proxied = false                            # Cloudflare のプロキシを利用するか
-  ttl     = 1                               # TTL
+  ttl     = 86400                           # TTL
   type    = "A"                             # レコードタイプ
   value   = "192.168.100.11"       # CloudFront を想定した値
   zone_id = "46b5be479776a4897b109614bd8c6a8a" # Cloudflare のゾーン ID
@@ -122,7 +122,7 @@ resource "cloudflare_record" "k8s1" {
 resource "cloudflare_record" "k8s2" {
   name    = "k8s2"                         # サブドメイン名
   proxied = false                            # Cloudflare のプロキシを利用するか
-  ttl     = 1                               # TTL
+  ttl     = 86400                           # TTL
   type    = "A"                             # レコードタイプ
   value   = "192.168.100.12"      # CloudFront を想定した値
   zone_id = "46b5be479776a4897b109614bd8c6a8a" # Cloudflare のゾーン ID
@@ -130,7 +130,7 @@ resource "cloudflare_record" "k8s2" {
 resource "cloudflare_record" "k8s3" {
   name    = "k8s3"                         # サブドメイン名
   proxied = false                            # Cloudflare のプロキシを利用するか
-  ttl     = 1                               # TTL
+  ttl     = 86400                           # TTL
   type    = "A"                             # レコードタイプ
   value   = "192.168.100.13"      # CloudFront を想定した値
   zone_id = "46b5be479776a4897b109614bd8c6a8a" # Cloudflare のゾーン ID
@@ -138,7 +138,7 @@ resource "cloudflare_record" "k8s3" {
 resource "cloudflare_record" "monitoring" {
   name    = "monitoring"                           # サブドメイン名
   proxied = false                            # Cloudflare のプロキシを利用するか
-  ttl     = 1                               # TTL
+  ttl     = 86400                           # TTL
   type    = "A"                             # レコードタイプ
   value   = "192.168.100.51"       # CloudFront を想定した値
   zone_id = "46b5be479776a4897b109614bd8c6a8a" # Cloudflare のゾーン ID
@@ -146,7 +146,7 @@ resource "cloudflare_record" "monitoring" {
 resource "cloudflare_record" "dify" {
   name    = "dify"                         # サブドメイン名
   proxied = false                            # Cloudflare のプロキシを利用するか
-  ttl     = 1                               # TTL
+  ttl     = 86400                           # TTL
   type    = "A"                             # レコードタイプ
   value   = "192.168.100.52"      # CloudFront を想定した値
   zone_id = "46b5be479776a4897b109614bd8c6a8a" # Cloudflare のゾーン ID
@@ -154,7 +154,7 @@ resource "cloudflare_record" "dify" {
 resource "cloudflare_record" "vpn-dev" {
   name    = "vpn-dev"                         # サブドメイン名
   proxied = false                            # Cloudflare のプロキシを利用するか
-  ttl     = 1                               # TTL
+  ttl     = 86400                           # TTL
   type    = "A"                             # レコードタイプ
   value   = "192.168.100.53"      # CloudFront を想定した値
   zone_id = "46b5be479776a4897b109614bd8c6a8a" # Cloudflare のゾーン ID
@@ -162,7 +162,7 @@ resource "cloudflare_record" "vpn-dev" {
 resource "cloudflare_record" "llm-proxy" {
   name    = "llm-proxy"                         # サブドメイン名
   proxied = false                            # Cloudflare のプロキシを利用するか
-  ttl     = 1                               # TTL
+  ttl     = 86400                           # TTL
   type    = "A"                             # レコードタイプ
   value   = "192.168.100.54"      # CloudFront を想定した値
   zone_id = "46b5be479776a4897b109614bd8c6a8a" # Cloudflare のゾーン ID
@@ -170,7 +170,7 @@ resource "cloudflare_record" "llm-proxy" {
 resource "cloudflare_record" "develop" {
   name    = "develop"                         # サブドメイン名
   proxied = false                            # Cloudflare のプロキシを利用するか
-  ttl     = 1                               # TTL
+  ttl     = 86400                           # TTL
   type    = "A"                             # レコードタイプ
   value   = "192.168.100.55"      # CloudFront を想定した値
   zone_id = "46b5be479776a4897b109614bd8c6a8a" # Cloudflare のゾーン ID
@@ -178,7 +178,7 @@ resource "cloudflare_record" "develop" {
 resource "cloudflare_record" "ai-test" {
   name    = "ai-test"                         # サブドメイン名
   proxied = false                            # Cloudflare のプロキシを利用するか
-  ttl     = 1                               # TTL
+  ttl     = 86400                          # TTL
   type    = "A"                             # レコードタイプ
   value   = "192.168.100.56"      # CloudFront を想定した値
   zone_id = "46b5be479776a4897b109614bd8c6a8a" # Cloudflare のゾーン ID
@@ -186,9 +186,17 @@ resource "cloudflare_record" "ai-test" {
 resource "cloudflare_record" "mcp" {
   name    = "mcp"                         # サブドメイン名
   proxied = false                            # Cloudflare のプロキシを利用するか
-  ttl     = 1                               # TTL
+  ttl     = 86400                           # TTL
   type    = "A"                             # レコードタイプ
   value   = "192.168.100.57"      # CloudFront を想定した値
+  zone_id = "46b5be479776a4897b109614bd8c6a8a" # Cloudflare のゾーン ID
+}
+resource "cloudflare_record" "vpn-proxy" {
+  name    = "vpn-proxy"                         # サブドメイン名
+  proxied = false                            # Cloudflare のプロキシを利用するか
+  ttl     = 86400                            # TTL
+  type    = "A"                             # レコードタイプ
+  value   = "192.168.100.58"      # CloudFront を想定した値
   zone_id = "46b5be479776a4897b109614bd8c6a8a" # Cloudflare のゾーン ID
 }
 ### ----------------------------------------------------------------------------------------------------
