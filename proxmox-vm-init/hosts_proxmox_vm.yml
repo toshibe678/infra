@@ -32,3 +32,7 @@ all:
           ansible_host: 192.168.100.55
         target09:
           ansible_host: 192.168.100.56
+        target10:
+          ansible_host: 192.168.100.57
+        target11:
+          ansible_host: 192.168.100.58
