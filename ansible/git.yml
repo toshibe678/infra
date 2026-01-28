@@ -36,6 +36,7 @@
         dest: "/home/{{ manage_user_name }}/scripts"
         clone: yes
         update: yes
+        force: yes
         key_file: "/home/{{ manage_user_name }}/.ssh/gitkey"
         accept_hostkey: true
       tags: git_checkout
@@ -70,6 +71,7 @@
         dest: "/home/{{ manage_user_name }}/infra"
         clone: yes
         update: yes
+        force: yes
         key_file: "/home/{{ manage_user_name }}/.ssh/gitkey"
         accept_hostkey: true
       tags: git_checkout
