@@ -133,6 +133,7 @@ VPNクライアント側で `/etc/hosts` またはDNSサーバーに以下を追
 10.0.0.5  develop-proxy.vpn.local
 10.0.0.5  monitoring-proxy.vpn.local
 10.0.0.5  ai-test-proxy.vpn.local
+10.0.0.5  mcp-proxy.vpn.local
 ```
 
 これにより、以下のようなアクセスが可能になります：
@@ -141,7 +142,25 @@ VPNクライアント側で `/etc/hosts` またはDNSサーバーに以下を追
 curl http://develop-proxy.vpn.local/
 curl http://monitoring-proxy.vpn.local/
 curl http://ai-test-proxy.vpn.local/
+curl -H "Authorization: Bearer ${AUTH_TOKEN}" http://mcp-proxy.vpn.local/health
 ```
+
+### MCP Servers経由アクセス
+
+VPN経由でMCPサーバーを利用する場合：
+
+```bash
+# ヘルスチェック
+curl http://mcp-proxy.vpn.local/health
+
+# MCP エンドポイントへのアクセス（認証トークン必須）
+curl -H "Authorization: Bearer ${AUTH_TOKEN}" http://mcp-proxy.vpn.local/git
+curl -H "Authorization: Bearer ${AUTH_TOKEN}" http://mcp-proxy.vpn.local/github
+curl -H "Authorization: Bearer ${AUTH_TOKEN}" http://mcp-proxy.vpn.local/filesystem
+```
+
+認証トークン（`AUTH_TOKEN`）は拠点内MCPサーバーの `.env` ファイルで確認可能です。
+
 
 ## 監視
 

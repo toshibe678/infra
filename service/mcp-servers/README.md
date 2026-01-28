@@ -89,22 +89,72 @@ curl http://mcp.abe365.org/github/repos \
   -H "Authorization: Bearer YOUR_AUTH_TOKEN"
 ```
 
-### クライアントからの接続設定例
+## Claude Desktopクライアント設定
 
-**Claude Desktop等のMCPクライアント設定**:
+### セットアップ手順
+
+1. **設定ファイルのコピー**
+   ```bash
+   # リポジトリルートから
+   cp claude_desktop_config.json.example ~/.config/Claude/claude_desktop_config.json
+   ```
+   - **macOS**: `~/Library/Application Support/Claude/claude_desktop_config.json`
+   - **Windows**: `%APPDATA%/Claude/claude_desktop_config.json`
+   - **Linux**: `~/.config/Claude/claude_desktop_config.json`
+
+2. **認証トークンの設定**
+   ```bash
+   # .env から AUTH_TOKEN を確認
+   grep AUTH_TOKEN /home/toshi/git/infra/service/mcp-servers/.env
+   
+   # claude_desktop_config.json の auth_token を編集
+   sed -i 's/your-auth-token-here/<実際のトークン>/g' ~/.config/Claude/claude_desktop_config.json
+   ```
+
+3. **Claude Desktopの再起動**
+   - Claude Desktopを完全に再起動
+   - Discoverボタンでサーバー一覧を更新
+
+### 設定ファイル例
 
 ```json
 {
   "mcpServers": {
-    "unified-mcp": {
+    "mcp-unified-gateway": {
       "url": "http://mcp.abe365.org",
-      "headers": {
-        "Authorization": "Bearer YOUR_AUTH_TOKEN"
+      "env": {
+        "AUTH_TOKEN": "your-actual-token-here"
       }
     }
   }
 }
 ```
+
+### 利用可能なエンドポイント
+
+統合ゲートウェイ経由で以下のMCPサーバーにアクセス可能：
+
+| エンドポイント | 説明 |
+|-------------|------|
+| `/git` | Gitリポジトリ操作 |
+| `/github` | GitHub API統合 |
+| `/filesystem` | ファイルシステムアクセス |
+| `/postgres` | PostgreSQLデータベース操作 |
+| `/fetch` | HTTP/HTTPS リクエスト |
+| `/playwright` | ブラウザ自動化 |
+
+### トラブルシューティング
+
+**接続できない場合:**
+1. ネットワーク接続確認: `ping mcp.abe365.org`
+2. ゲートウェイの起動確認: `curl http://mcp.abe365.org/health`
+3. トークンの確認: `echo $AUTH_TOKEN`
+4. Claude Desktopの再起動
+
+**認証エラー:**
+1. `Authorization: Bearer` ヘッダーが正しく送信されているか確認
+2. トークン値に前後の空白がないか確認
+3. `.env` ファイルの `AUTH_TOKEN` を更新後、ゲートウェイを再起動
 
 ## セキュリティ
 
