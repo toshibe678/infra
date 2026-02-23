@@ -28,25 +28,10 @@ services:
     network_mode: host  # wgdashboardもhostモードのため、Basic認証バイパス防止のためhostモードにする
     volumes:
       - ./nginx/nginx-${ENVIRONMENT:-dev}.conf:/etc/nginx/nginx.conf:ro
-      - ./data/certbot/conf:/etc/letsencrypt:ro
-      - ./data/certbot/www:/var/www/certbot:ro
+      - ./nginx/ssl:/etc/nginx/ssl:ro
     depends_on:
       - wgdashboard
     command: "/bin/sh -c 'while :; do sleep 6h & wait $${!}; nginx -s reload; done & nginx -g \"daemon off;\"'"
-
-  # Certbot for Let's Encrypt SSL (prod environment only)
-  # Note: certbotはbridgeネットワーク、nginxはhostモードだがボリューム経由で証明書を共有
-  certbot:
-    image: certbot/certbot
-    restart: unless-stopped
-    volumes:
-      - ./data/certbot/conf:/etc/letsencrypt
-      - ./data/certbot/www:/var/www/certbot
-    entrypoint: "/bin/sh -c 'trap exit TERM; while :; do certbot renew; sleep 12h & wait $${!}; done;'"
-    networks:
-      - wireguard-network
-    profiles:
-      - prod
 
   # Node Exporter for system metrics
   node-exporter:

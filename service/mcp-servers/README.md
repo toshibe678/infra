@@ -48,7 +48,18 @@ mkdir -p data/postgres data/redis logs/nginx logs/gateway
 mkdir -p repos workspace gateway mcp-servers/{git,github,filesystem,postgres,fetch,playwright}
 ```
 
-### 3. サービス起動
+### 3. 自己署名証明書の作成（HTTPS）
+
+```bash
+mkdir -p nginx/ssl && cd nginx/ssl
+openssl req -x509 -nodes -newkey ec -pkeyopt ec_paramgen_curve:secp384r1 -days 825 \
+  -keyout ./key.pem \
+  -out ./cert.pem \
+  -subj "/CN=mcp.abe365.org" \
+  -addext "subjectAltName=DNS:mcp.abe365.org"
+```
+
+### 4. サービス起動
 
 ```bash
 docker-compose up -d
@@ -58,11 +69,11 @@ docker-compose up -d
 
 ```bash
 # ヘルスチェック
-curl http://mcp.abe365.org/health
+curl https://mcp.abe365.org/health
 
 # 各MCPサーバーの確認
-curl -H "Authorization: Bearer YOUR_AUTH_TOKEN" http://mcp.abe365.org/git/
-curl -H "Authorization: Bearer YOUR_AUTH_TOKEN" http://mcp.abe365.org/github/
+curl -H "Authorization: Bearer YOUR_AUTH_TOKEN" https://mcp.abe365.org/git/
+curl -H "Authorization: Bearer YOUR_AUTH_TOKEN" https://mcp.abe365.org/github/
 ```
 
 ## 使用方法
@@ -71,7 +82,7 @@ curl -H "Authorization: Bearer YOUR_AUTH_TOKEN" http://mcp.abe365.org/github/
 
 ```bash
 # ゲートウェイ経由（推奨）
-curl -X POST http://mcp.abe365.org/api/execute \
+curl -X POST https://mcp.abe365.org/api/execute \
   -H "Authorization: Bearer YOUR_AUTH_TOKEN" \
   -H "Content-Type: application/json" \
   -d '{"server": "git", "command": "status", "params": {}}'
@@ -81,11 +92,11 @@ curl -X POST http://mcp.abe365.org/api/execute \
 
 ```bash
 # Git MCP直接アクセス
-curl http://mcp.abe365.org/git/status \
+curl https://mcp.abe365.org/git/status \
   -H "Authorization: Bearer YOUR_AUTH_TOKEN"
 
 # GitHub MCP直接アクセス
-curl http://mcp.abe365.org/github/repos \
+curl https://mcp.abe365.org/github/repos \
   -H "Authorization: Bearer YOUR_AUTH_TOKEN"
 ```
 
@@ -121,7 +132,7 @@ curl http://mcp.abe365.org/github/repos \
 {
   "mcpServers": {
     "mcp-unified-gateway": {
-      "url": "http://mcp.abe365.org",
+      "url": "https://mcp.abe365.org",
       "env": {
         "AUTH_TOKEN": "your-actual-token-here"
       }
@@ -147,7 +158,7 @@ curl http://mcp.abe365.org/github/repos \
 
 **接続できない場合:**
 1. ネットワーク接続確認: `ping mcp.abe365.org`
-2. ゲートウェイの起動確認: `curl http://mcp.abe365.org/health`
+2. ゲートウェイの起動確認: `curl https://mcp.abe365.org/health`
 3. トークンの確認: `echo $AUTH_TOKEN`
 4. Claude Desktopの再起動
 
@@ -226,7 +237,7 @@ docker-compose restart
 1. **ネットワーク確認**:
    ```bash
    ping mcp.abe365.org
-   curl -I http://mcp.abe365.org/health
+  curl -I https://mcp.abe365.org/health
    ```
 
 2. **認証トークン確認**:

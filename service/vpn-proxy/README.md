@@ -27,7 +27,7 @@ WireGuard VPNサーバーは拠点外のVPSで運用されており、VPNクラ�
 - **監視統合**: Prometheus Node Exporterによるメトリクス収集
 - **セキュリティ**: レート制限、アクセス制御、セキュリティヘッダー
 - **WebSocket対応**: 双方向通信が必要なアプリケーションに対応
-- **VPN内部通信**: NAT越しのためHTTPのみ（VPNトンネル内で暗号化済み）
+- **VPN内部通信**: 自己署名証明書でHTTPS化（VPNトンネル内でもHTTPSを強制）
 
 ## 技術スタック
 
@@ -105,7 +105,18 @@ server {
 mkdir -p logs/nginx
 ```
 
-### 4. サービス起動
+### 4. 自己署名証明書の作成（HTTPS）
+
+```bash
+mkdir -p nginx/ssl && cd nginx/ssl
+openssl req -x509 -nodes -newkey ec -pkeyopt ec_paramgen_curve:secp384r1 -days 825 \
+    -keyout ./key.pem \
+    -out ./cert.pem \
+    -subj "/CN=develop-proxy.vpn.local" \
+    -addext "subjectAltName=DNS:develop-proxy.vpn.local,DNS:monitoring-proxy.vpn.local,DNS:ai-test-proxy.vpn.local,DNS:mcp-proxy.vpn.local"
+```
+
+### 5. サービス起動
 
 ```bash
 docker compose up -d
@@ -119,10 +130,10 @@ VPNに接続したクライアントから、vpn-proxyのIPアドレスまたは
 
 ```bash
 # vpn-proxyが 10.0.0.5 で稼働している場合
-curl http://10.0.0.5/health  # ヘルスチェック
+curl https://10.0.0.5/health  # ヘルスチェック
 
 # 開発サーバーへのプロキシアクセス（ホスト名ベースルーティング）
-curl -H "Host: develop-proxy.vpn.local" http://10.0.0.5/
+curl -H "Host: develop-proxy.vpn.local" https://10.0.0.5/
 ```
 
 ### DNS設定（推奨）
@@ -139,10 +150,10 @@ VPNクライアント側で `/etc/hosts` またはDNSサーバーに以下を追
 これにより、以下のようなアクセスが可能になります：
 
 ```bash
-curl http://develop-proxy.vpn.local/
-curl http://monitoring-proxy.vpn.local/
-curl http://ai-test-proxy.vpn.local/
-curl -H "Authorization: Bearer ${AUTH_TOKEN}" http://mcp-proxy.vpn.local/health
+curl https://develop-proxy.vpn.local/
+curl https://monitoring-proxy.vpn.local/
+curl https://ai-test-proxy.vpn.local/
+curl -H "Authorization: Bearer ${AUTH_TOKEN}" https://mcp-proxy.vpn.local/health
 ```
 
 ### MCP Servers経由アクセス
@@ -151,12 +162,12 @@ VPN経由でMCPサーバーを利用する場合：
 
 ```bash
 # ヘルスチェック
-curl http://mcp-proxy.vpn.local/health
+curl https://mcp-proxy.vpn.local/health
 
 # MCP エンドポイントへのアクセス（認証トークン必須）
-curl -H "Authorization: Bearer ${AUTH_TOKEN}" http://mcp-proxy.vpn.local/git
-curl -H "Authorization: Bearer ${AUTH_TOKEN}" http://mcp-proxy.vpn.local/github
-curl -H "Authorization: Bearer ${AUTH_TOKEN}" http://mcp-proxy.vpn.local/filesystem
+curl -H "Authorization: Bearer ${AUTH_TOKEN}" https://mcp-proxy.vpn.local/git
+curl -H "Authorization: Bearer ${AUTH_TOKEN}" https://mcp-proxy.vpn.local/github
+curl -H "Authorization: Bearer ${AUTH_TOKEN}" https://mcp-proxy.vpn.local/filesystem
 ```
 
 認証トークン（`AUTH_TOKEN`）は拠点内MCPサーバーの `.env` ファイルで確認可能です。
@@ -169,7 +180,7 @@ curl -H "Authorization: Bearer ${AUTH_TOKEN}" http://mcp-proxy.vpn.local/filesys
 Node Exporterメトリクスは `/metrics` エンドポイントで公開：
 
 ```bash
-curl http://10.0.0.5/metrics
+curl https://10.0.0.5/metrics
 ```
 
 ### Prometheus設定例
@@ -178,7 +189,7 @@ curl http://10.0.0.5/metrics
 scrape_configs:
   - job_name: 'vpn-proxy'
     static_configs:
-      - targets: ['10.0.0.5:80']
+    - targets: ['10.0.0.5:443']
     metrics_path: '/metrics'
 ```
 
@@ -249,7 +260,7 @@ location /metrics {
 
 2. **Firewall確認**（vpn-proxyサーバー側）
    ```bash
-   sudo iptables -L -n -v | grep 80
+    sudo iptables -L -n -v | grep 443
    ```
 
 3. **Docker ネットワーク確認**

@@ -41,7 +41,20 @@ mkdir -p nginx
 # nginx.confを作成（必要に応じて）
 ```
 
-### 3. サービスの起動
+### 3. 自己署名証明書の作成（HTTPS）
+
+```bash
+mkdir -p dify/docker/nginx/ssl && cd dify/docker/nginx/ssl
+openssl req -x509 -nodes -newkey ec -pkeyopt ec_paramgen_curve:secp384r1 -days 825 \
+	-keyout ./dify.key \
+	-out ./dify.crt \
+	-subj "/CN=dify.abe365.org" \
+	-addext "subjectAltName=DNS:dify.abe365.org"
+
+sed -i 's/^NGINX_HTTPS_ENABLED=.*/NGINX_HTTPS_ENABLED=true/' dify/docker/.env
+```
+
+### 4. サービスの起動
 
 ```bash
 docker-compose up -d
@@ -70,8 +83,8 @@ docker-compose logs -f
 
 サービス起動後、以下のURLでアクセス可能です：
 
-- **Web UI**: http://dify.abe365.org
-- **API**: http://dify.abe365.org/api
+- **Web UI**: https://dify.abe365.org
+- **API**: https://dify.abe365.org/api
 
 ## データ永続化
 
@@ -151,3 +164,9 @@ docker compose up -d
 | git submodule init | .gitmodules の設定に基づきローカルの参照を初期化する |
 | git submodule update | 指定されたコミットハッシュの内容を実際にチェックアウトする |
 | git submodule update --init --recursive | 初期化と更新を同時に行い、dify内のサブモジュールも再帰的に取得する |
+
+
+# if HTTPS_ENABLED is true, you're required to add your own SSL certificates/keys to the `./nginx/ssl` directory
+# and modify the env vars below accordingly.
+NGINX_SSL_CERT_FILENAME=dify.crt
+NGINX_SSL_CERT_KEY_FILENAME=dify.key

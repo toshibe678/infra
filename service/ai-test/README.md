@@ -83,7 +83,18 @@ CMD ["uvicorn", "main:app", "--host", "0.0.0.0", "--port", "8000"]
 EOF
 ```
 
-### 3. サービスの起動
+### 3. 自己署名証明書の作成（HTTPS）
+
+```bash
+mkdir -p nginx/ssl && cd nginx/ssl
+openssl req -x509 -nodes -newkey ec -pkeyopt ec_paramgen_curve:secp384r1 -days 825 \
+  -keyout ./key.pem \
+  -out ./cert.pem \
+  -subj "/CN=ai-test.abe365.org" \
+  -addext "subjectAltName=DNS:ai-test.abe365.org"
+```
+
+### 4. サービスの起動
 
 ```bash
 # 全サービス起動
@@ -106,11 +117,11 @@ docker-compose exec ollama ollama pull codellama
 
 | サービス | URL | 用途 |
 |---------|-----|------|
-| Open WebUI | http://ai-test.abe365.org:3000 | LLMチャット |
-| MLflow | http://ai-test.abe365.org:5000 | モデル管理 |
-| Qdrant | http://ai-test.abe365.org:6333/dashboard | ベクトルDB管理 |
-| Text Gen WebUI | http://ai-test.abe365.org:7860 | テキスト生成 |
-| Ray Dashboard | http://ai-test.abe365.org:8265 | 分散処理管理 |
+| Open WebUI | https://ai-test.abe365.org/ | LLMチャット |
+| MLflow | https://ai-test.abe365.org/mlflow/ | モデル管理 |
+| Qdrant | https://ai-test.abe365.org/qdrant/ | ベクトルDB管理 |
+| Text Gen WebUI | https://ai-test.abe365.org/text-gen/ | テキスト生成 |
+| Ray Dashboard | https://ai-test.abe365.org/ray/ | 分散処理管理 |
 
 ## 環境変数
 
@@ -144,7 +155,7 @@ print(response.json()["response"])
 ```python
 from qdrant_client import QdrantClient
 
-client = QdrantClient(url="http://ai-test.abe365.org:6333")
+client = QdrantClient(url="https://ai-test.abe365.org/qdrant")
 
 # コレクション作成
 client.create_collection(
@@ -170,7 +181,7 @@ client.upsert(
 ```python
 import mlflow
 
-mlflow.set_tracking_uri("http://ai-test.abe365.org:5000")
+mlflow.set_tracking_uri("https://ai-test.abe365.org/mlflow/")
 
 with mlflow.start_run():
     mlflow.log_param("learning_rate", 0.001)
@@ -232,7 +243,7 @@ docker-compose exec ollama ollama run llama2 "Generate a 100-word essay"
 import time
 from qdrant_client import QdrantClient
 
-client = QdrantClient(url="http://ai-test.abe365.org:6333")
+client = QdrantClient(url="https://ai-test.abe365.org/qdrant")
 
 start = time.time()
 results = client.search(

@@ -73,7 +73,18 @@ cat config/gcp-credentials.json | base64 -w 0 > /tmp/gcp-creds-base64.txt
 echo "GOOGLE_APPLICATION_CREDENTIALS_JSON=$(cat /tmp/gcp-creds-base64.txt)" >> .env
 ```
 
-### 3. サービスの起動
+### 3. 自己署名証明書の作成（HTTPS）
+
+```bash
+mkdir -p nginx/ssl && cd nginx/ssl
+openssl req -x509 -nodes -newkey ec -pkeyopt ec_paramgen_curve:secp384r1 -days 825 \
+    -keyout ./key.pem \
+    -out ./cert.pem \
+    -subj "/CN=llm-proxy.abe365.org" \
+    -addext "subjectAltName=DNS:llm-proxy.abe365.org"
+```
+
+### 4. サービスの起動
 
 ```bash
 docker-compose up -d
@@ -83,10 +94,10 @@ docker-compose up -d
 
 ```bash
 # ヘルスチェック
-curl http://llm-proxy.abe365.org/health
+curl https://llm-proxy.abe365.org/health
 
 # モデル一覧
-curl http://llm-proxy.abe365.org/models \
+curl https://llm-proxy.abe365.org/models \
   -H "Authorization: Bearer ${LITELLM_MASTER_KEY}"
 ```
 
@@ -118,7 +129,7 @@ import openai
 
 client = openai.OpenAI(
     api_key="your-litellm-master-key",
-    base_url="http://llm-proxy.abe365.org:4000"
+    base_url="https://llm-proxy.abe365.org"
 )
 
 response = client.chat.completions.create(
@@ -130,7 +141,7 @@ response = client.chat.completions.create(
 ### cURLでの使用
 
 ```bash
-curl http://llm-proxy.abe365.org:4000/v1/chat/completions \
+curl https://llm-proxy.abe365.org/v1/chat/completions \
   -H "Content-Type: application/json" \
   -H "Authorization: Bearer ${LITELLM_MASTER_KEY}" \
   -d '{
@@ -146,7 +157,7 @@ import openai
 
 client = openai.OpenAI(
     api_key="your-litellm-master-key",
-    base_url="http://llm-proxy.abe365.org:4000"
+    base_url="https://llm-proxy.abe365.org"
 )
 
 # Claude 4.5 Sonnet
@@ -175,7 +186,7 @@ import openai
 
 client = openai.OpenAI(
     api_key="your-litellm-master-key",
-    base_url="http://llm-proxy.abe365.org:4000"
+    base_url="https://llm-proxy.abe365.org"
 )
 
 # Claude 4.5 Sonnet
@@ -212,7 +223,7 @@ import openai
 
 client = openai.OpenAI(
     api_key="your-litellm-master-key",
-    base_url="http://llm-proxy.abe365.org:4000"
+    base_url="https://llm-proxy.abe365.org"
 )
 
 # 自動フォールオーバー: Bedrock -> Vertex AI

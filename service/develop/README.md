@@ -43,7 +43,18 @@ vim .env  # 必要な環境変数を設定
 mkdir -p workspace notebooks data config
 ```
 
-### 3. サービスの起動
+### 3. 自己署名証明書の作成（HTTPS）
+
+```bash
+mkdir -p nginx/ssl && cd nginx/ssl 
+openssl req -x509 -nodes -newkey ec -pkeyopt ec_paramgen_curve:secp384r1 -days 825 \
+  -keyout ./key.pem \
+  -out ./cert.pem \
+  -subj "/CN=develop.abe365.org" \
+  -addext "subjectAltName=DNS:develop.abe365.org"
+```
+
+### 4. サービスの起動
 
 ```bash
 # 全サービス起動
@@ -59,10 +70,10 @@ docker-compose up -d code-server jupyter postgres
 
 | サービス | URL | 認証 |
 |---------|-----|------|
-| VS Code | http://develop.abe365.org:8080 | PASSWORD |
-| JupyterLab | http://develop.abe365.org:8888 | TOKEN |
-| Adminer | http://develop.abe365.org:8081 | DB認証 |
-| Portainer | http://develop.abe365.org:9000 | 初回セットアップ |
+| VS Code | https://develop.abe365.org/code/ | PASSWORD |
+| JupyterLab | https://develop.abe365.org/jupyter/ | TOKEN |
+| Adminer | https://develop.abe365.org/adminer/ | DB認証 |
+| Portainer | https://develop.abe365.org/portainer/ | 初回セットアップ |
 
 ## 環境変数
 
@@ -81,14 +92,14 @@ docker-compose up -d code-server jupyter postgres
 
 ### VS Codeでの開発
 
-1. http://develop.abe365.org:8080 にアクセス
+1. https://develop.abe365.org/code/ にアクセス
 2. PASSWORDでログイン
 3. `/home/coder/project` 配下で作業
 4. 拡張機能のインストール可能
 
 ### JupyterLabでのデータ分析
 
-1. http://develop.abe365.org:8888 にアクセス
+1. https://develop.abe365.org/jupyter/ にアクセス
 2. TOKENでログイン
 3. `/home/jovyan/work` 配下でノートブック作成
 

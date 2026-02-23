@@ -94,8 +94,10 @@ services:
     container_name: monitoring-nginx
     volumes:
       - ./config/nginx.conf:/etc/nginx/nginx.conf:ro
+      - ./nginx/ssl:/etc/nginx/ssl:ro
     ports:
       - "80:80"
+      - "443:443"
     depends_on:
       - grafana
       - prometheus

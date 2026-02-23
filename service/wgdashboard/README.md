@@ -1,6 +1,6 @@
 # WGDashboard - WireGuard Management Dashboard
 
-WireGuard VPNの管理ダッシュボード（環境別設定対応・開発環境はHTTP、本番環境はLet's Encrypt SSL）
+WireGuard VPNの管理ダッシュボード（環境別設定対応・開発/本番とも自己署名SSL）
 
 ## 概要
 
@@ -8,11 +8,11 @@ WGDashboardは、WireGuardの設定を視覚的に管理できるWebベースの
 ホスト側で動作しているWireGuardの設定を直接管理します。
 
 **環境別対応**：
-- **開発環境** (`vpn-dev.abe365.org`): HTTP通信、内部ネットワークのみ、SSL無し
-- **本番環境** (`vpn.toshi.click`): HTTPS通信、Let's Encrypt自動SSL更新、グローバルアクセス対応
+- **開発環境** (`vpn-dev.abe365.org`): HTTPS通信（自己署名）、内部ネットワーク
+- **本番環境** (`vpn.toshi.click`): HTTPS通信（自己署名）
 
 **セキュリティ機能**：
-- 環境別のSSL設定（本番環境のみLet's Encrypt）
+- 環境別のSSL設定（自己署名証明書）
 - Basic認証による二段階認証
 - レート制限（DDoS対策）
 - セキュリティヘッダー（本番環境は厳格）
@@ -22,8 +22,8 @@ WGDashboardは、WireGuardの設定を視覚的に管理できるWebベースの
 
 | 環境 | ドメイン | SSL | アクセス |
 |------|---------|-----|--------|
-| 開発 | vpn-dev.abe365.org | 無し（HTTP） | 内部ネットワークのみ |
-| 本番 | vpn.toshi.click | あり（Let's Encrypt） | グローバル（HTTPS） |
+| 開発 | vpn-dev.abe365.org | 自己署名SSL | 内部ネットワーク |
+| 本番 | vpn.toshi.click | 自己署名SSL | 内部ネットワーク |
 
 **DNS管理**: Cloudflare (cloudflere/records.tf)
 
@@ -35,7 +35,6 @@ WGDashboardは、WireGuardの設定を視覚的に管理できるWebベースの
 |---------|------|
 | wgdashboard | WireGuard管理ダッシュボード |
 | nginx | リバースプロキシ（HTTPS終端、Basic認証） |
-| certbot | Let's Encrypt SSL証明書自動更新 |
 
 ## 前提条件
 
@@ -94,13 +93,21 @@ ENABLE_TOTP=true
 ENVIRONMENT=prod
 ```
 
-### 2. 開発環境セットアップ（HTTP、SSLなし）
+### 2. 開発環境セットアップ（HTTPS、自己署名）
 
 ```bash
 # .envで認証情報を設定
 # - ENVIRONMENT=dev
 # - WGDASHBOARD_USERNAME / WGDASHBOARD_PASSWORD
 # - ENABLE_TOTP=true（OTP有効化）
+
+# 自己署名証明書の作成
+mkdir -p nginx/ssl && cd nginx/ssl
+openssl req -x509 -nodes -newkey ec -pkeyopt ec_paramgen_curve:secp384r1 -days 825 \
+  -keyout ./key.pem \
+  -out ./cert.pem \
+  -subj "/CN=vpn-dev.abe365.org" \
+  -addext "subjectAltName=DNS:vpn-dev.abe365.org"
 
 # サービス起動
 docker-compose up -d
@@ -111,14 +118,14 @@ docker-compose logs -f
 
 **アクセス方法**:
 ```
-http://vpn-dev.abe365.org:80
+https://vpn-dev.abe365.org
 ```
 
 **初回ログイン**:
 1. WGDashboard認証: `.env`で設定した`WGDASHBOARD_USERNAME`/`WGDASHBOARD_PASSWORD`
 2. OTP設定画面: QRコードをスキャンして認証器アプリに登録
 
-### 3. 本番環境セットアップ（HTTPS、Let's Encrypt）
+### 3. 本番環境セットアップ（HTTPS、自己署名）
 
 ```bash
 # .envで認証情報を設定
@@ -126,14 +133,16 @@ http://vpn-dev.abe365.org:80
 # - WGDASHBOARD_USERNAME / WGDASHBOARD_PASSWORD
 # - ENABLE_TOTP=true（OTP有効化）
 
-# Let's Encrypt SSL証明書の取得
-chmod +x init-letsencrypt.sh
-vim init-letsencrypt.sh
-# EMAIL="admin@example.com" を自分のメールアドレスに変更
-./init-letsencrypt.sh
+# 自己署名証明書の作成
+mkdir -p nginx/ssl && cd nginx/ssl
+openssl req -x509 -nodes -newkey ec -pkeyopt ec_paramgen_curve:secp384r1 -days 825 \
+  -keyout ./key.pem \
+  -out ./cert.pem \
+  -subj "/CN=vpn.toshi.click" \
+  -addext "subjectAltName=DNS:vpn.toshi.click"
 
-# 全サービスを起動（certbotを含む）
-docker-compose --profile prod up -d
+# 全サービスを起動
+docker-compose up -d
 
 # ログ確認
 docker-compose logs -f
@@ -148,16 +157,16 @@ https://vpn.toshi.click
 1. WGDashboard認証: `.env`で設定した`WGDASHBOARD_USERNAME`/`WGDASHBOARD_PASSWORD`
 2. OTP設定画面: QRコードをスキャンして認証器アプリに登録
 
-# 全サービスを起動（certbotを含む）
-docker-compose --profile prod up -d
+# 全サービスを起動
+docker-compose up -d
 
 # ログ確認
 docker-compose logs -f
-```
 
 **アクセス方法**:
 ```
 https://vpn.toshi.click
+```
 ```
 
 ### 4. サービスの動作確認
@@ -180,19 +189,17 @@ https://vpn.toshi.click
 - セキュリティ: OTP（Google Authenticator等）で強化
 
 **環境の詳細**:
-- `dev`: 開発環境（HTTP、内部ネットワーク）
-  - nginxはHTTPで動作
-  - certbotは起動しない
-- `prod`: 本番環境（HTTPS、Let's Encrypt）
+- `dev`: 開発環境（HTTPS、自己署名）
   - nginxはHTTPSで動作
-  - certbotが自動更新を管理
+- `prod`: 本番環境（HTTPS、自己署名）
+  - nginxはHTTPSで動作
 
 ## アクセス方法
 
 ### 開発環境
 
 ```
-http://vpn-dev.abe365.org
+https://vpn-dev.abe365.org
 ```
 
 **認証**:
@@ -257,7 +264,7 @@ docker-compose exec nginx cat /etc/nginx/nginx.conf | head -20
 
 ### ダッシュボードにアクセスできない
 
-**開発環境（HTTP）**:
+**開発環境（HTTPS/自己署名）**:
 ```bash
 # コンテナの状態確認
 docker-compose ps
@@ -265,20 +272,17 @@ docker-compose ps
 # nginxログの確認
 docker-compose logs nginx
 
-# ポート80が使用可能か確認
-sudo netstat -tlnp | grep :80
+# ポート443が使用可能か確認
+sudo netstat -tlnp | grep :443
 ```
 
-**本番環境（HTTPS）**:
+**本番環境（HTTPS/自己署名）**:
 ```bash
-# SSL証明書が取得できているか確認
-ls -la ./data/certbot/conf/live/
+# SSL証明書が配置されているか確認
+ls -la ./nginx/ssl/
 
 # 証明書の有効期限確認
-openssl x509 -in ./data/certbot/conf/live/vpn.toshi.click/cert.pem -noout -dates
-
-# certbotのログを確認
-docker-compose logs certbot
+openssl x509 -in ./nginx/ssl/cert.pem -noout -dates
 ```
 
 ### WireGuard設定が表示されない
@@ -317,18 +321,18 @@ sudo systemctl restart wg-quick@wg0
 - **OTP 2FA**: Google Authenticator や Microsoft Authenticator での二要素認証
 - **nginx**: Basic認証なし（OTP で直接保護）
 
-#### 開発環境（HTTP）
+#### 開発環境（HTTPS/自己署名）
 
 - **WGDashboard認証**: ユーザー名 + パスワード + OTP
-- **SSL/TLS**: なし（内部ネットワークのため）
+- **SSL/TLS**: 自己署名証明書
 - **セキュリティヘッダー**: 最小限
 - **レート制限**: 通常10req/s、ログイン3req/分
 - **用途**: ローカルネットワーク内での開発・管理
 
-#### 本番環境（HTTPS）
+#### 本番環境（HTTPS/自己署名）
 
 - **WGDashboard認証**: ユーザー名 + パスワード + OTP
-- **SSL/TLS**: Let's Encrypt（自動更新）
+- **SSL/TLS**: 自己署名証明書
 - **セキュリティヘッダー**: 厳格（HSTS、CSP、OCSP Stapling等）
 - **レート制限**: 通常10req/s、ログイン3req/分
 - **HTTP強制リダイレクト**: HTTPS強制（HSTS有効）
@@ -341,7 +345,7 @@ sudo systemctl restart wg-quick@wg0
 - タイムベース（TOTP）実装
 
 #### 2. **SSL/TLS暗号化**
-- Let's Encrypt証明書（自動更新）
+- 自己署名証明書
 - TLS 1.2/1.3のみ許可
 - 強力な暗号スイート設定
 - OCSP Stapling有効化
@@ -477,7 +481,7 @@ OTP設定はWebインターフェースから管理します：
 
 ```bash
 # SSL証明書の有効期限確認
-docker-compose run --rm certbot certificates
+openssl x509 -in ./nginx/ssl/cert.pem -noout -dates
 
 # nginxアクセスログの確認（不審なアクセス）
 docker-compose exec nginx tail -f /var/log/nginx/access.log
@@ -493,33 +497,22 @@ docker-compose logs wgdashboard | grep -i error
 #### 証明書の状態確認
 
 ```bash
-# 証明書情報の表示
-docker-compose run --rm certbot certificates
-
 # 証明書の有効期限確認
-openssl x509 -in ./data/certbot/conf/live/vpn-dev.abe365.org/cert.pem -noout -dates
+openssl x509 -in ./nginx/ssl/cert.pem -noout -dates
 ```
 
-#### 手動更新
+#### 証明書の再作成（必要時）
 
 ```bash
-# 証明書の手動更新
-docker-compose run --rm certbot renew
+rm -f ./nginx/ssl/cert.pem ./nginx/ssl/key.pem
+mkdir -p nginx/ssl && cd nginx/ssl
+openssl req -x509 -nodes -newkey ec -pkeyopt ec_paramgen_curve:secp384r1 -days 825 \
+  -keyout ./key.pem \
+  -out ./cert.pem \
+  -subj "/CN=vpn-dev.abe365.org" \
+  -addext "subjectAltName=DNS:vpn-dev.abe365.org"
 
-# nginxをリロード
 docker-compose exec nginx nginx -s reload
-```
-
-#### 証明書の再取得（トラブル時）
-
-```bash
-# 既存の証明書を削除
-sudo rm -rf ./data/certbot/conf/live/vpn-dev.abe365.org
-sudo rm -rf ./data/certbot/conf/archive/vpn-dev.abe365.org
-sudo rm -rf ./data/certbot/conf/renewal/vpn-dev.abe365.org.conf
-
-# 初期化スクリプトを再実行
-./init-letsencrypt.sh
 ```
 
 ### バックアップ

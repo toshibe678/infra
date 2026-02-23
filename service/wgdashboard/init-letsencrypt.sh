@@ -56,7 +56,7 @@ echo -e "${GREEN}ダミー証明書を作成しています...${NC}"
 mkdir -p ./data/certbot/conf/live/$DOMAIN
 
 docker-compose run --rm --entrypoint "\
-  openssl req -x509 -nodes -newkey rsa:4096 -days 1 \
+    openssl req -x509 -nodes -newkey ec -pkeyopt ec_paramgen_curve:secp384r1 -days 1 \
     -keyout '/etc/letsencrypt/live/$DOMAIN/privkey.pem' \
     -out '/etc/letsencrypt/live/$DOMAIN/fullchain.pem' \
     -subj '/CN=localhost'" certbot

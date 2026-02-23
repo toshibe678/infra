@@ -4,9 +4,9 @@ Prometheus + Grafana による統合監視基盤
 
 ## アクセスURL
 
-- Grafana UI：http://monitoring.abe365.org/grafana/
-- Prometheus UI：http://monitoring.abe365.org/prometheus/
-- Alertmanager UI：http://monitoring.abe365.org/alertmanager/
+- Grafana UI：https://monitoring.abe365.org/grafana/
+- Prometheus UI：https://monitoring.abe365.org/prometheus/
+- Alertmanager UI：https://monitoring.abe365.org/alertmanager/
 - Collector OTLP ポート：4317（gRPC）、4318（HTTP）
 - Collector メトリクス：http://localhost:8888/metrics
 
@@ -26,6 +26,14 @@ Prometheus + Grafana による統合監視基盤
 # 環境変数設定
 cp .env.example .env
 vim .env
+
+# 自己署名証明書の作成（HTTPS）
+mkdir -p nginx/ssl && cd nginx/ssl
+openssl req -x509 -nodes -newkey ec -pkeyopt ec_paramgen_curve:secp384r1 -days 825 \
+  -keyout ./key.pem \
+  -out ./cert.pem \
+  -subj "/CN=monitoring.abe365.org" \
+  -addext "subjectAltName=DNS:monitoring.abe365.org"
 
 # 起動
 docker-compose up -d
