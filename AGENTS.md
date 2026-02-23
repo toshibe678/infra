@@ -1,3 +1,8 @@
+## Core Principles
+
+- **Do NOT maintain backward compatibility** unless explicitly requested. Break things boldly.
+- **Keep this file under 20-30 lines of instructions.** Every line competes for the agent's limited context budget (~150-200 total).
+
 # 🧭 Project Overview
 このリポジトリは、複数環境にまたがる Infrastructure as Code (IaC) の統合管理を目的として構築されています。
 Ansible・Terraform・Docker・AWS CDK を中心に、構成管理・クラウドプロビジョニング・コンテナ化を一貫した形で自動化します。
