@@ -1,6 +1,9 @@
-module:
+auths:
+  public_v2c:
+    community: "public"
+
+modules:
   if_mib:
     walk:
       - 1.3.6.1.2.1.2  # インターフェイス情報（if_mib）
-    auth:
-      community: "public"  # v2c の場合。セキュリティ要件に応じて変更または v3 に
+    auth: public_v2c
