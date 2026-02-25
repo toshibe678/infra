@@ -165,8 +165,3 @@ docker compose up -d
 | git submodule update | 指定されたコミットハッシュの内容を実際にチェックアウトする |
 | git submodule update --init --recursive | 初期化と更新を同時に行い、dify内のサブモジュールも再帰的に取得する |
 
-
-# if HTTPS_ENABLED is true, you're required to add your own SSL certificates/keys to the `./nginx/ssl` directory
-# and modify the env vars below accordingly.
-NGINX_SSL_CERT_FILENAME=dify.crt
-NGINX_SSL_CERT_KEY_FILENAME=dify.key
