@@ -76,7 +76,7 @@
       "pluginVersion": "9.0.0",
       "targets": [
         {
-          "expr": "ifOperStatus",
+          "expr": "ifOperStatus{job=\"switch\"}",
           "legendFormat": "{{instance}} - {{ifDescr}}",
           "refId": "A"
         }
@@ -144,12 +144,12 @@
       },
       "targets": [
         {
-          "expr": "rate(ifHCInOctets[5m]) * 8",
+          "expr": "rate(ifHCInOctets{job=\"switch\"}[5m]) * 8",
           "legendFormat": "{{instance}} - {{ifDescr}} (IN)",
           "refId": "A"
         },
         {
-          "expr": "rate(ifHCOutOctets[5m]) * 8",
+          "expr": "rate(ifHCOutOctets{job=\"switch\"}[5m]) * 8",
           "legendFormat": "{{instance}} - {{ifDescr}} (OUT)",
           "refId": "B"
         }
@@ -217,12 +217,12 @@
       },
       "targets": [
         {
-          "expr": "rate(ifHCInUcastPkts[5m])",
+          "expr": "rate(ifHCInUcastPkts{job=\"switch\"}[5m])",
           "legendFormat": "{{instance}} - {{ifDescr}} (IN)",
           "refId": "A"
         },
         {
-          "expr": "rate(ifHCOutUcastPkts[5m])",
+          "expr": "rate(ifHCOutUcastPkts{job=\"switch\"}[5m])",
           "legendFormat": "{{instance}} - {{ifDescr}} (OUT)",
           "refId": "B"
         }
@@ -294,12 +294,12 @@
       },
       "targets": [
         {
-          "expr": "rate(ifInErrors[5m])",
+          "expr": "rate(ifInErrors{job=\"switch\"}[5m])",
           "legendFormat": "{{instance}} - {{ifDescr}} (IN Errors)",
           "refId": "A"
         },
         {
-          "expr": "rate(ifOutErrors[5m])",
+          "expr": "rate(ifOutErrors{job=\"switch\"}[5m])",
           "legendFormat": "{{instance}} - {{ifDescr}} (OUT Errors)",
           "refId": "B"
         }
@@ -371,12 +371,12 @@
       },
       "targets": [
         {
-          "expr": "rate(ifInDiscards[5m])",
+          "expr": "rate(ifInDiscards{job=\"switch\"}[5m])",
           "legendFormat": "{{instance}} - {{ifDescr}} (IN Discards)",
           "refId": "A"
         },
         {
-          "expr": "rate(ifOutDiscards[5m])",
+          "expr": "rate(ifOutDiscards{job=\"switch\"}[5m])",
           "legendFormat": "{{instance}} - {{ifDescr}} (OUT Discards)",
           "refId": "B"
         }
@@ -425,12 +425,12 @@
       "pluginVersion": "9.0.0",
       "targets": [
         {
-          "expr": "(rate(ifHCInOctets[5m]) * 8 / ifHighSpeed / 1000000) * 100",
+          "expr": "(rate(ifHCInOctets{job=\"switch\"}[5m]) * 8 / ifHighSpeed{job=\"switch\"} / 1000000) * 100",
           "legendFormat": "{{instance}} - {{ifDescr}} (IN)",
           "refId": "A"
         },
         {
-          "expr": "(rate(ifHCOutOctets[5m]) * 8 / ifHighSpeed / 1000000) * 100",
+          "expr": "(rate(ifHCOutOctets{job=\"switch\"}[5m]) * 8 / ifHighSpeed{job=\"switch\"} / 1000000) * 100",
           "legendFormat": "{{instance}} - {{ifDescr}} (OUT)",
           "refId": "B"
         }
@@ -479,7 +479,7 @@
       "pluginVersion": "9.0.0",
       "targets": [
         {
-          "expr": "sysUpTime / 100",
+          "expr": "sysUpTime{job=\"switch\"} / 100",
           "legendFormat": "{{instance}}",
           "refId": "A"
         }
