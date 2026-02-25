@@ -30,17 +30,10 @@ services:
 
   alertmanager:
     image: prom/alertmanager:latest
-    environment:
-      - SLACK_WEBHOOK_URL=${SLACK_WEBHOOK_URL}
     volumes:
-      - ./config/alertmanager.yml.template:/etc/alertmanager/alertmanager.yml.template:ro
-      - ./config/alertmanager.yml:/etc/alertmanager/alertmanager.yml
-    entrypoint:
-      - /bin/sh
-      - -c
-      - |
-        envsubst < /etc/alertmanager/alertmanager.yml.template > /etc/alertmanager/alertmanager.yml
-        exec /bin/alertmanager --config.file=/etc/alertmanager/alertmanager.yml
+      - ./config/alertmanager.yml.template:/etc/alertmanager/alertmanager.yml:ro
+    command:
+      - "--config.file=/etc/alertmanager/alertmanager.yml"
 
   # loki:
   #   image: grafana/loki:latest
