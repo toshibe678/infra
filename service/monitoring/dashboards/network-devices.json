@@ -134,12 +134,15 @@
       "id": 2,
       "options": {
         "legend": {
-          "calcs": ["max", "mean"],
+          "calcs": ["max", "mean", "last"],
           "displayMode": "table",
-          "placement": "bottom"
+          "placement": "bottom",
+          "sortBy": "Last",
+          "sortDesc": true
         },
         "tooltip": {
-          "mode": "multi"
+          "mode": "multi",
+          "sort": "desc"
         }
       },
       "targets": [
@@ -207,12 +210,15 @@
       "id": 3,
       "options": {
         "legend": {
-          "calcs": ["max", "mean"],
+          "calcs": ["max", "mean", "last"],
           "displayMode": "table",
-          "placement": "bottom"
+          "placement": "bottom",
+          "sortBy": "Last",
+          "sortDesc": true
         },
         "tooltip": {
-          "mode": "multi"
+          "mode": "multi",
+          "sort": "desc"
         }
       },
       "targets": [
@@ -284,12 +290,15 @@
       "id": 4,
       "options": {
         "legend": {
-          "calcs": ["max", "mean"],
+          "calcs": ["max", "mean", "last"],
           "displayMode": "table",
-          "placement": "bottom"
+          "placement": "bottom",
+          "sortBy": "Last",
+          "sortDesc": true
         },
         "tooltip": {
-          "mode": "multi"
+          "mode": "multi",
+          "sort": "desc"
         }
       },
       "targets": [
@@ -361,12 +370,15 @@
       "id": 5,
       "options": {
         "legend": {
-          "calcs": ["max", "mean"],
+          "calcs": ["max", "mean", "last"],
           "displayMode": "table",
-          "placement": "bottom"
+          "placement": "bottom",
+          "sortBy": "Last",
+          "sortDesc": true
         },
         "tooltip": {
-          "mode": "multi"
+          "mode": "multi",
+          "sort": "desc"
         }
       },
       "targets": [
