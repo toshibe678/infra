@@ -39,6 +39,22 @@
                 "3": {
                   "text": "TESTING",
                   "color": "yellow"
+                },
+                "4": {
+                  "text": "UNKNOWN",
+                  "color": "orange"
+                },
+                "5": {
+                  "text": "DORMANT",
+                  "color": "blue"
+                },
+                "6": {
+                  "text": "NOT_PRESENT",
+                  "color": "gray"
+                },
+                "7": {
+                  "text": "LOWER_LAYER_DOWN",
+                  "color": "purple"
                 }
               },
               "type": "value"
@@ -76,12 +92,13 @@
       "pluginVersion": "9.0.0",
       "targets": [
         {
-          "expr": "ifOperStatus{job=\"switch\"}",
-          "legendFormat": "{{instance}} - {{ifDescr}}",
+          "expr": "ifOperStatus{job=\"switch\"} * on(instance) group_left(sysName) sysName{job=\"switch\"}",
+          "legendFormat": "{{sysName}} - {{ifDescr}}",
           "refId": "A"
         }
       ],
       "title": "インターフェイス稼働状態",
+      "description": "SNMP ifOperStatus の状態を表示します。1=UP(通信可能), 2=DOWN(停止), 3=TESTING(試験中), 4=UNKNOWN(不明), 5=DORMANT(待機), 6=NOT_PRESENT(未実装/未装着), 7=LOWER_LAYER_DOWN(下位層リンク断)。",
       "type": "stat"
     },
     {
@@ -147,13 +164,13 @@
       },
       "targets": [
         {
-          "expr": "rate(ifHCInOctets{job=\"switch\"}[5m]) * 8",
-          "legendFormat": "{{instance}} - {{ifDescr}} (IN)",
+          "expr": "(rate(ifHCInOctets{job=\"switch\"}[5m]) * 8) * on(instance) group_left(sysName) sysName{job=\"switch\"}",
+          "legendFormat": "{{sysName}} - {{ifDescr}} (IN)",
           "refId": "A"
         },
         {
-          "expr": "rate(ifHCOutOctets{job=\"switch\"}[5m]) * 8",
-          "legendFormat": "{{instance}} - {{ifDescr}} (OUT)",
+          "expr": "(rate(ifHCOutOctets{job=\"switch\"}[5m]) * 8) * on(instance) group_left(sysName) sysName{job=\"switch\"}",
+          "legendFormat": "{{sysName}} - {{ifDescr}} (OUT)",
           "refId": "B"
         }
       ],
@@ -223,13 +240,13 @@
       },
       "targets": [
         {
-          "expr": "rate(ifHCInUcastPkts{job=\"switch\"}[5m])",
-          "legendFormat": "{{instance}} - {{ifDescr}} (IN)",
+          "expr": "rate(ifHCInUcastPkts{job=\"switch\"}[5m]) * on(instance) group_left(sysName) sysName{job=\"switch\"}",
+          "legendFormat": "{{sysName}} - {{ifDescr}} (IN)",
           "refId": "A"
         },
         {
-          "expr": "rate(ifHCOutUcastPkts{job=\"switch\"}[5m])",
-          "legendFormat": "{{instance}} - {{ifDescr}} (OUT)",
+          "expr": "rate(ifHCOutUcastPkts{job=\"switch\"}[5m]) * on(instance) group_left(sysName) sysName{job=\"switch\"}",
+          "legendFormat": "{{sysName}} - {{ifDescr}} (OUT)",
           "refId": "B"
         }
       ],
@@ -303,13 +320,13 @@
       },
       "targets": [
         {
-          "expr": "rate(ifInErrors{job=\"switch\"}[5m])",
-          "legendFormat": "{{instance}} - {{ifDescr}} (IN Errors)",
+          "expr": "rate(ifInErrors{job=\"switch\"}[5m]) * on(instance) group_left(sysName) sysName{job=\"switch\"}",
+          "legendFormat": "{{sysName}} - {{ifDescr}} (IN Errors)",
           "refId": "A"
         },
         {
-          "expr": "rate(ifOutErrors{job=\"switch\"}[5m])",
-          "legendFormat": "{{instance}} - {{ifDescr}} (OUT Errors)",
+          "expr": "rate(ifOutErrors{job=\"switch\"}[5m]) * on(instance) group_left(sysName) sysName{job=\"switch\"}",
+          "legendFormat": "{{sysName}} - {{ifDescr}} (OUT Errors)",
           "refId": "B"
         }
       ],
@@ -383,13 +400,13 @@
       },
       "targets": [
         {
-          "expr": "rate(ifInDiscards{job=\"switch\"}[5m])",
-          "legendFormat": "{{instance}} - {{ifDescr}} (IN Discards)",
+          "expr": "rate(ifInDiscards{job=\"switch\"}[5m]) * on(instance) group_left(sysName) sysName{job=\"switch\"}",
+          "legendFormat": "{{sysName}} - {{ifDescr}} (IN Discards)",
           "refId": "A"
         },
         {
-          "expr": "rate(ifOutDiscards{job=\"switch\"}[5m])",
-          "legendFormat": "{{instance}} - {{ifDescr}} (OUT Discards)",
+          "expr": "rate(ifOutDiscards{job=\"switch\"}[5m]) * on(instance) group_left(sysName) sysName{job=\"switch\"}",
+          "legendFormat": "{{sysName}} - {{ifDescr}} (OUT Discards)",
           "refId": "B"
         }
       ],
@@ -437,17 +454,18 @@
       "pluginVersion": "9.0.0",
       "targets": [
         {
-          "expr": "(rate(ifHCInOctets{job=\"switch\"}[5m]) * 8 / ifHighSpeed{job=\"switch\"} / 1000000) * 100",
-          "legendFormat": "{{instance}} - {{ifDescr}} (IN)",
+          "expr": "topk(6, ((rate(ifHCInOctets{job=\"switch\"}[5m]) * 8 / ifHighSpeed{job=\"switch\"} / 1000000) * 100) * on(instance) group_left(sysName) sysName{job=\"switch\"})",
+          "legendFormat": "{{sysName}} - {{ifDescr}} (IN)",
           "refId": "A"
         },
         {
-          "expr": "(rate(ifHCOutOctets{job=\"switch\"}[5m]) * 8 / ifHighSpeed{job=\"switch\"} / 1000000) * 100",
-          "legendFormat": "{{instance}} - {{ifDescr}} (OUT)",
+          "expr": "topk(6, ((rate(ifHCOutOctets{job=\"switch\"}[5m]) * 8 / ifHighSpeed{job=\"switch\"} / 1000000) * 100) * on(instance) group_left(sysName) sysName{job=\"switch\"})",
+          "legendFormat": "{{sysName}} - {{ifDescr}} (OUT)",
           "refId": "B"
         }
       ],
-      "title": "帯域使用率（%）",
+      "title": "帯域使用率 上位12（%）",
+      "description": "表示負荷と可読性のため、直近5分の使用率が高いインターフェイスのみ表示（IN上位6件 + OUT上位6件）。",
       "type": "gauge"
     },
     {
@@ -491,8 +509,8 @@
       "pluginVersion": "9.0.0",
       "targets": [
         {
-          "expr": "sysUpTime{job=\"switch\"} / 100",
-          "legendFormat": "{{instance}}",
+          "expr": "(sysUpTime{job=\"switch\"} / 100) * on(instance) group_left(sysName) sysName{job=\"switch\"}",
+          "legendFormat": "{{sysName}}",
           "refId": "A"
         }
       ],
