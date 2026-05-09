@@ -108,6 +108,10 @@ if [ -f ~/.bash_aliases ]; then
     . ~/.bash_aliases
 fi
 
+if [ -f ~/.bash_profile ]; then
+    . ~/.profile
+fi
+
 # enable programmable completion features (you don't need to enable
 # this, if it's already enabled in /etc/bash.bashrc and /etc/profile
 # sources /etc/bash.bashrc).
@@ -118,3 +122,17 @@ if ! shopt -oq posix; then
     . /etc/bash_completion
   fi
 fi
+
+# サプライチェーン攻撃対策
+export PIP_INDEX_URL=https://pypi.flatt.tech/simple/
+export UV_INDEX_URL=https://pypi.flatt.tech/simple/
+
+
+# プロンプトが表示される直前に必ずカーソル表示シーケンスを送る
+export PROMPT_COMMAND='printf "\e[?25h"; '"$PROMPT_COMMAND"
+
+# apt update
+sudo apt update && sudo apt upgrade -y
+
+# Claude CodeのUPDATE
+claude update

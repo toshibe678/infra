@@ -76,6 +76,23 @@
     mode: 0644
     backup: true
 
+- name: set .bash_alias
+  copy:
+    src: home/manage_user/.bash_aliases.j2
+    dest: "/home/{{ manage_user_name }}/.bash_aliases"
+    owner: "{{ manage_user_name }}"
+    group: "{{ manage_user_group }}"
+    mode: 0644
+    backup: true
+
+- name: "create {{ manage_user_name }} .config/pip/ dicrectory"
+  file:
+    path: "/home/{{ manage_user_name }}/.config/pip"
+    state: directory
+    mode: 0700
+    owner: "{{ manage_user_name }}"
+    group: "{{ manage_user_group }}"
+
 - name: set history
   copy:
     src: "etc/profile.d/history.sh"
