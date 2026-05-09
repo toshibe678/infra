@@ -30,6 +30,9 @@
           - npm
         state: present
 
+    - name: npm registryをflatt.techに設定
+      ansible.builtin.command: npm config set registry https://npm.flatt.tech
+
     - name: npmでgo-task/cliをグローバルインストール
       npm:
         name: "@go-task/cli"
