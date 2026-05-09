@@ -13,6 +13,10 @@
   # Linux機全体に適用する設定を記載する
   # 適宜Commonロールなどに分割すること
   tasks:
+    - name: apt upgrade
+      ansible.builtin.apt:
+        upgrade: dist
+
     - name: Install power pkg
       ansible.builtin.package:
         name:
