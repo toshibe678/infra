@@ -94,8 +94,8 @@
     group: "{{ manage_user_group }}"
 
 - name: ".config/pip/pip.conf"
-  template:
-    src: home/.config/pip/pip.conf
+  copy:
+    src: home/manage_user/.config/pip/pip.conf
     dest: "/home/{{ manage_user_name }}/.config/pip/pip.conf"
     owner: "{{ manage_user_name }}"
     group: "{{ manage_user_group }}"
