@@ -1,0 +1,48 @@
+---
+# vpn_proxy role default variables
+
+# Service directory on the target host (absolute path)
+vpn_proxy_service_dir: "/home/{{ manage_user_name }}/service/vpn-proxy"
+
+# Backend services list
+# Required fields per entry: name, server_name, upstream_host, upstream_port
+vpn_proxy_backends:
+  - name: monitoring
+    server_name: monitoring-proxy.vpn.local
+    upstream_host: 192.168.100.51
+    upstream_port: 3000
+    proxy_read_timeout: 60s
+    websocket: true
+  - name: develop
+    server_name: develop-proxy.vpn.local
+    upstream_host: 192.168.100.55
+    upstream_port: 8080
+    proxy_read_timeout: 60s
+    websocket: true
+  - name: ai-test
+    server_name: ai-test-proxy.vpn.local
+    upstream_host: 192.168.100.56
+    upstream_port: 8080
+    proxy_read_timeout: 300s
+    websocket: true
+  - name: mcp
+    server_name: mcp-proxy.vpn.local
+    upstream_host: 192.168.100.57
+    upstream_port: 80
+    proxy_read_timeout: 300s
+    websocket: true
+
+# SSL certificate settings
+vpn_proxy_ssl_days: 825
+vpn_proxy_ssl_curve: secp384r1
+vpn_proxy_ssl_cn: "vpn.local"
+
+# Rate limiting
+vpn_proxy_rate_limit_general: "10r/s"
+vpn_proxy_rate_limit_strict: "3r/s"
+vpn_proxy_conn_limit: 10
+vpn_proxy_burst: 20
+
+# VPN subnet restriction for /metrics endpoint
+# Set to empty string to allow all, or specify CIDR (e.g., "10.0.0.0/24")
+vpn_proxy_allowed_subnet: "192.168.101.0/24"

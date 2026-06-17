@@ -1,0 +1,14 @@
+---
+- name: Nginx reload via Docker Compose
+  ansible.builtin.command:
+    cmd: docker compose exec -T nginx nginx -s reload
+    chdir: "{{ vpn_proxy_service_dir }}"
+  become: true
+  become_user: "{{ manage_user_name }}"
+  register: _nginx_reload_result
+  failed_when:
+    - _nginx_reload_result.rc != 0
+    - "'No such container' not in _nginx_reload_result.stderr"
+    - "'Error' not in _nginx_reload_result.stderr or 'not running' not in _nginx_reload_result.stderr"
+  changed_when: _nginx_reload_result.rc == 0
+  listen: nginx_reload

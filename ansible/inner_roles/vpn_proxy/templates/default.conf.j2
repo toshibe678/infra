@@ -1,3 +1,5 @@
+# Managed by Ansible - DO NOT EDIT MANUALLY
+
 # HTTP catch-all: redirect to HTTPS
 server {
     listen 80 default_server;
@@ -33,9 +35,11 @@ server {
         proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
         proxy_set_header X-Forwarded-Proto $scheme;
 
-        # Security: Allow only from VPN network (configured via Ansible)
-        # allow 10.0.0.0/24;
-        # deny all;
+{% if vpn_proxy_allowed_subnet | length > 0 %}
+        # Allow only from VPN subnet
+        allow {{ vpn_proxy_allowed_subnet }};
+        deny all;
+{% endif %}
     }
 
     # Default response for undefined hosts

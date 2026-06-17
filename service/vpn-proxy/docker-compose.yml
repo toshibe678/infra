@@ -23,7 +23,7 @@ services:
 
   # Node Exporter for Prometheus Monitoring
   node-exporter:
-    image: prom/node-exporter:latest
+    image: prom/node-exporter:v1.8.2
     restart: always
     container_name: vpn-proxy-node-exporter
     expose:
