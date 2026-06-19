@@ -25,6 +25,14 @@ LiteLLMを使用した統一的なLLM APIプロキシサービスです。
 - **Claude 4.5 Sonnet**: Bedrock → Vertex AI
 - **Claude 4.5 Haiku**: Bedrock → Vertex AI
 - **Claude 4.5 Opus**: Bedrock → Vertex AI
+- **Claude Code用**: Anthropic Claude → Ollama (qwen3-coder:14b)
+- **GitHub Copilot用**: GitHub Copilot → Ollama (qwen3-coder:14b)
+
+### クレジット優先ルーティング（今回追加）
+
+- `claude-code-sonnet`: 通常はAnthropic Claude APIを使用し、レート制限/課金上限等の失敗時のみ `claude-code-local-fallback` へ切り替え
+- `github-copilot-coder`: 通常はGitHub Copilot APIを使用し、上限到達や失敗時のみ `github-copilot-local-fallback` へ切り替え
+- ローカルfallbackは `qwen3-coder:14b` を使用（RTX5070Ti 16GBでの実運用を意識したサイズ）
 
 ## DNS設定
 

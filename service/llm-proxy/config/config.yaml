@@ -20,12 +20,12 @@ model_list:
       model: ollama/qwen3-coder:30b    # 「ollama/モデル名」の形式
       api_base: http://toshi-gamepc.abe365.org:11434
       timeout: 300
-  - model_name: rtx5070ti-gpt-oss-20b  # 任意の識別名
+  - model_name: rtx5070ti-qwen3-coder-14b  # 16GB GPU向けの実運用コーディングモデル
     litellm_params:
-      model: ollama/gpt-oss:20b   # 「ollama/モデル名」の形式
+      model: ollama/qwen3-coder:14b    # Claude/GitHub障害時のローカルfallback先
       api_base: http://toshi-gamepc.abe365.org:11434
       timeout: 300
-      
+
   # AWS Bedrock Models
   ## 埋め込みモデル
   - model_name: bedrock-titan-embed
@@ -115,6 +115,29 @@ model_list:
       model: vertex_ai/claude-sonnet-4-5@20250929
       vertex_project: os.environ/GCP_PROJECT_ID
       vertex_location: os.environ/VERTEX_LOCATION
+
+  # Claude Code向け: まずAnthropic、課金エラー時のみOllamaへ
+  - model_name: claude-code-sonnet
+    litellm_params:
+      model: anthropic/claude-sonnet-4-5-20250929
+      api_key: os.environ/ANTHROPIC_API_KEY
+
+  - model_name: claude-code-local-fallback
+    litellm_params:
+      model: ollama/qwen3-coder:14b
+      api_base: http://toshi-gamepc.abe365.org:11434
+      timeout: 300
+
+  # GitHub Copilot向け: まずGitHub、上限到達時のみOllamaへ
+  - model_name: github-copilot-coder
+    litellm_params:
+      model: github_copilot/claude-sonnet-4
+
+  - model_name: github-copilot-local-fallback
+    litellm_params:
+      model: ollama/qwen3-coder:14b
+      api_base: http://toshi-gamepc.abe365.org:11434
+      timeout: 300
    
   # Google Cloud Vertex AI - Gemini Models
   - model_name: vertex-gemini-2.5-flash
@@ -198,6 +221,8 @@ litellm_settings:
   
   # フォールバック設定
   fallbacks: [
+    {"claude-code-sonnet": ["claude-code-local-fallback"]},
+    {"github-copilot-coder": ["github-copilot-local-fallback"]},
     {"claude-4.5-sonnet-fallback": ["bedrock/anthropic.claude-sonnet-4-5-v1:0", "vertex_ai/claude-sonnet-4-5@20250101"]},
     {"claude-4.5-haiku-fallback": ["bedrock/anthropic.claude-haiku-4-5-v1:0", "vertex_ai/claude-haiku-4-5@20250101"]},
     {"claude-4.5-opus-fallback": ["bedrock/anthropic.claude-opus-4-5-v1:0", "vertex_ai/claude-opus-4-5@20250101"]}

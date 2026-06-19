@@ -16,6 +16,8 @@ services:
       - AWS_ACCESS_KEY_ID=${AWS_ACCESS_KEY_ID}
       - AWS_SECRET_ACCESS_KEY=${AWS_SECRET_ACCESS_KEY}
       - AWS_REGION_NAME=${AWS_REGION_NAME:-us-east-1}
+      - ANTHROPIC_API_KEY=${ANTHROPIC_API_KEY}
+      - GITHUB_COPILOT_TOKEN_DIR=${GITHUB_COPILOT_TOKEN_DIR:-/app/data/github_copilot_auth}
       - BEDROCK_NOVA_MICRO_ARN=${BEDROCK_NOVA_MICRO_ARN}
       - BEDROCK_NOVA_LITE_ARN=${BEDROCK_NOVA_LITE_ARN}
       - BEDROCK_NOVA_PRO_ARN=${BEDROCK_NOVA_PRO_ARN}
@@ -31,6 +33,7 @@ services:
     volumes:
       - ./config/config.yaml:/app/config.yaml:ro
       - ./config/gcp-credentials.json:/app/gcp-credentials.json:ro
+      - ./data/github-copilot:/app/data/github_copilot_auth
       - ./logs:/app/logs
     command: --config /app/config.yaml --detailed_debug
     depends_on:
