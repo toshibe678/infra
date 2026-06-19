@@ -10,15 +10,39 @@
       - software-properties-common
     state: present
 
-- name: Install docker key
-  get_url:
-    url:  https://download.docker.com/linux/ubuntu/gpg
-    dest: /etc/apt/trusted.gpg.d/docker-key.asc
+- name: Ensure apt keyrings directory exists
+  ansible.builtin.file:
+    path: /etc/apt/keyrings
+    state: directory
+    owner: root
+    group: root
+    mode: "0755"
+
+- name: Download Docker GPG key (ASCII armored)
+  ansible.builtin.command:
+    argv:
+      - curl
+      - -fsSL
+      - https://download.docker.com/linux/ubuntu/gpg
+      - -o
+      - /etc/apt/keyrings/docker.asc
+    creates: /etc/apt/keyrings/docker.asc
+
+- name: Convert Docker GPG key to keyring format
+  ansible.builtin.command:
+    argv:
+      - gpg
+      - --dearmor
+      - --yes
+      - -o
+      - /etc/apt/keyrings/docker.gpg
+      - /etc/apt/keyrings/docker.asc
+    creates: /etc/apt/keyrings/docker.gpg
 
 - block:
     - name: amd64 set up the stable repository
       apt_repository:
-        repo: deb [arch=amd64 signed-by=/etc/apt/trusted.gpg.d/docker-key.asc] https://download.docker.com/linux/ubuntu {{ ansible_distribution_release }} stable
+        repo: deb [arch=amd64 signed-by=/etc/apt/keyrings/docker.gpg] https://download.docker.com/linux/ubuntu {{ ansible_distribution_release }} stable
         state: present
         update_cache: yes
   when:
@@ -29,7 +53,7 @@
 - block:
     - name: arm64 set up the stable repository
       apt_repository:
-        repo: deb [arch=arm64 signed-by=/etc/apt/trusted.gpg.d/docker-key.asc] https://download.docker.com/linux/ubuntu {{ ansible_distribution_release }} stable
+        repo: deb [arch=arm64 signed-by=/etc/apt/keyrings/docker.gpg] https://download.docker.com/linux/ubuntu {{ ansible_distribution_release }} stable
         state: present
         update_cache: yes
   when:
