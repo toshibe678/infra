@@ -3,6 +3,10 @@ wire_guard_default_forward_address: 192.168.101.0/24
 
 wire_guard_server_private_key: "{{ crypt_wire_guard_server_private_key }}"
 wire_guard_server_public_key: "rbsVaVt+duRl8lsADYlLhtFjkZOtbQ0ogdaQjK3GOxE="
+
+# 自分で使用するPCやスマートフォンは192.168.101.10-192.168.101.99を使用させる
+# スマートフォンやタブレットのAndroidやモバイル端末は、VPN経由ですべての通信を行うようにする
+# Server系は192.168.101.101-192.168.101.149を使用させる
 wire_guard_clients:
   - name: toshipc01
     private_key: "{{ crypt_wire_guard_client_toshipc01_private_key }}"
@@ -58,4 +62,11 @@ wire_guard_clients:
     public_key: "{{ crypt_wire_guard_client_nas_qnap_public_key }}"
     preshared_key: "{{ crypt_wire_guard_client_preshared_key }}"
     ip_address: 192.168.101.93
+    forward_address: "{{ wire_guard_default_forward_address }}"
+
+  - name: vpn_proxy
+    private_key: "{{ crypt_wire_guard_client_vpn_proxy_private_key }}"
+    public_key: "{{ crypt_wire_guard_client_vpn_proxy_public_key }}"
+    preshared_key: "{{ crypt_wire_guard_client_preshared_key }}"
+    ip_address: 192.168.101.101
     forward_address: "{{ wire_guard_default_forward_address }}"
