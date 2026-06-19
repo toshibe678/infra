@@ -1,7 +1,9 @@
 {
   "cleanupPeriodDays": 9999,
   "env": {
-    "CLAUDE_CODE_EXPERIMENTAL_AGENT_TEAMS": "1"
+    "CLAUDE_CODE_EXPERIMENTAL_AGENT_TEAMS": "1",
+    "MAX_MCP_OUTPUT_TOKENS": "50000",
+    "ENABLE_TOOL_SEARCH": "auto:5 claude"
   },
   "sandbox": {
     "enabled": true,
@@ -20,8 +22,35 @@
     }
   },
   "permissions": {
+    "defaultMode": "default",
     "disableBypassPermissionsMode": "disable",
+    "allow": [
+      "Read",
+      "Glob",
+      "Grep",
+      "Bash(pnpm run *)",
+      "Bash(pnpm test *)",
+      "Bash(pnpm build *)",
+      "Bash(pnpm lint *)",
+      "Bash(pnpm typecheck)",
+      "Bash(git status)",
+      "Bash(git diff *)",
+      "Bash(git log *)",
+      "Bash(git branch *)",
+      "Bash(git checkout *)",
+      "Bash(git add *)",
+      "Bash(git commit *)",
+      "Bash(gh pr *)",
+      "Bash(gh issue *)",
+      "Bash(npx prisma *)",
+      "Bash(* --version)",
+      "Bash(* --help)",
+      "Edit(/packages/**)",
+      "Write(/packages/**)"
+    ],
     "deny": [
+      "Bash(git push --force *)",
+      "Bash(git reset --hard *)",
       "Read(./.env)",
       "Read(./.env.*)",
       "Read(./secrets/**)",
@@ -29,9 +58,9 @@
       "Read(**/*.pem)",
       "Read(**/*.key)",
       "Bash(rm -rf *)",
-      "Bash(curl *)",
       "Bash(wget *)",
-      "Bash(git push *)",
+      "Bash(curl *)",
+      "Edit(/.github/workflows/**)",
       "Bash(chmod 777 *)"
     ]
   },
