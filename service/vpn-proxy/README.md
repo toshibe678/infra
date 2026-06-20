@@ -81,16 +81,16 @@ cp proxy-backends.conf.example proxy-backends.conf
 `proxy-backends.conf`を編集し、必要なバックエンドサーバーの設定を追加：
 
 ```nginx
-upstream develop_backend {
-    server 192.168.100.55:8080;
+upstream monitoring_backend {
+    server 192.168.100.51:3000;
 }
 
 server {
     listen 80;
-    server_name develop-proxy.vpn.local;
+    server_name vpn.monitoring.abe365.org;
     
     location / {
-        proxy_pass http://develop_backend;
+        proxy_pass http://monitoring_backend;
         proxy_set_header Host $host;
         proxy_set_header X-Real-IP $remote_addr;
         proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
@@ -112,8 +112,8 @@ mkdir -p nginx/ssl && cd nginx/ssl
 openssl req -x509 -nodes -newkey ec -pkeyopt ec_paramgen_curve:secp384r1 -days 825 \
     -keyout ./key.pem \
     -out ./cert.pem \
-    -subj "/CN=develop-proxy.vpn.local" \
-    -addext "subjectAltName=DNS:develop-proxy.vpn.local,DNS:monitoring-proxy.vpn.local,DNS:ai-test-proxy.vpn.local,DNS:mcp-proxy.vpn.local"
+    -subj "/CN=vpn.monitoring.abe365.org" \
+    -addext "subjectAltName=DNS:vpn.monitoring.abe365.org,DNS:vpn.mcp.abe365.org"
 ```
 
 ### 5. サービス起動
@@ -132,8 +132,8 @@ VPNに接続したクライアントから、vpn-proxyのIPアドレスまたは
 # vpn-proxyが 10.0.0.5 で稼働している場合
 curl https://10.0.0.5/health  # ヘルスチェック
 
-# 開発サーバーへのプロキシアクセス（ホスト名ベースルーティング）
-curl -H "Host: develop-proxy.vpn.local" https://10.0.0.5/
+# バックエンドサーバーへのプロキシアクセス（ホスト名ベースルーティング）
+curl -H "Host: vpn.monitoring.abe365.org" https://10.0.0.5/
 ```
 
 ### DNS設定（推奨）
@@ -141,19 +141,15 @@ curl -H "Host: develop-proxy.vpn.local" https://10.0.0.5/
 VPNクライアント側で `/etc/hosts` またはDNSサーバーに以下を追加：
 
 ```
-10.0.0.5  develop-proxy.vpn.local
-10.0.0.5  monitoring-proxy.vpn.local
-10.0.0.5  ai-test-proxy.vpn.local
-10.0.0.5  mcp-proxy.vpn.local
+10.0.0.5  vpn.monitoring.abe365.org
+10.0.0.5  vpn.mcp.abe365.org
 ```
 
 これにより、以下のようなアクセスが可能になります：
 
 ```bash
-curl https://develop-proxy.vpn.local/
-curl https://monitoring-proxy.vpn.local/
-curl https://ai-test-proxy.vpn.local/
-curl -H "Authorization: Bearer ${AUTH_TOKEN}" https://mcp-proxy.vpn.local/health
+curl https://vpn.monitoring.abe365.org/
+curl -H "Authorization: Bearer ${AUTH_TOKEN}" https://vpn.mcp.abe365.org/health
 ```
 
 ### MCP Servers経由アクセス
@@ -162,12 +158,12 @@ VPN経由でMCPサーバーを利用する場合：
 
 ```bash
 # ヘルスチェック
-curl https://mcp-proxy.vpn.local/health
+curl https://vpn.mcp.abe365.org/health
 
 # MCP エンドポイントへのアクセス（認証トークン必須）
-curl -H "Authorization: Bearer ${AUTH_TOKEN}" https://mcp-proxy.vpn.local/git
-curl -H "Authorization: Bearer ${AUTH_TOKEN}" https://mcp-proxy.vpn.local/github
-curl -H "Authorization: Bearer ${AUTH_TOKEN}" https://mcp-proxy.vpn.local/filesystem
+curl -H "Authorization: Bearer ${AUTH_TOKEN}" https://vpn.mcp.abe365.org/git
+curl -H "Authorization: Bearer ${AUTH_TOKEN}" https://vpn.mcp.abe365.org/github
+curl -H "Authorization: Bearer ${AUTH_TOKEN}" https://vpn.mcp.abe365.org/filesystem
 ```
 
 認証トークン（`AUTH_TOKEN`）は拠点内MCPサーバーの `.env` ファイルで確認可能です。

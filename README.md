@@ -27,7 +27,7 @@
 
 ### Monitoring Stack
 - Prometheus, Grafana, Alertmanager
-- 詳細: [monitoring/README.md](monitoring/README.md)
+- 詳細: [service/monitoring/README.md](service/monitoring/README.md)
 
 ## クイックスタート
 
@@ -42,9 +42,8 @@ make deploy
 make vm-init
 
 # Monitoring 起動
-cd monitoring && docker-compose up -d
+cd service/monitoring && docker compose up -d
 ```
 
 ## ドキュメント
-- **AI エージェント向け**: [AGENTS.md](AGENTS.md) - プロジェクト全体のコンテキスト
-- **GitHub Copilot向け**: [.github/copilot-instructions.md](.github/copilot-instructions.md) - 開発ガイドライン
+- **AI エージェント向け**: [CLAUDE.md](CLAUDE.md) - チーム構成・デプロイ方針・業務ルールも同内容を参照）

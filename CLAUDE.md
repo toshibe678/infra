@@ -1,92 +1,57 @@
-# Agentic SDLC and Spec-Driven Development
+# infra — Agent Teams ガイド
 
-Kiro-style Spec-Driven Development on an agentic SDLC
+オンプレ及びクラウドのインフラを IaC で協調管理するリポジトリ。
+AI エージェントがチームで作業するための運用ガイド。
 
-## Project Context
+## 目的とゴール
 
-### Paths
-- Steering: `.kiro/steering/`
-- Specs: `.kiro/specs/`
+- 目的: オンプレ及びクラウドのインフラ管理を協調して行う。
+- ゴール: 各種 IaC ツール（Ansible / Terraform / AWS CDK / CloudFormation）を駆使し、
+  各種ハードウェアやクラウドを設定する。
 
-### Steering vs Specification
+## チーム構成と役割
 
-**Steering** (`.kiro/steering/`) - Guide AI with project-wide rules and context
-**Specs** (`.kiro/specs/`) - Formalize development process for individual features
+コスト最適化のため、チームメイト（Teammates）のモデルにはすべて **sonnet** を指定してスポーンする。
 
-### Active Specifications
-- Check `.kiro/specs/` for active specifications
-- Use `/kiro:spec-status [feature-name]` to check progress
+| エージェント | 役割 | 担当エリア |
+|---|---|---|
+| **A: サーバーサービス担当** | 各サーバーで docker compose で定義する各種サービスを起動・連携 | `service/` |
+| **B: 共通設定 / ドメイン / 通信担当** | Ansible でサーバー共通設定を定義、DNS・通信設定 | `ansible/`, `cloudflere/` |
+| **C: クラウド担当** | クラウド環境の設定 | `cdk/`, `cloudformation/`, `terraform/` |
 
-## Development Guidelines
-- Think in English, generate responses in Japanese. All Markdown content written to project files (e.g., requirements.md, design.md, tasks.md, research.md, validation reports) MUST be written in the target language configured for this specification (see spec.json.language).
+## デプロイ方針
 
-## Minimal Workflow
-- Phase 0 (optional): `/kiro:steering`, `/kiro:steering-custom`
-- Phase 1 (Specification):
-  - `/kiro:spec-init "description"`
-  - `/kiro:spec-requirements {feature}`
-  - `/kiro:validate-gap {feature}` (optional: for existing codebase)
-  - `/kiro:spec-design {feature} [-y]`
-  - `/kiro:validate-design {feature}` (optional: design review)
-  - `/kiro:spec-tasks {feature} [-y]`
-- Phase 2 (Implementation): `/kiro:spec-impl {feature} [tasks]`
-  - `/kiro:validate-impl {feature}` (optional: after implementation)
-- Progress check: `/kiro:spec-status {feature}` (use anytime)
+- `service/` 配下の docker compose サービスは **Ansible 経由デプロイに統一**する。
+  各サービスは `ansible/inner_roles/service_compose` 汎用 role を使い、per-service playbook
+  `ansible/<service>.yml` で対象ホストへ冪等に展開する（手本: `ansible/inner_roles/vpn_proxy`）。
+- クラウドリソースは Terraform / CDK / CloudFormation で管理する。
+- CI/CD は self-hosted runner 上の Ansible/Terraform コンテナから実行する（`.github/workflows/`）。
 
-## Development Rules
-- 3-phase approval workflow: Requirements → Design → Tasks → Implementation
-- Human review required each phase; use `-y` only for intentional fast-track
-- Keep steering current and verify alignment with `/kiro:spec-status`
-- Follow the user's instructions precisely, and within that scope act autonomously: gather the necessary context and complete the requested work end-to-end in this run, asking questions only when essential information is missing or the instructions are critically ambiguous.
+### サービス → ホスト対応
 
-## Steering Configuration
-- Load entire `.kiro/steering/` as project memory
-- Default files: `product.md`, `tech.md`, `structure.md`
-- Custom files are supported (managed via `/kiro:steering-custom`)
+| service | host |
+|---|---|
+| vpn-proxy | vpn-proxy.abe365.org |
+| dify | dify.abe365.org |
+| llm-proxy | llm-proxy.abe365.org |
+| mcp-servers | mcp.abe365.org |
+| monitoring | monitoring.abe365.org |
+| siem | siem.abe365.org |
+| wgdashboard | vpn.toshi.click（VPN prod に同居） |
 
+## 業務ルール
 
-# Agentic SDLC and Spec-Driven Development
+- 各メンバーは「共有タスクリスト」を適切に更新・管理し、依存関係を意識して並列で進める。
+- ファイルロック（競合）を避けるため、他メンバーのエリアを編集する場合は必ず事前にメッセージ機能で連携する。
+- すべてのタスク完了後、全体のビルドとテストがパスすることを確認して最終報告をする。
+- 秘密情報（`.env`, credentials 等）はコミットしない（`.gitignore` で管理、値は Ansible Vault へ）。
 
-Kiro-style Spec-Driven Development on an agentic SDLC
+## 主要ディレクトリ
 
-## Project Context
-
-### Paths
-- Steering: `.kiro/steering/`
-- Specs: `.kiro/specs/`
-
-### Steering vs Specification
-
-**Steering** (`.kiro/steering/`) - Guide AI with project-wide rules and context
-**Specs** (`.kiro/specs/`) - Formalize development process for individual features
-
-### Active Specifications
-- Check `.kiro/specs/` for active specifications
-- Use `/kiro:spec-status [feature-name]` to check progress
-
-## Development Guidelines
-- Think in English, generate responses in Japanese. All Markdown content written to project files (e.g., requirements.md, design.md, tasks.md, research.md, validation reports) MUST be written in the target language configured for this specification (see spec.json.language).
-
-## Minimal Workflow
-- Phase 0 (optional): `/kiro:steering`, `/kiro:steering-custom`
-- Phase 1 (Specification):
-  - `/kiro:spec-init "description"`
-  - `/kiro:spec-requirements {feature}`
-  - `/kiro:validate-gap {feature}` (optional: for existing codebase)
-  - `/kiro:spec-design {feature} [-y]`
-  - `/kiro:validate-design {feature}` (optional: design review)
-  - `/kiro:spec-tasks {feature} [-y]`
-- Phase 2 (Implementation): `/kiro:spec-impl {feature} [tasks]`
-  - `/kiro:validate-impl {feature}` (optional: after implementation)
-- Progress check: `/kiro:spec-status {feature}` (use anytime)
-
-## Development Rules
-- 3-phase approval workflow: Requirements → Design → Tasks → Implementation
-- Human review required each phase; use `-y` only for intentional fast-track
-- Keep steering current and verify alignment with `/kiro:spec-status`
-- Follow the user's instructions precisely, and within that scope act autonomously: gather the necessary context and complete the requested work end-to-end in this run, asking questions only when essential information is missing or the instructions are critically ambiguous.
-
-## Steering Configuration
-- Load entire `.kiro/steering/` as project memory
-- Default files: `product.md`, `tech.md`, `structure.md`
-- Custom files are supported (managed via `/kiro:steering-custom`)
+- `ansible/` — サーバー共通設定、WireGuard VPN、サービスデプロイ role
+- `service/` — docker compose サービス群
+- `terraform/` — AWS（S3/CloudFront/ACM）・GCP 基本設定
+- `cdk/` — AWS マルチアカウント構成
+- `cloudformation/` — StackSets 等
+- `cloudflere/` — Cloudflare DNS（Terraform）
+- `proxmox-vm-init/` — 新規 VM 初期構成

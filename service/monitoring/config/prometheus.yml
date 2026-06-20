@@ -24,8 +24,6 @@ scrape_configs:
         - 'dify.abe365.org:9323'
         - 'vpn-dev.abe365.org:9323'
         - 'llm-proxy.abe365.org:9323'
-        - 'develop.abe365.org:9323'
-        - 'ai-test.abe365.org:9323'
 
   # Node Exporter for system metrics
   - job_name: 'node-exporter'
@@ -35,8 +33,6 @@ scrape_configs:
         - 'dify.abe365.org:9100'
         - 'vpn-dev.abe365.org:9100'
         - 'llm-proxy.abe365.org:9100'
-        - 'develop.abe365.org:9100'
-        - 'ai-test.abe365.org:9100'
 
   # SNMP devices
   - job_name: 'snmp-network-devices'
