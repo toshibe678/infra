@@ -136,6 +136,24 @@
   hostname:
     name: "{{ hostname }}"
 
+- name: Find existing Docker apt source list files
+  ansible.builtin.find:
+    paths: /etc/apt/sources.list.d
+    patterns: "*.list"
+    contains: "download.docker.com/linux/ubuntu"
+  register: docker_apt_source_lists
+
+- name: Remove existing Docker apt source list files before common apt install
+  ansible.builtin.file:
+    path: "{{ item.path }}"
+    state: absent
+  loop: "{{ docker_apt_source_lists.files }}"
+
+- name: Remove legacy Docker apt key file before common apt install
+  ansible.builtin.file:
+    path: /etc/apt/trusted.gpg.d/docker-key.asc
+    state: absent
+
 - name: apt install common packages
   ansible.builtin.package:
     name:
