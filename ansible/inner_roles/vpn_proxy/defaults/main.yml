@@ -8,25 +8,13 @@ vpn_proxy_service_dir: "/home/{{ manage_user_name }}/service/vpn-proxy"
 # Required fields per entry: name, server_name, upstream_host, upstream_port
 vpn_proxy_backends:
   - name: monitoring
-    server_name: monitoring-proxy.vpn.local
+    server_name: vpn.monitoring.abe365.org
     upstream_host: 192.168.100.51
     upstream_port: 3000
     proxy_read_timeout: 60s
     websocket: true
-  - name: develop
-    server_name: develop-proxy.vpn.local
-    upstream_host: 192.168.100.55
-    upstream_port: 8080
-    proxy_read_timeout: 60s
-    websocket: true
-  - name: ai-test
-    server_name: ai-test-proxy.vpn.local
-    upstream_host: 192.168.100.56
-    upstream_port: 8080
-    proxy_read_timeout: 300s
-    websocket: true
   - name: mcp
-    server_name: mcp-proxy.vpn.local
+    server_name: vpn.mcp.abe365.org
     upstream_host: 192.168.100.57
     upstream_port: 80
     proxy_read_timeout: 300s
@@ -35,7 +23,7 @@ vpn_proxy_backends:
 # SSL certificate settings
 vpn_proxy_ssl_days: 825
 vpn_proxy_ssl_curve: secp384r1
-vpn_proxy_ssl_cn: "vpn.local"
+vpn_proxy_ssl_cn: "vpn-proxy.abe365.org"
 
 # Rate limiting
 vpn_proxy_rate_limit_general: "10r/s"

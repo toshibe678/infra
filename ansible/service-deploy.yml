@@ -1,0 +1,23 @@
+---
+# 汎用 service デプロイ playbook
+# service/ 配下の docker compose サービスを service_compose role で冪等にデプロイする。
+# ホスト⇄サービスの対応は inventory(compose_services グループの service_name)に持たせ、
+# サービス定義は vars/services/<service_name>.yml から include_vars で読み込む。
+#
+# 全サービス一括:   ansible-playbook -i hosts_all.yml service-deploy.yml
+# 個別(ホスト指定):  ansible-playbook -i hosts_all.yml service-deploy.yml --limit mcp.abe365.org
+#
+# 注: dify(2段サブモジュール構成)と vpn-proxy(専用 vpn_proxy role)は形が異なるため
+#     compose_services には含めず、個別 playbook (dify.yml / vpn-proxy.yml) で管理する。
+- name: Deploy containerized service via service_compose role
+  hosts: "{{ deploy_target | default('compose_services') }}"
+  become: true
+  become_user: root
+  gather_facts: true
+
+  pre_tasks:
+    - name: Load per-service definition
+      ansible.builtin.include_vars: "{{ playbook_dir }}/vars/services/{{ service_name }}.yml"
+
+  roles:
+    - role: ./inner_roles/service_compose

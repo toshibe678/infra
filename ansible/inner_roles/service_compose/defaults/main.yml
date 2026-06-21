@@ -1,0 +1,25 @@
+---
+# service_compose role default variables
+# vpn_proxy role を一般化した汎用 docker compose デプロイ role
+#
+# 前提: ターゲットホストには ansible/git.yml で infra リポジトリが
+#       /home/{{ manage_user_name }}/infra に clone/update 済み。
+#       docker-compose.yml や追跡済み config はその checkout を直接使うため、
+#       本 role は gitignore 対象(.env / secret files)の生成と compose 起動のみ行う。
+
+# サービス名（ディレクトリ名やラベル表示に使用）
+service_compose_name: ""
+
+# ターゲットホスト上のサービスディレクトリ（git.yml の checkout 内を直接使う）
+service_compose_dir: "/home/{{ manage_user_name }}/infra/service/{{ service_compose_name }}"
+
+# .env に書き出す環境変数（dict）。秘密値は vault 前提
+service_compose_env: {}
+
+# gitignore対象などリポジトリに存在しない秘密ファイルを vault 変数から書き出す一覧
+# 例: [{ dest: "config/gcp-credentials.json", content: "{{ crypt_llm_proxy_gcp_credentials }}" }]
+# dest は service_compose_dir からの相対パス
+service_compose_secret_files: []
+
+# デプロイ後に実行する任意のヘルスチェックコマンド（空文字なら実行しない）
+service_compose_healthcheck: ""

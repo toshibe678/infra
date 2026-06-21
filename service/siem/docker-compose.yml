@@ -57,7 +57,7 @@ services:
   # Node Exporter for system metrics
   node-exporter:
     image: prom/node-exporter:latest
-    container_name: wgdashboard-node-exporter
+    container_name: siem-node-exporter
     restart: always
     ports:
       - "9100:9100"

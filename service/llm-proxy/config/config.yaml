@@ -41,44 +41,8 @@ model_list:
       aws_access_key_id: os.environ/AWS_ACCESS_KEY_ID
       aws_secret_access_key: os.environ/AWS_SECRET_ACCESS_KEY
       aws_region_name: os.environ/AWS_REGION_NAME
-  ## 音声-to-テキストモデル テキスト-to-音声モデル
-  - model_name: bedrock-nova2-sonic
-    litellm_params:
-      model: bedrock/us.amazon.nova-2-sonic-v1:0
-      aws_access_key_id: os.environ/AWS_ACCESS_KEY_ID
-      aws_secret_access_key: os.environ/AWS_SECRET_ACCESS_KEY
-      aws_region_name: os.environ/AWS_REGION_NAME
-
-  # AWS Bedrock - Amazon Nova Models
-  - model_name: bedrock-nova-micro
-    litellm_params:
-      model: os.environ/BEDROCK_NOVA_MICRO_ARN
-      aws_access_key_id: os.environ/AWS_ACCESS_KEY_ID
-      aws_secret_access_key: os.environ/AWS_SECRET_ACCESS_KEY
-      aws_region_name: os.environ/AWS_REGION_NAME
-  
-  - model_name: bedrock-nova-lite
-    litellm_params:
-      model: os.environ/BEDROCK_NOVA_LITE_ARN
-      aws_access_key_id: os.environ/AWS_ACCESS_KEY_ID
-      aws_secret_access_key: os.environ/AWS_SECRET_ACCESS_KEY
-      aws_region_name: os.environ/AWS_REGION_NAME
-  
-  - model_name: bedrock-nova-pro
-    litellm_params:
-      model: os.environ/BEDROCK_NOVA_PRO_ARN
-      aws_access_key_id: os.environ/AWS_ACCESS_KEY_ID
-      aws_secret_access_key: os.environ/AWS_SECRET_ACCESS_KEY
-      aws_region_name: os.environ/AWS_REGION_NAME
-  
-  # AWS Bedrock - Amazon Nova 2 Models
-  - model_name: bedrock-nova2-micro
-    litellm_params:
-      model: bedrock/us.amazon.nova-micro-v2:0
-      aws_access_key_id: os.environ/AWS_ACCESS_KEY_ID
-      aws_secret_access_key: os.environ/AWS_SECRET_ACCESS_KEY
-      aws_region_name: os.environ/AWS_REGION_NAME
-  
+ 
+  # AWS Bedrock - Amazon Nova 2 Models  
   - model_name: bedrock-nova2-lite
     litellm_params:
       model: os.environ/BEDROCK_NOVA2_LITE_ARN
@@ -87,39 +51,25 @@ model_list:
       aws_region_name: os.environ/AWS_REGION_NAME
 
   
-  # AWS Bedrock - Claude 4.5 Models
-  - model_name: bedrock-claude-4.5-sonnet
+  # AWS Bedrock - Claude Models
+  - model_name: bedrock-claude-4.6-sonnet
     litellm_params:
-      model: os.environ/BEDROCK_CLAUDE_SONNET_4_5_ARN
+      model: os.environ/BEDROCK_CLAUDE_SONNET_ARN
       aws_access_key_id: os.environ/AWS_ACCESS_KEY_ID
       aws_secret_access_key: os.environ/AWS_SECRET_ACCESS_KEY
       aws_region_name: os.environ/AWS_REGION_NAME
-  
-  - model_name: bedrock-claude-4.5-haiku
-    litellm_params:
-      model: os.environ/BEDROCK_CLAUDE_HAIKU_4_5_ARN
-      aws_access_key_id: os.environ/AWS_ACCESS_KEY_ID
-      aws_secret_access_key: os.environ/AWS_SECRET_ACCESS_KEY
-      aws_region_name: os.environ/AWS_REGION_NAME
-  
-  - model_name: bedrock-claude-4.5-opus
-    litellm_params:
-      model: os.environ/BEDROCK_CLAUDE_OPUS_4_5_ARN
-      aws_access_key_id: os.environ/AWS_ACCESS_KEY_ID
-      aws_secret_access_key: os.environ/AWS_SECRET_ACCESS_KEY
-      aws_region_name: os.environ/AWS_REGION_NAME
-  
-  # Google Cloud Vertex AI - Claude 4.5 Models
-  - model_name: vertex-claude-4.5-sonnet
-    litellm_params:
-      model: vertex_ai/claude-sonnet-4-5@20250929
-      vertex_project: os.environ/GCP_PROJECT_ID
-      vertex_location: os.environ/VERTEX_LOCATION
+   
+  # # Google Cloud Vertex AI - Claude 4.5 Models
+  # - model_name: vertex-claude-4.5-sonnet
+  #   litellm_params:
+  #     model: vertex_ai/claude-sonnet-4-5@20250929
+  #     vertex_project: os.environ/GCP_PROJECT_ID
+  #     vertex_location: os.environ/VERTEX_LOCATION
 
   # Claude Code向け: まずAnthropic、課金エラー時のみOllamaへ
   - model_name: claude-code-sonnet
     litellm_params:
-      model: anthropic/claude-sonnet-4-5-20250929
+      model: anthropic/claude-sonnet-4-6-20250929
       api_key: os.environ/ANTHROPIC_API_KEY
 
   - model_name: claude-code-local-fallback
@@ -131,7 +81,7 @@ model_list:
   # GitHub Copilot向け: まずGitHub、上限到達時のみOllamaへ
   - model_name: github-copilot-coder
     litellm_params:
-      model: github_copilot/claude-sonnet-4
+      model: github_copilot/claude-sonnet-4-6
 
   - model_name: github-copilot-local-fallback
     litellm_params:
@@ -140,24 +90,6 @@ model_list:
       timeout: 300
    
   # Google Cloud Vertex AI - Gemini Models
-  - model_name: vertex-gemini-2.5-flash
-    litellm_params:
-      model: vertex_ai/gemini-2.5-flash
-      vertex_project: os.environ/GCP_PROJECT_ID
-      vertex_location: os.environ/VERTEX_LOCATION
-  
-  - model_name: vertex-gemini-2.5-pro
-    litellm_params:
-      model: vertex_ai/gemini-2.5-pro
-      vertex_project: os.environ/GCP_PROJECT_ID
-      vertex_location: os.environ/VERTEX_LOCATION
-  
-  - model_name: vertex-gemini-3-pro-preview
-    litellm_params:
-      model: vertex_ai/gemini-3-pro-preview
-      vertex_project: os.environ/GCP_PROJECT_ID
-      vertex_location: os.environ/VERTEX_LOCATION
-  
   - model_name: vertex-gemini-3-flash-preview
     litellm_params:
       model: vertex_ai/gemini-3-flash-preview
@@ -167,17 +99,17 @@ model_list:
   
   # Fallback Configuration: Bedrock -> Vertex AI
   # 同じmodel_nameで複数定義すると自動的にフォールオーバー
-  # Claude 4.5 Sonnet Fallback
-  - model_name: claude-4.5-sonnet-fallback
+  # Claude 4.6 Sonnet Fallback
+  - model_name: claude-4.6-sonnet-fallback
     litellm_params:
-      model: os.environ/BEDROCK_CLAUDE_SONNET_4_5_ARN
+      model: os.environ/BEDROCK_CLAUDE_SONNET_ARN
       aws_access_key_id: os.environ/AWS_ACCESS_KEY_ID
       aws_secret_access_key: os.environ/AWS_SECRET_ACCESS_KEY
       aws_region_name: os.environ/AWS_REGION_NAME
   
-  - model_name: claude-4.5-sonnet-fallback
+  - model_name: claude-4.6-sonnet-fallback
     litellm_params:
-      model: vertex_ai/claude-sonnet-4-5@20250929
+      model: vertex_ai/claude-sonnet-4-6@20250929
       vertex_project: os.environ/GCP_PROJECT_ID
       vertex_location: os.environ/VERTEX_LOCATION
 

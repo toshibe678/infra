@@ -72,6 +72,10 @@
         clone: yes
         update: yes
         force: yes
+        # dify 本体は submodule (service/dify/dify, public HTTPS) のため再帰取得が必須。
+        # recursive は既定 yes だが依存を明示する。
+        recursive: yes
+        track_submodules: no
         key_file: "/home/{{ manage_user_name }}/.ssh/gitkey"
         accept_hostkey: true
       tags: git_checkout

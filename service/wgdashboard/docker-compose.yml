@@ -1,4 +1,16 @@
 services:
+  # AdGuard Home - DNS ad blocking for WireGuard clients
+  adguard-home:
+    image: adguard/adguardhome:latest
+    container_name: adguard-home
+    restart: always
+    network_mode: host
+    environment:
+      - TZ=${TZ:-Asia/Tokyo}
+    volumes:
+      - ./data/adguard/work:/opt/adguardhome/work
+      - ./data/adguard/conf:/opt/adguardhome/conf
+
   # WGDashboard - WireGuard Management Dashboard
   wgdashboard:
     image: dselen/wgdashboard:latest
@@ -13,6 +25,8 @@ services:
       # WGDashboard Webインターフェース認証（公式環境変数）
       - username=${WGDASHBOARD_USERNAME:-admin}
       - password=${WGDASHBOARD_PASSWORD}
+      # OTPベースの2段階認証（公式環境変数。true/false）
+      - enable_totp=${ENABLE_TOTP:-true}
     volumes:
       # WireGuard設定ディレクトリをマウント（ホスト側で動作中のWireGuard）
       - /etc/wireguard:/etc/wireguard
@@ -39,7 +53,7 @@ services:
     container_name: wgdashboard-node-exporter
     restart: always
     ports:
-      - "9100:9100"
+      - "${WGDASHBOARD_NODE_EXPORTER_PORT:-9100}:9100"
     command:
       - '--path.rootfs=/host'
       - '--path.procfs=/host/proc'
