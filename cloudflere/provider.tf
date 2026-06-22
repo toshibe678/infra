@@ -5,7 +5,7 @@ terraform {
     aws = ">= 5.94.0"
     cloudflare = {
       source = "cloudflare/cloudflare"
-      version = "~> 4.0"
+      version = "~> 5.0"
     }
   }
 }
@@ -15,8 +15,8 @@ terraform {
 # Authentication error(10000) が頻発する。リクエスト速度を抑えつつ、
 # スロットリング時は長めにバックオフ・リトライする。
 provider "cloudflare" {
-  rps         = 2
+  rps         = 1
   retries     = 5
   min_backoff = 2
-  max_backoff = 60
+  max_backoff = 120
 }
