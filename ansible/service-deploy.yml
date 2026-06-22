@@ -7,8 +7,8 @@
 # 全サービス一括:   ansible-playbook -i hosts_all.yml service-deploy.yml
 # 個別(ホスト指定):  ansible-playbook -i hosts_all.yml service-deploy.yml --limit mcp.abe365.org
 #
-# 注: dify(2段サブモジュール構成)と vpn-proxy(専用 vpn_proxy role)は形が異なるため
-#     compose_services には含めず、個別 playbook (dify.yml / vpn-proxy.yml) で管理する。
+# 注: dify(公式サブモジュールの2段構成)のみ形が異なるため compose_services には含めず、
+#     個別 playbook (dify.yml) で管理する。vpn-proxy は SSL 任意機能を使い compose_services に統合済み。
 - name: Deploy containerized service via service_compose role
   hosts: "{{ deploy_target | default('compose_services') }}"
   become: true

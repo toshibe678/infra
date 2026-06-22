@@ -1,9 +1,0 @@
----
-- name: Deploy vpn-proxy reverse proxy
-  hosts: vpn-proxy.abe365.org
-  become: true
-  become_user: root
-  gather_facts: true
-
-  roles:
-    - role: ./inner_roles/vpn_proxy

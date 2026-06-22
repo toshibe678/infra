@@ -23,3 +23,14 @@ service_compose_secret_files: []
 
 # デプロイ後に実行する任意のヘルスチェックコマンド（空文字なら実行しない）
 service_compose_healthcheck: ""
+
+# 自己署名 SSL 証明書の生成（任意機能）。nginx で TLS 終端するサービス(vpn-proxy 等)で使う。
+# 証明書/鍵は gitignore 対象のため checkout には無く、初回のみ host 上で生成する(creates ガード)。
+service_compose_ssl_enabled: false
+service_compose_ssl_dir: "{{ service_compose_dir }}/nginx/ssl"
+service_compose_ssl_cert: "{{ service_compose_ssl_dir }}/cert.pem"
+service_compose_ssl_key: "{{ service_compose_ssl_dir }}/key.pem"
+service_compose_ssl_cn: ""
+service_compose_ssl_sans: []        # SAN に入れる DNS 名のリスト
+service_compose_ssl_days: 825
+service_compose_ssl_curve: secp384r1

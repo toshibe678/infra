@@ -13,8 +13,7 @@
 - import_playbook: ./develop.yml
 - import_playbook: ./git.yml
 - import_playbook: ./github_self_host_runner.yml
-- import_playbook: ./vpn-proxy.yml
 - import_playbook: ./dify.yml
-# llm-proxy / mcp-servers / monitoring / siem / wgdashboard を集約
+# vpn-proxy / llm-proxy / mcp-servers / monitoring / siem / wgdashboard を集約
 # (inventory の compose_services + vars/services/<service>.yml で分岐)
 - import_playbook: ./service-deploy.yml

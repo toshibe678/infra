@@ -28,14 +28,21 @@ all:
             vpn-proxy.abe365.org: { }
             siem.abe365.org: { }
         # service-deploy.yml の対象。service_name で vars/services/<name>.yml を選択する。
-        # dify(2段構成) / vpn-proxy(専用role) は形が異なるため含めない。
+        # dify(公式サブモジュールの2段構成) のみ形が異なるため含めない。
         compose_services:
           hosts:
             llm-proxy.abe365.org: { service_name: llm-proxy }
             mcp.abe365.org: { service_name: mcp-servers }
             siem.abe365.org: { service_name: siem }
             monitoring.abe365.org: { service_name: monitoring }
+            vpn-proxy.abe365.org: { service_name: vpn-proxy }
             vpn.toshi.click: { service_name: wgdashboard }
+        vpn_client:
+          hosts:
+            vpn-proxy.abe365.org: 
+              wireguard_client_private_key: "{{ crypt_wire_guard_client_vpn_proxy_private_key }}"
+              wireguard_client_ip_address: "192.168.101.101"
+
         # k8s:
         #   hosts:
         #     k8s1.abe365.org: { }

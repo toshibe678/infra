@@ -52,7 +52,33 @@
     label: "{{ item.dest }}"
   no_log: true
 
-# 5. Start Docker Compose services (idempotent)
+# 5. (任意) 自己署名 SSL 証明書を生成（service_compose_ssl_enabled のときのみ）
+- name: Create SSL certificate directory
+  ansible.builtin.file:
+    path: "{{ service_compose_ssl_dir }}"
+    state: directory
+    owner: "{{ manage_user_name }}"
+    group: "{{ manage_user_group }}"
+    mode: "0750"
+  when: service_compose_ssl_enabled
+
+- name: Generate self-signed SSL certificate (EC + SAN, idempotent via creates)
+  ansible.builtin.command:
+    cmd: >
+      openssl req -x509 -nodes
+      -newkey ec
+      -pkeyopt ec_paramgen_curve:{{ service_compose_ssl_curve }}
+      -days {{ service_compose_ssl_days }}
+      -keyout {{ service_compose_ssl_key }}
+      -out {{ service_compose_ssl_cert }}
+      -subj "/CN={{ service_compose_ssl_cn }}"
+      -addext "subjectAltName={% for n in service_compose_ssl_sans %}DNS:{{ n }}{% if not loop.last %},{% endif %}{% endfor %}"
+    creates: "{{ service_compose_ssl_cert }}"
+  become: true
+  become_user: "{{ manage_user_name }}"
+  when: service_compose_ssl_enabled
+
+# 6. Start Docker Compose services (idempotent)
 - name: Start {{ service_compose_name }} Docker Compose services
   ansible.builtin.command:
     cmd: docker compose up -d

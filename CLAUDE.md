@@ -26,14 +26,18 @@ AI エージェントがチームで作業するための運用ガイド。
   から使い回す。ホスト⇄サービスの対応は inventory の `compose_services` グループに `service_name` で
   持たせ、サービス定義（env / secret_files / healthcheck）は `ansible/vars/services/<service>.yml`
   に置く。新サービス追加は「vars ファイル追加 ＋ inventory に1行」だけで済み、playbook は増やさない。
-  - **ファイル配布は `git.yml` に一元化**: `docker-compose.yml` と追跡済み config は各ホストの
-    `~/infra` checkout（`git.yml` が clone/update）を直接使う。`service_compose` role は gitignore 対象
-    （`.env` ＋ vault 由来の secret files）の生成と `docker compose up -d` のみ行う。
+  - **ファイル配布は `git.yml` に一元化**: `docker-compose.yml` と追跡済み config（nginx.conf 等）は
+    各ホストの `~/infra` checkout（`git.yml` が clone/update）を直接使う。`service_compose` role は
+    gitignore 対象（`.env` ＋ vault 由来 secret files ＋ 任意で自己署名 SSL 証明書）の生成と
+    `docker compose up -d` のみ行い、追跡ファイルの再生成・コピーはしない。
     → デプロイ前に対象ホストで `git.yml`（`--tags git_checkout`）が走っている必要がある（CI も同様）。
+  - **任意 SSL**: nginx で TLS 終端するサービス（vpn-proxy 等）は `service_compose_ssl_enabled: true` ＋
+    `service_compose_ssl_cn` / `service_compose_ssl_sans` を vars に指定すると、role が初回のみ
+    自己署名証明書を host 上に生成する（nginx の backend 設定自体は追跡済み静的ファイル）。
   - 全サービス一括: `ansible-playbook -i hosts_all.yml service-deploy.yml`
   - 個別: `ansible-playbook -i hosts_all.yml service-deploy.yml --limit <host>`
-  - **例外**: `dify`（公式サブモジュールの2段構成）と `vpn-proxy`（専用 `vpn_proxy` role）は形が異なるため
-    個別 playbook `ansible/dify.yml` / `ansible/vpn-proxy.yml` で管理する。
+  - **例外**: `dify` のみ（公式サブモジュールの2段構成）個別 playbook `ansible/dify.yml` で管理する。
+    vpn-proxy も `compose_services`（`vars/services/vpn-proxy.yml`、SSL 任意機能を使用）に統合済み。
 - クラウドリソースは Terraform / CDK / CloudFormation で管理する。
 - CI/CD は self-hosted runner 上の Ansible/Terraform コンテナから実行する（`.github/workflows/`）。
   - Ansible デプロイは **`all.yml` を単一エントリポイント**とし `-l <host/group>` で対象を絞る方式。
