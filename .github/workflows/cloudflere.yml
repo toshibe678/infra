@@ -44,13 +44,13 @@ jobs:
           CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
       - name: Terraform Plan
         id: plan
-        run: terraform plan -no-color
+        run: terraform plan -no-color -parallelism=1
         working-directory: ./cloudflere
         env:
           CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
       - name: Terraform apply
         id: apply
-        run: terraform apply -no-color -auto-approve
+        run: terraform apply -no-color -auto-approve -parallelism=1
         working-directory: ./cloudflere
         env:
           CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
