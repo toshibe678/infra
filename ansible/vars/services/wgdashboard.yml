@@ -1,0 +1,13 @@
+---
+# wgdashboard (WireGuard dashboard + AdGuard Home) サービス定義
+# 新規ホストを立てず既存 VPN prod ホスト(vpn.toshi.click)に同居させる。
+# 汎用 service-deploy.yml が include_vars で読み込む。秘密値は group_vars/all/service_vars.yml 経由。
+service_compose_name: wgdashboard
+service_compose_env:
+  ENVIRONMENT: prod
+  WGDASHBOARD_USERNAME: admin
+  WGDASHBOARD_PASSWORD: "{{ wgdashboard_password }}"
+  ENABLE_TOTP: "true"
+  TZ: Asia/Tokyo
+  # VPN prod ホスト同居のため node-exporter ポートを明示（9100競合時は変更）
+  WGDASHBOARD_NODE_EXPORTER_PORT: "9100"

@@ -1,5 +1,3 @@
-server_group: "vpn"
-
 ufw_reset: yes
 ufw_rules:
   - { from_ip: '127.0.0.0/8', comment: 'Allow localhost' }
@@ -7,12 +5,15 @@ ufw_rules:
   - { port: 25, rule: allow, comment: 'Allow Mail' }
   - { port: 80, rule: allow, comment: 'Allow HTTP' }
   - { port: 443, rule: allow, comment: 'Allow HTTPS' }
+  - { from_ip: '192.168.101.0/24', port: 53, proto: udp, rule: allow, comment: 'Allow DNS(UDP) from WireGuard clients' }
+  - { from_ip: '192.168.101.0/24', port: 53, proto: tcp, rule: allow, comment: 'Allow DNS(TCP) from WireGuard clients' }
+  - { port: 9323, rule: allow, comment: 'Allow Docker Metrics' }
   - { port: 51820, proto: udp, rule: allow, comment: 'wireguard' }
-  - { port: 9100, rule: allow, comment: 'Allow Node Exporter' }
+  - { from_ip: '127.0.0.0/8', port: 10086, rule: allow, comment: 'Allow wireguard Dashboard' }
 ufw_default_forward_policy: ACCEPT
 ufw_logging: low
-ufw_applications:
-  - { name: "Postfix" }
+# ufw_applications:
+#   - { name: "Postfix" }
 
 wire_guard_server_host: "{{ crypt_wire_guard_server_host }}"
 wire_guard_server_listen_port: 51820

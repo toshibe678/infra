@@ -1,0 +1,302 @@
+---
+- name: "modify /etc/sudoers"
+  template:
+    src: etc/sudoers
+    dest: "/etc/sudoers"
+    owner: root
+    group: root
+    mode: 0440
+    backup: true
+
+- name: "put /etc/sudoers.d/{{ sudo_user_name }}"
+  template:
+    src: etc/sudoers.d/user_sudo
+    dest: "/etc/sudoers.d/{{ sudo_user_name }}"
+    owner: root
+    group: root
+    mode: 0440
+    backup: true
+
+- name: "create group {{ manage_user_group }}"
+  group:
+    name: "{{ manage_user_group }}"
+
+- name: "users exist {{ manage_user_name }}  {{ manage_user_group }}"
+  user:
+    name: "{{ manage_user_name }}"
+    state: present
+    password: "{{ manage_user_password }}"
+    group: "{{ manage_user_group }}"
+    shell: /bin/bash
+  no_log: true
+
+- name: "directory create /home/{{ manage_user_name }}/.ssh"
+  file:
+    path: "/home/{{ manage_user_name }}/.ssh"
+    state: directory
+    owner: "{{ manage_user_name }}"
+    group: "{{ manage_user_group }}"
+    mode: 0700
+
+# add key
+- name: ssh_key
+  copy:
+    src: "{{ common_ssh_id_ed25519_path | default('id_ed25519') }}"
+    dest: "/home/{{ manage_user_name }}/.ssh/id_ed25519"
+    owner: "{{ manage_user_name }}"
+    group: "{{ manage_user_group }}"
+    mode: 0600
+    backup: true
+  no_log: true
+
+- name: authorized_keys
+  copy:
+    src: "home/manage_user/.ssh/authorized_keys"
+    dest: "/home/{{ manage_user_name }}/.ssh/authorized_keys"
+    owner: "{{ manage_user_name }}"
+    group: "{{ manage_user_group }}"
+    mode: 0600
+    backup: true
+
+- name: set profile
+  copy:
+    src: "home/manage_user/.profile"
+    dest: "/home/{{ manage_user_name }}/.profile"
+    owner: "{{ manage_user_name }}"
+    group: "{{ manage_user_group }}"
+    mode: 0644
+    backup: true
+
+- name: set bashrc
+  copy:
+    src: "home/manage_user/.bashrc"
+    dest: "/home/{{ manage_user_name }}/.bashrc"
+    owner: "{{ manage_user_name }}"
+    group: "{{ manage_user_group }}"
+    mode: 0644
+    backup: true
+
+- name: set .bash_alias
+  copy:
+    src: home/manage_user/.bash_aliases.j2
+    dest: "/home/{{ manage_user_name }}/.bash_aliases"
+    owner: "{{ manage_user_name }}"
+    group: "{{ manage_user_group }}"
+    mode: 0644
+    backup: true
+
+- name: "create {{ manage_user_name }} .config/pip/ dicrectory"
+  file:
+    path: "/home/{{ manage_user_name }}/.config/pip"
+    state: directory
+    mode: 0700
+    owner: "{{ manage_user_name }}"
+    group: "{{ manage_user_group }}"
+
+- name: ".config/pip/pip.conf"
+  copy:
+    src: home/manage_user/.config/pip/pip.conf
+    dest: "/home/{{ manage_user_name }}/.config/pip/pip.conf"
+    owner: "{{ manage_user_name }}"
+    group: "{{ manage_user_group }}"
+    mode: 0600
+    backup: true
+
+- name: set history
+  copy:
+    src: "etc/profile.d/history.sh"
+    dest: "/etc/profile.d/history.sh"
+    owner: root
+    group: root
+    mode: 0755
+    backup: true
+
+- name: add kernel parameters and reload
+  sysctl:
+    name: "{{ item.name }}"
+    value: "{{ item.value }}"
+    state: present
+    reload: yes
+    sysctl_file: /etc/sysctl.d/common.conf
+  with_items:
+    - name: vm.max_map_count
+      value: 262144
+    - name: net.ipv4.ip_forward
+      value: 1
+    - name: net.core.somaxconn
+      value: 65535
+    - name: net.ipv4.tcp_max_syn_backlog
+      value: 65535
+    - name: net.core.netdev_max_backlog
+      value: 16384
+    - name: net.ipv4.conf.all.forwarding
+      value: 1
+
+- name: "change hostname to {{ hostname }}"
+  hostname:
+    name: "{{ hostname }}"
+
+- name: Find existing Docker apt source list files
+  ansible.builtin.find:
+    paths: /etc/apt/sources.list.d
+    patterns: "*.list"
+    contains: "download.docker.com/linux/ubuntu"
+  register: docker_apt_source_lists
+
+- name: Remove existing Docker apt source list files before common apt install
+  ansible.builtin.file:
+    path: "{{ item.path }}"
+    state: absent
+  loop: "{{ docker_apt_source_lists.files }}"
+
+- name: Remove legacy Docker apt key file before common apt install
+  ansible.builtin.file:
+    path: /etc/apt/trusted.gpg.d/docker-key.asc
+    state: absent
+
+- name: apt install common packages
+  ansible.builtin.package:
+    name:
+      - ansible
+      - bash-completion
+      - bcc
+      - bmon
+      - bpfcc-tools
+      - bpftrace
+      - chrony
+      - curl
+      - dstat
+      - ethtool
+      - git
+      - git-lfs
+      - htop
+      - ibus-mozc
+      - iftop
+      - iotop
+      - iproute2
+      - iptraf
+      - iptraf-ng
+      - iputils-ping
+      - linux-tools-common
+      - mailutils
+      - manpages-ja
+      - manpages-ja-dev
+      - net-tools
+      - nicstat
+      - nmap
+      - numactl
+      - procps
+      - sudo
+      - sysstat
+      - tcpdump
+      - telnet
+      - tiptop
+      - trace-cmd
+      - tree
+      - unzip
+      - util-linux
+      - vim
+      - wget
+      - zip
+    state: present
+
+- name: create locale ja_JP.UTF-8
+  locale_gen:
+    name: ja_JP.UTF-8
+
+- name: "set-locale"
+  shell: update-locale LANG=ja_JP.UTF-8
+  check_mode: no
+
+- name: Set timezone to Asia/Tokyo
+  file:
+    src: /usr/share/zoneinfo/Asia/Tokyo
+    path: /etc/localtime
+    state: link
+    force: yes
+
+- name: update timezone
+  command: dpkg-reconfigure -f noninteractive tzdata
+  check_mode: no
+
+- name: set state chrony
+  systemd:
+    name: chrony
+    state: restarted
+    enabled: yes
+
+# ipv6よりもipv4を優先する設定
+# https://qastack.jp/ubuntu/32298/prefer-a-ipv4-dns-lookups-before-aaaaipv6-lookups
+- name: put /etc/gai.conf file ipv6 than also ipv4 preferred preference
+  copy:
+    src: etc/gai.conf
+    dest: /etc/gai.conf
+    owner: root
+    group: root
+    mode: 0644
+    backup: true
+
+- name: "root user password change"
+  user:
+    name: "{{ root_user_name }}"
+    password: "{{ root_user_password }}"
+  no_log: true
+
+- name: Install resolvconf
+  ansible.builtin.package:
+    name:
+      - resolvconf
+    state: present
+  tags: resolve
+
+- name: /etc/systemd/resolved.conf set
+  template:
+    src: "etc/systemd/resolved.conf"
+    dest: /etc/systemd/resolved.conf
+    owner: root
+    group: root
+    mode: 0644
+  tags: resolve
+
+- name: Configure systemd-resolved
+  ansible.builtin.file:
+    src: /run/systemd/resolve/resolv.conf
+    dest: /etc/resolv.conf
+    state: link
+    force: yes
+  tags: resolve
+
+- name: restart resolvconf
+  service:
+    name: systemd-resolved
+    state: restarted
+    enabled: yes
+  tags: resolve
+
+- name: Generate /etc/hosts file
+  template:
+    src: "etc/hosts"
+    dest: "/etc/hosts"
+    owner: root
+    group: root
+    mode: 0644
+    backup: true
+  tags: resolve
+
+- name: Install open ssh server
+  ansible.builtin.package:
+    name:
+      - openssh-server
+    state: present
+# sshd
+- name: sshd is configured
+  notify:
+    - restart ssh
+    - enable ssh
+  template:
+    src: "ubuntu_sshd_config"
+    dest: "/etc/ssh/sshd_config"
+    owner: root
+    group: root
+    mode: 0644
+    backup: true

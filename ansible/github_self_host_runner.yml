@@ -3,10 +3,12 @@
   hosts:
     - raspi.abe365.org
     - rasdev.abe365.org
-#    - ranko.abe365.org
-#    - sae.abe365.org
-#    - kaede.abe365.org
-#    - shiki.abe365.org
+    - dify.abe365.org
+    - monitoring.abe365.org
+    - ranko.abe365.org
+    - sae.abe365.org
+    - kaede.abe365.org
+    - shiki.abe365.org
   become: true
   become_user: root
   gather_facts: yes
@@ -14,7 +16,7 @@
   vars:
     - github_account: toshibe678
     - runner_org: true
-    - runner_labels: [self-hosted, linux, arm64]
+    - runner_labels: "{{ host_runner_labels | default(['self-hosted','linux'])}}"
     - access_token: "{{ crypt_github_org_access_token }}"
   roles:
     - role: monolithprojects.github_actions_runner

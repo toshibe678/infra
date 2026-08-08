@@ -1,0 +1,72 @@
+services:
+  # AdGuard Home - DNS ad blocking for WireGuard clients
+  adguard-home:
+    image: adguard/adguardhome:latest
+    container_name: adguard-home
+    restart: always
+    network_mode: host
+    environment:
+      - TZ=${TZ:-Asia/Tokyo}
+    volumes:
+      - ./data/adguard/work:/opt/adguardhome/work
+      - ./data/adguard/conf:/opt/adguardhome/conf
+
+  # WGDashboard - WireGuard Management Dashboard
+  wgdashboard:
+    image: dselen/wgdashboard:latest
+    restart: always
+    container_name: wgdashboard
+    cap_add:
+      - NET_ADMIN
+    network_mode: host  # wg showコマンドでホストのWireGuard状態取得に必要
+    environment:
+      - TZ=${TZ:-Asia/Tokyo}
+      - ENVIRONMENT=${ENVIRONMENT:-dev}
+      # WGDashboard Webインターフェース認証（公式環境変数）
+      - username=${WGDASHBOARD_USERNAME:-admin}
+      - password=${WGDASHBOARD_PASSWORD}
+      # OTPベースの2段階認証（公式環境変数。true/false）
+      - enable_totp=${ENABLE_TOTP:-true}
+    volumes:
+      # WireGuard設定ディレクトリをマウント（ホスト側で動作中のWireGuard）
+      - /etc/wireguard:/etc/wireguard
+      # WGDashboard設定永続化
+      - ./data/wgdashboard:/opt/wireguarddashboard/src/db
+      - ./data/wgdashboard/log:/opt/wireguarddashboard/src/log
+    privileged: true
+
+  # Nginx Reverse Proxy
+  nginx:
+    image: nginx:alpine
+    restart: always
+    network_mode: host  # wgdashboardもhostモードのため、Basic認証バイパス防止のためhostモードにする
+    volumes:
+      - ./nginx/nginx-${ENVIRONMENT:-dev}.conf:/etc/nginx/nginx.conf:ro
+      - ./nginx/ssl:/etc/nginx/ssl:ro
+    depends_on:
+      - wgdashboard
+    command: "/bin/sh -c 'while :; do sleep 6h & wait $${!}; nginx -s reload; done & nginx -g \"daemon off;\"'"
+
+  # Node Exporter for system metrics
+  node-exporter:
+    image: prom/node-exporter:latest
+    container_name: wgdashboard-node-exporter
+    restart: always
+    ports:
+      - "${WGDASHBOARD_NODE_EXPORTER_PORT:-9100}:9100"
+    command:
+      - '--path.rootfs=/host'
+      - '--path.procfs=/host/proc'
+      - '--path.sysfs=/host/sys'
+      - '--collector.filesystem.mount-points-exclude=^/(sys|proc|dev|host|etc)($$|/)'
+    volumes:
+      - /proc:/host/proc:ro
+      - /sys:/host/sys:ro
+      - /:/host:ro
+    pid: host
+    networks:
+      - wireguard-network
+
+networks:
+  wireguard-network:
+    driver: bridge

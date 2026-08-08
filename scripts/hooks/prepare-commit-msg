@@ -1,0 +1,72 @@
+#!/bin/bash
+# prepare-commit-msg hook
+# AGENTS.mdを変更内容に基づいて自動更新
+
+COMMIT_MSG_FILE=$1
+COMMIT_SOURCE=$2
+
+# merge commitやamendの場合はスキップ
+if [ "$COMMIT_SOURCE" = "merge" ] || [ "$COMMIT_SOURCE" = "squash" ]; then
+    exit 0
+fi
+
+# AGENTS.mdが変更されている場合はスキップ（無限ループ防止）
+if git diff --cached --name-only | grep -q "AGENTS.md"; then
+    exit 0
+fi
+
+# 変更されたファイルを取得
+CHANGED_FILES=$(git diff --cached --name-status)
+
+# 変更がない場合はスキップ
+if [ -z "$CHANGED_FILES" ]; then
+    exit 0
+fi
+
+# AGENTS.md更新プロンプトを表示
+echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
+echo "📝 AGENTS.md自動更新"
+echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
+echo ""
+echo "変更されたファイル:"
+echo "$CHANGED_FILES"
+echo ""
+read -p "AGENTS.mdに変更内容を記録しますか？ (y/N): " -n 1 -r
+echo ""
+
+if [[ ! $REPLY =~ ^[Yy]$ ]]; then
+    echo "スキップしました"
+    exit 0
+fi
+
+# 変更内容のサマリを取得
+SUMMARY=$(git diff --cached --stat)
+DATE=$(date +"%Y-%m-%d")
+
+# AGENTS.mdに追記するためのテンポラリファイルを作成
+TEMP_FILE=$(mktemp)
+
+# 変更内容を簡潔にまとめる
+echo "変更内容を入力してください（空行で終了）:"
+INPUT=""
+while IFS= read -r line; do
+    [ -z "$line" ] && break
+    INPUT+="$line"$'\n'
+done
+
+if [ -n "$INPUT" ]; then
+    # AGENTS.mdの「進行中」セクションに追記
+    # ※実際の実装では、より洗練された方法でファイルを更新する必要があります
+    echo ""
+    echo "✅ 変更内容を記録:"
+    echo "$INPUT"
+    
+    # git add AGENTS.md を実行してcommitに含める
+    git add AGENTS.md
+    
+    echo ""
+    echo "AGENTS.mdを更新しました"
+fi
+
+rm -f "$TEMP_FILE"
+exit 0

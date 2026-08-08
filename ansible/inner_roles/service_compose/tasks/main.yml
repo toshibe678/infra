@@ -1,0 +1,101 @@
+---
+# service_compose role tasks
+# 前提: git.yml で /home/{{ manage_user_name }}/infra に checkout 済み。
+#       docker-compose.yml と追跡済み config はその checkout(service_compose_dir)を直接使う。
+# Pipeline order: .env生成 → secret生成 → compose up → ヘルスチェック
+
+# 1. Ensure the service directory (git checkout) exists — git.yml 未実行なら fail で気付けるようにする
+- name: Assert service directory exists (provisioned by git.yml)
+  ansible.builtin.stat:
+    path: "{{ service_compose_dir }}/docker-compose.yml"
+  register: service_compose_dir_stat
+
+- name: Fail if checkout is missing
+  ansible.builtin.fail:
+    msg: >-
+      {{ service_compose_dir }}/docker-compose.yml が見つかりません。
+      先に git.yml で infra リポジトリを展開してください。
+  when: not service_compose_dir_stat.stat.exists
+
+# 2. Deploy .env file from variables (gitignore対象なので checkout 内に生成)
+- name: Deploy .env file
+  ansible.builtin.template:
+    src: env.j2
+    dest: "{{ service_compose_dir }}/.env"
+    owner: "{{ manage_user_name }}"
+    group: "{{ manage_user_group }}"
+    mode: "0600"
+
+# 3. Ensure parent directories for secret files exist
+- name: Create parent directories for secret files
+  ansible.builtin.file:
+    path: "{{ service_compose_dir }}/{{ item.dest | dirname }}"
+    state: directory
+    owner: "{{ manage_user_name }}"
+    group: "{{ manage_user_group }}"
+    mode: "0755"
+  loop: "{{ service_compose_secret_files }}"
+  loop_control:
+    label: "{{ item.dest }}"
+  when: (item.dest | dirname) != '.'
+
+# 4. Deploy secret files from Vault variables (gitignore対象でリポジトリに存在しないファイル用)
+- name: Deploy secret files
+  ansible.builtin.copy:
+    content: "{{ item.content }}"
+    dest: "{{ service_compose_dir }}/{{ item.dest }}"
+    owner: "{{ manage_user_name }}"
+    group: "{{ manage_user_group }}"
+    mode: "0600"
+  loop: "{{ service_compose_secret_files }}"
+  loop_control:
+    label: "{{ item.dest }}"
+  no_log: true
+
+# 5. (任意) 自己署名 SSL 証明書を生成（service_compose_ssl_enabled のときのみ）
+- name: Create SSL certificate directory
+  ansible.builtin.file:
+    path: "{{ service_compose_ssl_dir }}"
+    state: directory
+    owner: "{{ manage_user_name }}"
+    group: "{{ manage_user_group }}"
+    mode: "0750"
+  when: service_compose_ssl_enabled
+
+- name: Generate self-signed SSL certificate (EC + SAN, idempotent via creates)
+  ansible.builtin.command:
+    cmd: >
+      openssl req -x509 -nodes
+      -newkey ec
+      -pkeyopt ec_paramgen_curve:{{ service_compose_ssl_curve }}
+      -days {{ service_compose_ssl_days }}
+      -keyout {{ service_compose_ssl_key }}
+      -out {{ service_compose_ssl_cert }}
+      -subj "/CN={{ service_compose_ssl_cn }}"
+      -addext "subjectAltName={% for n in service_compose_ssl_sans %}DNS:{{ n }}{% if not loop.last %},{% endif %}{% endfor %}"
+    creates: "{{ service_compose_ssl_cert }}"
+  become: true
+  become_user: "{{ manage_user_name }}"
+  when: service_compose_ssl_enabled
+
+# 6. Start Docker Compose services (idempotent)
+- name: Start {{ service_compose_name }} Docker Compose services
+  ansible.builtin.command:
+    cmd: docker compose up -d
+    chdir: "{{ service_compose_dir }}"
+  become: true
+  become_user: "{{ manage_user_name }}"
+  register: service_compose_up
+  changed_when: "'Started' in service_compose_up.stdout or 'Created' in service_compose_up.stdout"
+
+# 6. Run optional healthcheck command
+- name: Run healthcheck
+  ansible.builtin.command:
+    cmd: "{{ service_compose_healthcheck }}"
+    chdir: "{{ service_compose_dir }}"
+  become: true
+  become_user: "{{ manage_user_name }}"
+  register: service_compose_healthcheck_result
+  failed_when: service_compose_healthcheck_result.rc != 0
+  changed_when: false
+  when: service_compose_healthcheck | length > 0
