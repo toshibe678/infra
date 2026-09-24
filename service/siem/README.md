@@ -18,11 +18,13 @@ Beats/TCPでログを受け取り、Logstashで処理してElasticsearchに格�
 |---------|------|--------|
 | elasticsearch | 検索・保存エンジン（シングルノード） | 9200 |
 | kibana | 可視化・管理UI | 5601 |
+| nginx | Kibana へのリバースプロキシ（HTTP） | 80 |
 | logstash | ログ収集・変換パイプライン | 5044 (Beats), 50000 (TCP), 9600 (監視API) |
 | node-exporter | システムメトリクス収集 | 9100 |
 
 ### 依存関係
 
+- nginx → kibana
 - kibana → elasticsearch
 - logstash → elasticsearch
 
@@ -44,7 +46,7 @@ docker compose logs -f
 
 サービス起動後、以下のURLでアクセス可能です：
 
-- **Kibana**: http://localhost:5601
+- **Kibana**: http://localhost/ （nginx 経由、ポート80）または http://localhost:5601 （直接）
 - **Elasticsearch API**: http://localhost:9200
 
 ## ログ投入方法
@@ -62,6 +64,7 @@ docker compose logs -f
 
 ## 設定ファイル
 
+- `nginx/nginx.conf`: Kibana へのリバースプロキシ設定（HTTP:80）
 - `logstash/config/logstash.yml`: Logstash全体設定（HTTP bind, モニタリング有無）
 - `logstash/pipeline/logstash.conf`: input/filter/output パイプライン定義
 

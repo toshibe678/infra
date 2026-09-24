@@ -94,6 +94,7 @@ LiteLLM Proxy + PostgreSQL + Redis + Nginx 構成。
 ```bash
 docker compose exec -T nginx nginx -t
 curl -fsS https://llm-proxy.abe365.org/health
+curl -fsS http://llm-proxy.abe365.org/health   # HTTP(80)でも同一内容を提供
 ```
 
 ### ハードコード是正点
@@ -139,6 +140,7 @@ Nginx + MCP Gateway + 各種MCPサーバー（git/github/filesystem/postgres/fet
 ```bash
 docker compose exec -T nginx nginx -t
 curl -fsS https://mcp.abe365.org/health
+curl -fsS http://mcp.abe365.org/health   # HTTP(80)でも同一内容を提供
 ```
 
 ### ハードコード是正点
@@ -180,6 +182,7 @@ Prometheus + Alertmanager + Grafana + SNMP Exporter + Nginx + Node Exporter 構�
 docker compose exec -T nginx nginx -t
 curl -fsS https://monitoring.abe365.org/grafana/login
 curl -fsS https://monitoring.abe365.org/prometheus/-/healthy
+curl -fsS http://monitoring.abe365.org/prometheus/-/healthy   # HTTP(80)でも同一内容を提供
 ```
 
 ### ハードコード是正点
@@ -201,6 +204,7 @@ Ansible側で必要なら `.env.example`（`STACK_VERSION=9.1.2` のみ）を新
 
 ### config_files
 
+- `nginx/nginx.conf`（HTTP:80 → kibana:5601 のリバースプロキシ）
 - `logstash/config/logstash.yml`
 - `logstash/pipeline/logstash.conf`
 
@@ -210,9 +214,9 @@ Ansible側で必要なら `.env.example`（`STACK_VERSION=9.1.2` のみ）を新
 docker compose ps
 curl -fsS http://localhost:9200/_cluster/health?pretty
 curl -fsS http://localhost:5601/api/status   # Kibana
+curl -fsS http://localhost/health            # nginx (HTTP:80)
+docker compose exec -T nginx nginx -t
 ```
-
-（nginxサービスが無いため `nginx -t` 系のhealthcheckは対象外）
 
 ### ハードコード是正点
 
