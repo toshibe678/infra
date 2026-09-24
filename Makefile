@@ -49,3 +49,9 @@ lint:
 raspi-up:
 	@docker compose -f compose-raspi.yml build
 	@docker compose -f compose-raspi.yml up -d
+
+vm-init:
+	@docker compose run --rm ansible bash -c 'cd /ansible/proxmox-vm-init && ansible-playbook -i hosts_proxmox_vm.yml vm_init.yml --vault-password-file ~/.ssh/.ansible_vault_pass --ask-become-pass'
+
+vm-init-check:
+	@docker compose run --rm ansible bash -c 'cd /ansible/proxmox-vm-init && ansible-playbook -i hosts_proxmox_vm.yml vm_init.yml --vault-password-file ~/.ssh/.ansible_vault_pass -C'

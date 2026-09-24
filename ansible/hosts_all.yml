@@ -6,57 +6,62 @@ all:
         ansible_ssh_user: toshi
         ansible_ssh_port: 22
         ansible_python_interpreter: /usr/bin/python3
-        ansible_ssh_private_key_file: ~/.ssh/id_rsa
+        ansible_ssh_private_key_file: ~/.ssh/id_ed25519
       children:
         vpn:
+          children:
+            dev:
+              hosts:
+                vpn-dev.abe365.org: { }
+            prod:
+              hosts:
+                vpn.toshi.click: { }
+        monitoring:
           hosts:
-            vpn.toshi.click: { }
+            monitoring.abe365.org: { }
+        # dockerで提供するので、docker系だけ入ればOK
+        home_servers:
+          hosts:
+            dify.abe365.org: { }
+            llm-proxy.abe365.org: { }
+            mcp.abe365.org: { }
+            vpn-proxy.abe365.org: { }
+            siem.abe365.org: { }
+        # service-deploy.yml の対象。service_name で vars/services/<name>.yml を選択する。
+        # dify(公式サブモジュールの2段構成) のみ形が異なるため含めない。
+        compose_services:
+          hosts:
+            llm-proxy.abe365.org: { service_name: llm-proxy }
+            mcp.abe365.org: { service_name: mcp-servers }
+            siem.abe365.org: { service_name: siem }
+            monitoring.abe365.org: { service_name: monitoring }
+            vpn-proxy.abe365.org: { service_name: vpn-proxy }
+            vpn.toshi.click: { service_name: wgdashboard }
         vpn_client:
-          children:
-            shigure: { }
-            raspi: { }
-        shigure:
-          children:
-            shigure_novpn: { }
-            shigure_vpn: { }
-        shigure_novpn:
           hosts:
-            shigure.abe365.org: { }
-        shigure_vpn:
-          hosts:
-            vpn.shigure.abe365.org: { }
-        # mayu:
+            vpn-proxy.abe365.org:
+              wireguard_client_private_key: "{{ crypt_wire_guard_client_vpn_proxy_private_key }}"
+              wireguard_client_ip_address: "192.168.101.101"
+              # AllowedIPs: 以下を除外し、それ以外を全てトンネルへ流す (0.0.0.0/0 から除外):
+              #   192.168.0.0/24, 192.168.77.0/24, 192.168.100.0/24, 192.168.254.0/24 (LAN)
+              #   172.16.0.0/12 (Docker が使う 172.16.0.0〜172.31.255.255。内部通信のため直送)
+              wire_guard_default_forward_address: "0.0.0.0/1, 128.0.0.0/3, 160.0.0.0/5, 168.0.0.0/6, 172.0.0.0/12, 172.32.0.0/11, 172.64.0.0/10, 172.128.0.0/9, 173.0.0.0/8, 174.0.0.0/7, 176.0.0.0/4, 192.0.0.0/9, 192.128.0.0/11, 192.160.0.0/13, 192.168.2.0/23, 192.168.4.0/22, 192.168.8.0/21, 192.168.16.0/20, 192.168.32.0/19, 192.168.64.0/21, 192.168.72.0/22, 192.168.76.0/24, 192.168.78.0/23, 192.168.80.0/20, 192.168.96.0/22, 192.168.101.0/24, 192.168.102.0/23, 192.168.104.0/21, 192.168.112.0/20, 192.168.128.0/18, 192.168.192.0/19, 192.168.224.0/20, 192.168.240.0/21, 192.168.248.0/22, 192.168.252.0/23, 192.168.255.0/24, 192.169.0.0/16, 192.170.0.0/15, 192.172.0.0/14, 192.176.0.0/12, 192.192.0.0/10, 193.0.0.0/8, 194.0.0.0/7, 196.0.0.0/6, 200.0.0.0/5, 208.0.0.0/4, 224.0.0.0/3"
+
+        # k8s:
         #   hosts:
-        #     mayu.abe365.org: { }
-        raspi:
-          children:
-            raspi_novpn: { }
-            raspi_vpn: { }
-        raspi_novpn:
-          hosts:
-            raspi.abe365.org: { }
-            rasdev.abe365.org: { }
-            sae.abe365.org: {}
-            kaede.abe365.org: {}
-            shiki.abe365.org: {}
-            kako.abe365.org: {}
-        raspi_vpn:
-          hosts:
-            vpn.raspi.abe365.org: { }
-            vpn.rasdev.abe365.org: { }
-            vpn.sae.abe365.org: {}
-            vpn.kaede.abe365.org: {}
-            vpn.shiki.abe365.org: {}
-            vpn.kako.abe365.org: {}
-        bare_metal:
-          children:
-            shigure: { }
-    # proxmox:
-    #   vars:
-    #     ansible_ssh_user: toshi
-    #     ansible_ssh_port: 22
-    #     ansible_python_interpreter: /usr/bin/python3
-    #     ansible_ssh_private_key_file: ~/.ssh/id_rsa
-    #   hosts:
-    #     infra.abe365.org: { }
-    #     monitoring.abe365.org: { }
+        #     k8s1.abe365.org: { }
+        #     k8s2.abe365.org: { }
+        #     k8s3.abe365.org: { }
+        # raspi:
+        #   hosts:
+        #     raspi.abe365.org: { }
+        #     rasdev.abe365.org: { }
+        #     sae.abe365.org: {}
+        #     kaede.abe365.org: {}
+        #     shiki.abe365.org: {}
+        #     kako.abe365.org: {}           
+    proxmox:
+      hosts:
+        shigure.abe365.org: { }
+        infra1.abe365.org: { }
+        infra2.abe365.org: { }

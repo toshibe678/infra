@@ -1,0 +1,31 @@
+---
+- name: set state chronyd
+  systemd:
+    name: chronyd
+    state: restarted
+    enabled: yes
+
+- name: enable chronyd
+  systemd:
+    name: chronyd
+    enabled: yes
+    
+- name: restart sshd
+  service:
+    name: sshd
+    state: restarted
+
+- name: enable sshd
+  service:
+    name: sshd
+    enabled: yes
+
+- name: restart ssh
+  service:
+    name: ssh
+    state: restarted
+
+- name: enable ssh
+  service:
+    name: ssh
+    enabled: yes

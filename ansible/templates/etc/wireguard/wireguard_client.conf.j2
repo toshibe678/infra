@@ -3,7 +3,7 @@
 PrivateKey = {{ wireguard_client_private_key }}
 # WireGuardクライアントで使用するIPアドレスを指定。
 Address = {{ wireguard_client_ip_address }}/24
-DNS = 172.16.1.1, 8.8.8.8
+DNS = {{ wire_guard_client_dns_servers | default(['192.168.101.1', '8.8.8.8']) | join(', ') }}
 # MTU
 MTU = 1374
 

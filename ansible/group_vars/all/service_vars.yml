@@ -1,0 +1,53 @@
+---
+# service デプロイ用 秘密変数マッピング（平文）
+# 規約: 暗号値は group_vars/all/service_crypt_vars.yml に crypt_ prefix 付きで ansible-vault 暗号化保存し、
+#       ここで prefix を除去した変数にマップ、playbook/role は prefix なし変数を参照する。
+# 生成元: ansible/<service>.yml の service_compose_env / secret_files
+
+# --- dify ---
+dify_db_password: "{{ crypt_dify_db_password }}"
+dify_redis_password: "{{ crypt_dify_redis_password }}"
+dify_secret_key: "{{ crypt_dify_secret_key }}"
+
+# --- llm-proxy ---
+llm_proxy_anthropic_api_key: "{{ crypt_llm_proxy_anthropic_api_key }}"
+llm_proxy_aws_access_key_id: "{{ crypt_llm_proxy_aws_access_key_id }}"
+llm_proxy_aws_secret_access_key: "{{ crypt_llm_proxy_aws_secret_access_key }}"
+llm_proxy_azure_api_base: "{{ crypt_llm_proxy_azure_api_base }}"
+llm_proxy_azure_api_key: "{{ crypt_llm_proxy_azure_api_key }}"
+llm_proxy_bedrock_claude_sonnet_arn: "bedrock/arn:aws:bedrock:us-east-1:{{ crypt_llm_proxy_aws_account_id }}:inference-profile/global.anthropic.claude-sonnet-4-6"
+llm_proxy_bedrock_nova2_lite_arn: "bedrock/arn:aws:bedrock:us-east-1:{{ crypt_llm_proxy_aws_account_id }}:inference-profile/global.amazon.nova-2-lite-v1:0"
+llm_proxy_db_password: "{{ crypt_llm_proxy_db_password }}"
+llm_proxy_gcp_credentials: "{{ crypt_llm_proxy_gcp_credentials }}"
+llm_proxy_gcp_project_id: "{{ crypt_llm_proxy_gcp_project_id }}"
+llm_proxy_litellm_master_key: "{{ crypt_llm_proxy_litellm_master_key }}"
+llm_proxy_openai_api_key: "{{ crypt_llm_proxy_openai_api_key }}"
+llm_proxy_redis_password: "{{ crypt_llm_proxy_redis_password }}"
+llm_proxy_ui_password: "{{ crypt_llm_proxy_ui_password }}"
+llm_proxy_ui_username: "{{ crypt_llm_proxy_ui_username }}"
+
+# --- mcp-servers ---
+mcp_servers_auth_token: "{{ crypt_mcp_servers_auth_token }}"
+mcp_servers_aws_access_key_id: "{{ crypt_mcp_servers_aws_access_key_id }}"
+mcp_servers_aws_secret_access_key: "{{ crypt_mcp_servers_aws_secret_access_key }}"
+mcp_servers_db_password: "{{ crypt_mcp_servers_db_password }}"
+mcp_servers_github_personal_access_token: "{{ crypt_mcp_servers_github_personal_access_token }}"
+mcp_servers_github_token: "{{ crypt_mcp_servers_github_token }}"
+mcp_servers_gmail_client_id: "{{ crypt_mcp_servers_gmail_client_id }}"
+mcp_servers_gmail_client_secret: "{{ crypt_mcp_servers_gmail_client_secret }}"
+mcp_servers_gmail_refresh_token: "{{ crypt_mcp_servers_gmail_refresh_token }}"
+mcp_servers_notion_api_key: "{{ crypt_mcp_servers_notion_api_key }}"
+mcp_servers_notion_database_id: "{{ crypt_mcp_servers_notion_database_id }}"
+mcp_servers_redis_password: "{{ crypt_mcp_servers_redis_password }}"
+mcp_servers_slack_app_token: "{{ crypt_mcp_servers_slack_app_token }}"
+mcp_servers_slack_bot_token: "{{ crypt_mcp_servers_slack_bot_token }}"
+mcp_servers_upstash_redis_token: "{{ crypt_mcp_servers_upstash_redis_token }}"
+mcp_servers_upstash_redis_url: "{{ crypt_mcp_servers_upstash_redis_url }}"
+
+# --- monitoring ---
+monitoring_grafana_admin_password: "{{ crypt_monitoring_grafana_admin_password }}"
+monitoring_slack_webhook_url: "{{ crypt_monitoring_slack_webhook_url }}"
+
+# --- wgdashboard ---
+wgdashboard_password: "{{ crypt_wgdashboard_password }}"
+

@@ -1,0 +1,34 @@
+- name: restart iptables
+  service:
+    name: iptables
+    state: restarted
+    enabled: yes
+  notify:
+  - restart docker
+
+- name: restart ip6tables
+  service:
+    name: ip6tables
+    state: restarted
+    enabled: yes
+
+- name: restart docker
+  service:
+    name: docker
+    state: restarted
+
+- name: reload ufw
+  ufw:
+    state: reloaded
+  when: ufw_state == 'enabled'
+
+- name: restart ubuntu iptables
+  service:
+    name: netfilter-persistent
+    state: restarted
+    enabled: yes
+
+- name: restart rsyslog restart
+  service:
+    name: rsyslog
+    state: restarted

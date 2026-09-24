@@ -1,0 +1,131 @@
+---
+- name: install docker require packages
+  ansible.builtin.package:
+    name:
+      - apt-transport-https
+      - ca-certificates
+      - curl
+      - gnupg
+      - lsb-release
+      - software-properties-common
+    state: present
+
+- name: Ensure apt keyrings directory exists
+  ansible.builtin.file:
+    path: /etc/apt/keyrings
+    state: directory
+    owner: root
+    group: root
+    mode: "0755"
+
+- name: Download Docker GPG key (ASCII armored)
+  ansible.builtin.command:
+    argv:
+      - curl
+      - -fsSL
+      - https://download.docker.com/linux/ubuntu/gpg
+      - -o
+      - /etc/apt/keyrings/docker.asc
+    creates: /etc/apt/keyrings/docker.asc
+
+- name: Convert Docker GPG key to keyring format
+  ansible.builtin.command:
+    argv:
+      - gpg
+      - --dearmor
+      - --yes
+      - -o
+      - /etc/apt/keyrings/docker.gpg
+      - /etc/apt/keyrings/docker.asc
+    creates: /etc/apt/keyrings/docker.gpg
+
+- name: Remove legacy Docker apt source list to avoid signed-by conflicts
+  ansible.builtin.file:
+    path: /etc/apt/sources.list.d/download_docker_com_linux_ubuntu.list
+    state: absent
+
+- name: Remove legacy Docker apt key file
+  ansible.builtin.file:
+    path: /etc/apt/trusted.gpg.d/docker-key.asc
+    state: absent
+
+- block:
+    - name: amd64 set up the stable repository
+      apt_repository:
+        repo: deb [arch=amd64 signed-by=/etc/apt/keyrings/docker.gpg] https://download.docker.com/linux/ubuntu {{ ansible_distribution_release }} stable
+        state: present
+        update_cache: yes
+  when:
+    - ansible_architecture != "aarch64"
+    - ansible_architecture != "armv7l"
+  ignore_errors: true
+
+- block:
+    - name: arm64 set up the stable repository
+      apt_repository:
+        repo: deb [arch=arm64 signed-by=/etc/apt/keyrings/docker.gpg] https://download.docker.com/linux/ubuntu {{ ansible_distribution_release }} stable
+        state: present
+        update_cache: yes
+  when:
+    - ansible_architecture == "aarch64" or ansible_architecture == "armv7l"
+  ignore_errors: true
+
+- name: install docker
+  ansible.builtin.package:
+    name:
+      - docker-ce
+      - docker-ce-cli
+      - containerd.io
+      - docker-buildx-plugin
+      - docker-compose-plugin
+    state: present
+
+- name: docker.service set
+  template:
+    src: "ubuntu_docker.service"
+    dest: /etc/systemd/system/docker.service
+    owner: root
+    group: root
+    mode: 0644
+    backup: true
+
+# systemdにconfigsを読み直すように強制する
+# servicedの再読込（/etc/systemd/system/のファイルを変更した場合に必須）
+- name: just force systemd to reread configs
+  systemd:
+    daemon_reload: yes
+  ignore_errors: true
+
+# docker ipv4 forward-----------------------------------------------------------------------------------------
+- name: add kernel parameters and reload
+  sysctl:
+    name: net.ipv4.ip_forward
+    value: 1
+    state: present
+    reload: yes
+    ignoreerrors: yes
+
+- name: put /etc/docker/daemon.json
+  template:
+    src: daemon.json
+    dest: /etc/docker/daemon.json
+    owner: root
+    group: root
+    mode: 0644
+    backup: true
+
+- name: put /etc/default/docker
+  template:
+    src: etc/default/docker
+    dest: /etc/default/docker
+    owner: root
+    group: root
+    mode: 0644
+    backup: true
+
+- name: Add to docker group
+  user:
+    name: "{{ manage_user_name }}"
+    groups: docker
+    append: yes
+    

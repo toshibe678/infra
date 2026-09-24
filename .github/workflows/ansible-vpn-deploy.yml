@@ -9,11 +9,7 @@ on:
       - "ansible/**"
       - ".github/workflows/ansible-vpn-deploy.yml"
     branches:
-      - main
-      - 'releases/**'
-  # 毎日22時に反映
-  schedule:
-    - cron: '3 22 * * *'
+      - develop
 
 jobs:
   ansible-vpn-deploy:
@@ -26,7 +22,7 @@ jobs:
 
     steps:
       - name: Checkout
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
 
       - name: Deploy ansible server
         env:
@@ -35,6 +31,6 @@ jobs:
         run: |
           cd ansible
           bash ./ci.sh
-          ansible-playbook -l vpn -i hosts_all.yml all.yml --vault-password-file ~/.ssh/.ansible_vault_pass
-          rm -f ~/.ssh/id_rsa
+          ansible-playbook -l vpn.toshi.click -i hosts_all.yml all.yml --vault-password-file ~/.ssh/.ansible_vault_pass
+          rm -f ~/.ssh/id_ed25519
           rm -f ~/.ssh/.ansible_vault_pass

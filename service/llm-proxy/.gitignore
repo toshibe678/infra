@@ -1,0 +1,19 @@
+# Environment variables
+.env
+
+# GCP Service Account
+config/gcp-credentials.json
+
+# Logs
+logs/
+
+# Data directories
+data/
+
+# Nginx SSL certificates
+nginx/ssl/
+
+# Temporary files
+*.tmp
+*.bak
+*~

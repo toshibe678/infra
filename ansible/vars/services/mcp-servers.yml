@@ -1,0 +1,32 @@
+---
+# mcp-servers (MCP Gateway and servers) サービス定義
+# 汎用 service-deploy.yml が include_vars で読み込む。秘密値は group_vars/all/service_vars.yml 経由。
+service_compose_name: mcp-servers
+service_compose_env:
+  NODE_ENV: production
+  DB_USER: mcpuser
+  DB_PASSWORD: "{{ mcp_servers_db_password }}"
+  DB_NAME: mcpdb
+  DATABASE_URL: "postgresql://mcpuser:{{ mcp_servers_db_password }}@db:5432/mcpdb"
+  REDIS_PASSWORD: "{{ mcp_servers_redis_password }}"
+  REDIS_URL: "redis://:{{ mcp_servers_redis_password }}@redis:6379"
+  AUTH_TOKEN: "{{ mcp_servers_auth_token }}"
+  GITHUB_TOKEN: "{{ mcp_servers_github_token }}"
+  GITHUB_PERSONAL_ACCESS_TOKEN: "{{ mcp_servers_github_personal_access_token }}"
+  GIT_ALLOWED_REPOS: /repos
+  FILESYSTEM_ALLOWED_PATHS: /workspace
+  POSTGRES_MCP_URL: "postgresql://mcpuser:{{ mcp_servers_db_password }}@db:5432/mcpdb"
+  FETCH_USER_AGENT: "MCP-Fetch/1.0"
+  GMAIL_CLIENT_ID: "{{ mcp_servers_gmail_client_id }}"
+  GMAIL_CLIENT_SECRET: "{{ mcp_servers_gmail_client_secret }}"
+  GMAIL_REFRESH_TOKEN: "{{ mcp_servers_gmail_refresh_token }}"
+  SLACK_BOT_TOKEN: "{{ mcp_servers_slack_bot_token }}"
+  SLACK_APP_TOKEN: "{{ mcp_servers_slack_app_token }}"
+  NOTION_API_KEY: "{{ mcp_servers_notion_api_key }}"
+  NOTION_DATABASE_ID: "{{ mcp_servers_notion_database_id }}"
+  AWS_ACCESS_KEY_ID: "{{ mcp_servers_aws_access_key_id }}"
+  AWS_SECRET_ACCESS_KEY: "{{ mcp_servers_aws_secret_access_key }}"
+  AWS_REGION: us-east-1
+  UPSTASH_REDIS_URL: "{{ mcp_servers_upstash_redis_url }}"
+  UPSTASH_REDIS_TOKEN: "{{ mcp_servers_upstash_redis_token }}"
+service_compose_healthcheck: "docker compose exec -T nginx nginx -t"

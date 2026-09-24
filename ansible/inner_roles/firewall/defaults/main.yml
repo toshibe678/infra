@@ -1,0 +1,48 @@
+iptables:
+  accept_tcp_rules:
+    - {port: 22}
+    - {port: 22, source: 127.0.0.1}
+    - {port: 22, source: 10.0.2.2}
+    - {port: 22, source: 172.16.0.0/12}
+    - {port: 22, source: 192.168.0.0/16}
+  accept_udp_rules: ""
+  deny_tcp_rules: ""
+  deny_udp_rules: ""
+ip6tables:
+  accept_tcp_rules:
+    - {port: 22}
+    - {port: 22, source: 127.0.0.1}
+    - {port: 22, source: 10.0.2.2}
+    - {port: 22, source: 172.16.0.0/12}
+    - {port: 22, source: 192.168.0.0/16}
+  accept_udp_rules: ""
+  deny_tcp_rules: ""
+  deny_udp_rules: ""
+
+# ufw_rules:
+#   - { [port: ""] [rule: allow] [proto: any] [from_ip: any] [to_ip: any] [comment: 'rule comment']}
+# ufw_applications:
+#   - { name: OpenSSH [rule: allow, from_ip: any] }
+#
+
+# list of rules
+ufw_rules: [{ port: 22, rule: allow }]
+# list of profiles located in /etc/ufw/applications.d
+ufw_applications: []
+# /etc/defaut/ufw settings
+ufw_ipv6: "yes"
+ufw_default_input_policy: DROP
+ufw_default_output_policy: ACCEPT
+ufw_default_forward_policy: DROP
+ufw_default_application_policy: SKIP
+# firewall state: enabled | disabled
+ufw_state: enabled
+ufw_logging: "off"
+# always reset the firewall
+ufw_reset: yes
+
+ip4tables_rules:
+  - { rule: "-A INPUT -m state --state NEW -m tcp -p tcp --dport 22 -j ACCEPT" , comment: "ssh rule" }
+
+ip6tables_rules:
+  - { rule: "-A INPUT -m state --state NEW -m tcp -p tcp --dport 22 -j ACCEPT" , comment: "ssh rule" }

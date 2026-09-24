@@ -1,0 +1,11 @@
+# Ansible
+*.retry
+.ansible_vault_pass
+
+# Logs
+*.log
+
+# Temporary files
+*~
+*.swp
+*.swo

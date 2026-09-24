@@ -1,4 +1,5 @@
 ---
+# Raspiだけに適用するような特殊タスクを記載する
 - name: raspi setting
   hosts: raspi
   become: true

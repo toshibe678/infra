@@ -114,3 +114,6 @@ if ! shopt -oq posix; then
     . /etc/bash_completion
   fi
 fi
+
+# プロンプトが表示される直前に必ずカーソル表示シーケンスを送る
+export PROMPT_COMMAND='printf "\e[?25h"; '"$PROMPT_COMMAND"
