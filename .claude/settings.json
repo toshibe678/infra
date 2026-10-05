@@ -17,7 +17,9 @@
         "*.githubusercontent.com",
         "*.npmjs.org",
         "registry.yarnpkg.com",
-        "pypi.org"
+        "pypi.org",
+        "*.abe365.org",
+        "*.toshi.click"
       ]
     }
   },
@@ -43,6 +45,12 @@
       "Bash(gh pr *)",
       "Bash(gh issue *)",
       "Bash(npx prisma *)",
+      "Bash(npm *)",
+      "Bash(git push *)",
+      "Bash(git pull *)",
+      "Bash(git fetch *)",
+      "Bash(git merge *)",
+      "Bash(git stash *)",
       "Bash(* --version)",
       "Bash(* --help)",
       "Edit(/packages/**)",
