@@ -1,52 +1,9 @@
 ---
-#collections:
-#  - name: yamaha_network.rtx
+collections:
+ - name: prometheus.prometheus
 
 # ansible-galaxy install -r requirements.yml -p roles --force
 roles:
   - name: monolithprojects.github_actions_runner
     src: https://github.com/MonolithProjects/ansible-github_actions_runner
-
-  - name: node_exporter
-    src: geerlingguy.node_exporter
-
-  - src: https://github.com/toshi-click/roles_common.git
-    name: common
-    scm: git
-    version: "master"
-
-  - src: https://github.com/toshi-click/roles_docker.git
-    name: docker
-    scm: git
-    version: "master"
-
-  - src: https://github.com/toshi-click/roles_firewall.git
-    name: firewall
-    scm: git
-    version: "master"
-
-#  - src: https://github.com/toshi-click/roles_monitoring
-#    name: monitoring
-#    scm: git
-#    version: "master"
-
-  - src: https://github.com/toshi-click/roles_sshd.git
-    name: sshd
-    scm: git
-    version: "master"
-
-  - src: https://github.com/toshi-click/roles_chrome.git
-    name: chrome
-    scm: git
-    version: "master"
-
-  - src: https://github.com/toshi-click/roles_kvm.git
-    name: kvm
-    scm: git
-    version: "master"
-
-  - src: https://github.com/toshi-click/roles_samba.git
-    name: samba
-    scm: git
-    version: "master"
 

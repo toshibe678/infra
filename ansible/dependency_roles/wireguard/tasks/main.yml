@@ -12,7 +12,7 @@
   ansible.builtin.file:
     path: "{{ wire_guard_dir }}"
     state: directory
-    mode: '0700'
+    mode: '0755'
   tags: wireguard
 
 - name: wireguard server setting
@@ -20,6 +20,7 @@
     src: etc/wireguard/wg.conf
     dest: "{{ wire_guard_dir }}/{{ wire_guard_server_vpn_interface }}.conf"
     mode: '0600'
+  no_log: true
   tags: wireguard
   notify:
     - Restart Wireguard service
@@ -27,27 +28,30 @@
 - name: client conf
   ansible.builtin.template:
     src: etc/wireguard/client.conf
-    dest: "{{ wire_guard_dir }}/{{ hostname }}_{{ item.name }}.conf"
+    dest: "{{ wire_guard_dir }}/{{ item.name }}_{{ hostname }}.conf"
     mode: '0640'
     owner: root
     group: "{{ manage_user_group }}"
   loop: "{{ wire_guard_clients }}"
+  no_log: true
   tags: wireguard
 
 - name: Generate QR codes
-  shell: "qrencode -o {{ wire_guard_dir }}/{{ hostname }}_{{ item.name }}.png -t png < {{ wire_guard_dir }}/{{ hostname }}_{{ item.name }}.conf"
+  shell: "qrencode -o {{ wire_guard_dir }}/{{ item.name }}_{{ hostname }}.png -t png < {{ wire_guard_dir }}/{{ item.name }}_{{ hostname }}.conf"
   changed_when: false
   loop: "{{ wire_guard_clients }}"
+  no_log: true
   become: true
   tags: wireguard
 
 - name: file permission change
   ansible.builtin.file:
-    path: "{{ wire_guard_dir }}/{{ hostname }}_{{ item.name }}.png"
+    path: "{{ wire_guard_dir }}/{{ item.name }}_{{ hostname }}.png"
     mode: '0640'
     owner: root
     group: "{{ manage_user_group }}"
   loop: "{{ wire_guard_clients }}"
+  no_log: true
   tags: wireguard
 
 - name: enable Wireguard service

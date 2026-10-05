@@ -1,0 +1,7 @@
+---
+# siem (Elastic Stack: Elasticsearch/Logstash/Kibana) サービス定義
+# 汎用 service-deploy.yml が include_vars で読み込む。
+service_compose_name: siem
+service_compose_env:
+  STACK_VERSION: "9.1.2"
+service_compose_healthcheck: "docker compose exec -T elasticsearch curl -fsS http://localhost:9200/_cluster/health"

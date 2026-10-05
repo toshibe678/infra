@@ -1,0 +1,46 @@
+services:
+  # Nginx Reverse Proxy for VPN-connected to non-VPN servers
+  nginx:
+    image: nginx:alpine
+    restart: always
+    container_name: vpn-proxy-nginx
+    ports:
+      - "${PROXY_HTTP_PORT:-80}:80"
+      - "${PROXY_HTTPS_PORT:-443}:443"
+    environment:
+      - TZ=${TZ:-Asia/Tokyo}
+      - ENVIRONMENT=${ENVIRONMENT:-dev}
+    volumes:
+      - ./nginx/nginx.conf:/etc/nginx/nginx.conf:ro
+      - ./nginx/conf.d:/etc/nginx/conf.d:ro
+      - ./nginx/streams:/etc/nginx/streams:ro
+      - ./nginx/ssl:/etc/nginx/ssl:ro
+      - ./logs/nginx:/var/log/nginx
+    depends_on:
+      - node-exporter
+    networks:
+      - vpn-proxy-network
+
+  # Node Exporter for Prometheus Monitoring
+  node-exporter:
+    image: prom/node-exporter:v1.8.2
+    restart: always
+    container_name: vpn-proxy-node-exporter
+    expose:
+      - "9100"
+    command:
+      - '--path.rootfs=/host'
+      - '--path.procfs=/host/proc'
+      - '--path.sysfs=/host/sys'
+      - '--collector.filesystem.mount-points-exclude=^/(sys|proc|dev|host|etc)($$|/)'
+    volumes:
+      - /proc:/host/proc:ro
+      - /sys:/host/sys:ro
+      - /:/host:ro
+    networks:
+      - vpn-proxy-network
+
+networks:
+  vpn-proxy-network:
+    name: vpn-proxy-network
+    driver: bridge

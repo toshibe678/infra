@@ -1,8 +1,8 @@
-FROM python:3.13
+FROM python:3.14
 
-ARG TERRAFORM_VERSION="1.11.4"
+ARG TERRAFORM_VERSION="1.15.6"
 # https://github.com/terraform-linters/tflint/releases
-ARG TFLINT_VERSION="0.45.0"
+ARG TFLINT_VERSION="0.63.1"
 
 # Debian set Locale
 # tzdataのapt-get時にtimezoneの選択で止まってしまう対策でDEBIAN_FRONTENDを定義する
@@ -29,7 +29,7 @@ RUN python3 -m pip install --upgrade pip \
 
 # terraform
 # 最新バージョン確認：https://www.terraform.io/downloads.html
-ARG terraform_version=1.11.4
+ARG terraform_version=1.15.6
 ENV TERRAFORM_VERSION=${terraform_version}
 RUN apt-get update \
     && apt-get -y install zip \

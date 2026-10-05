@@ -1,0 +1,81 @@
+---
+# dify は2段構成のため service_compose role をそのまま使えない:
+#   1. service/dify (トップレベル): node-exporter のみの薄い docker-compose.yml
+#   2. service/dify/dify/docker (公式Difyサブモジュール): api/worker/web/db/redis/weaviate/nginx 本体
+# 本体側は公式の .env.example (1585行) をベースに必須キーのみ上書きする運用のため、
+# service_compose role の env(dict) 全量テンプレート方式ではなく専用タスクで対応する。
+
+- name: Deploy dify node-exporter (top-level docker-compose.yml)
+  hosts: dify.abe365.org
+  become: true
+  become_user: root
+  gather_facts: true
+
+  vars:
+    service_compose_name: dify
+    service_compose_env: {}
+
+  roles:
+    - role: ./inner_roles/service_compose
+
+- name: Deploy dify main stack (dify/dify/docker submodule)
+  hosts: dify.abe365.org
+  become: true
+  become_user: root
+  gather_facts: true
+
+  # docker-compose.yaml / .env.example はホストの ~/infra checkout(submodule)を直接使う。
+  # git.yml が recursive で submodule(service/dify/dify) も展開済みである前提。
+  vars:
+    dify_docker_dir: "/home/{{ manage_user_name }}/infra/service/dify/dify/docker"
+
+  tasks:
+    - name: Assert dify submodule checkout exists (provisioned by git.yml --recursive)
+      ansible.builtin.stat:
+        path: "{{ dify_docker_dir }}/docker-compose.yaml"
+      register: dify_compose_stat
+
+    - name: Fail if dify submodule is missing
+      ansible.builtin.fail:
+        msg: >-
+          {{ dify_docker_dir }}/docker-compose.yaml が見つかりません。
+          git.yml(recursive)で dify submodule を展開してください。
+      when: not dify_compose_stat.stat.exists
+
+    - name: Copy official .env.example as the base .env
+      ansible.builtin.copy:
+        remote_src: true
+        src: "{{ dify_docker_dir }}/.env.example"
+        dest: "{{ dify_docker_dir }}/.env"
+        owner: "{{ manage_user_name }}"
+        group: "{{ manage_user_group }}"
+        mode: "0600"
+        force: false # 既存の.envを上書きしない（差分上書きのみ後続タスクで行う）
+
+    - name: Override required secrets in .env
+      ansible.builtin.lineinfile:
+        path: "{{ dify_docker_dir }}/.env"
+        regexp: "^{{ item.key }}="
+        line: "{{ item.key }}={{ item.value }}"
+      loop:
+        - { key: SECRET_KEY, value: "{{ dify_secret_key }}" }
+        - { key: DB_PASSWORD, value: "{{ dify_db_password }}" }
+        - { key: REDIS_PASSWORD, value: "{{ dify_redis_password }}" }
+        - { key: CONSOLE_API_URL, value: "http://dify.abe365.org" }
+        - { key: CONSOLE_WEB_URL, value: "http://dify.abe365.org" }
+        - { key: SERVICE_API_URL, value: "http://dify.abe365.org" }
+        - { key: APP_API_URL, value: "http://dify.abe365.org" }
+        - { key: APP_WEB_URL, value: "http://dify.abe365.org" }
+        - { key: FILES_URL, value: "http://dify.abe365.org" }
+      loop_control:
+        label: "{{ item.key }}"
+      no_log: true
+
+    - name: Start dify main stack Docker Compose services
+      ansible.builtin.command:
+        cmd: docker compose up -d
+        chdir: "{{ dify_docker_dir }}"
+      become: true
+      become_user: "{{ manage_user_name }}"
+      register: dify_compose_up
+      changed_when: "'Started' in dify_compose_up.stdout or 'Created' in dify_compose_up.stdout"

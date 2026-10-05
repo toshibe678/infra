@@ -1,0 +1,40 @@
+---
+- name: language setup
+  hosts: linux
+  become: true
+  become_user: root
+  gather_facts: yes
+  ignore_unreachable: true
+  tasks:
+    - name: golang repository Add an apt key by id from a keyserver
+      ansible.builtin.apt_key:
+        keyserver: keyserver.ubuntu.com
+        id: 52B59B1571A79DBC054901C0F6BC817356A3D45E
+
+    - name: apt add golang repository
+      ansible.builtin.apt_repository:
+        repo: ppa:longsleep/golang-backports
+        state: present
+
+    - name: Install golang
+      ansible.builtin.package:
+        name:
+          - golang
+          - golang-go
+        state: present
+
+    - name: Install nodejs and npm
+      ansible.builtin.package:
+        name:
+          - nodejs
+          - npm
+        state: present
+
+    - name: npm registryをflatt.techに設定
+      ansible.builtin.command: npm config set registry https://npm.flatt.tech
+
+    - name: npmでgo-task/cliをグローバルインストール
+      npm:
+        name: "@go-task/cli"
+        global: yes
+        state: present

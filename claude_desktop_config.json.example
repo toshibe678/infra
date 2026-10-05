@@ -1,0 +1,10 @@
+{
+  "mcpServers": {
+    "mcp-unified-gateway": {
+      "url": "http://mcp.abe365.org",
+      "env": {
+        "AUTH_TOKEN": "your-auth-token-here"
+      }
+    }
+  }
+}

@@ -1,0 +1,20 @@
+---
+# vpn-proxy (Nginx リバースプロキシ) サービス定義
+# nginx 設定(nginx.conf / conf.d/default.conf / conf.d/proxy-backends.conf)は
+# リポジトリ追跡ファイルを正とし、git.yml の checkout を直接使う（role は生成しない）。
+# 自己署名 SSL 証明書のみ service_compose の任意 SSL 機能で host 上に生成する。
+service_compose_name: vpn-proxy
+service_compose_env:
+  ENVIRONMENT: prod
+  TZ: Asia/Tokyo
+  PROXY_HTTP_PORT: "80"
+  PROXY_HTTPS_PORT: "443"
+service_compose_ssl_enabled: true
+service_compose_ssl_cn: vpn-proxy.abe365.org
+# SAN は proxy-backends.conf の server_name 群（VPN 経由公開サービス）に合わせる
+service_compose_ssl_sans:
+  - vpn.monitoring.abe365.org
+  - vpn.mcp.abe365.org
+  - vpn.dify.abe365.org
+  - vpn.llm-proxy.abe365.org
+service_compose_healthcheck: "docker compose exec -T nginx nginx -t"

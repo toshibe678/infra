@@ -5,6 +5,12 @@
   hosts:
     - vpn_client
   tasks:
+    - name: Install wireguard client
+      ansible.builtin.package:
+        name:
+          - wireguard
+        state: present
+        
     - name: install wireguard
       ansible.builtin.package:
         name: wireguard-tools
@@ -25,6 +31,8 @@
         owner: root
         group: root
         mode: 0600
+      vars:
+        wireguard_client_preshared_key: "{{ crypt_wire_guard_client_preshared_key }}"
       tags: wireguard_client
 
     - name: enable Wireguard service
