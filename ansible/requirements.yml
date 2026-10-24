@@ -1,9 +1,14 @@
 ---
 collections:
  - name: prometheus.prometheus
+ - name: community.general
+ - name: ansible.posix
 
 # ansible-galaxy install -r requirements.yml -p roles --force
 roles:
   - name: monolithprojects.github_actions_runner
     src: https://github.com/MonolithProjects/ansible-github_actions_runner
-
+  # develop 関連の設定の唯一の定義元。バージョンは固定せず main の最新を取得する（受け入れ済みのリスク R1）。
+  # 取り込み前の確認は `make check-branch BRANCH=<作業ブランチ>`（README 参照）
+  - name: develop_setting
+    src: https://github.com/toshibe678/develop-setting.git

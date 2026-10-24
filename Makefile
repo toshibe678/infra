@@ -1,5 +1,5 @@
 export COMPOSE_HTTP_TIMEOUT := 500
-.PHONY: build plan apply destroy init check exec_tf exec_ansible lint deploy
+.PHONY: build plan apply destroy init check exec_tf exec_ansible lint deploy check-branch
 
 # makefile内のすべてのコマンドが単一のシェルスクリプトで実行されるようになるおまじない
 .ONESHELL:
@@ -20,6 +20,17 @@ apply:
 
 deploy:
 	@docker compose run --rm ansible bash -c './ci.sh && ansible-playbook -D -i hosts_all.yml -l linux all.yml --vault-password-file ~/.ssh/.ansible_vault_pass -C'
+
+# 取り込み前の確認: develop-setting の作業ブランチを取得した状態で dev に --check -D を実行する
+#   make check-branch BRANCH=<作業ブランチ> [LIMIT=<対象ホストまたはグループ>]
+# 値はシェルの文字列に展開せず、環境変数（$$BRANCH、$$LIMIT）でコンテナへ渡す。ブランチ名の文字種は check-branch.sh が検査する
+BRANCH ?=
+LIMIT ?=
+export BRANCH LIMIT
+
+check-branch:
+	@test -n "$$BRANCH" || { echo "BRANCH を指定してください (例: make check-branch BRANCH=feature/x)"; exit 1; }
+	@docker compose run --rm -e BRANCH -e LIMIT ansible bash -c './ci.sh && ./check-branch.sh "$$BRANCH" $$LIMIT'
 
 nw-deploy:
 	@docker compose run --rm ansible bash -c './ci.sh && ansible-playbook -D -i hosts_all.yml -l router all.yml --vault-password-file ~/.ssh/.ansible_vault_pass -C'

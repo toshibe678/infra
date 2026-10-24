@@ -6,10 +6,8 @@
   gather_facts: yes
   ignore_unreachable: true
   tasks:
-    - name: "git safe directory at /home/{{ manage_user_name }}/scripts"
-      shell: "git config --global --add safe.directory /home/{{ manage_user_name }}/scripts"
-      tags: git_checkout
-
+    # safe.directory は develop-setting が .gitconfig に出力する（develop_setting_git_safe_directories。develop.yml で指定）。
+    # git config --global --add は実行のたびに追記して changed になり、.gitconfig の管理とも衝突するため使わない
     - name: Check if scripts directory exists
       stat:
         path: "/home/{{ manage_user_name }}/scripts"
@@ -39,10 +37,6 @@
         force: yes
         key_file: "/home/{{ manage_user_name }}/.ssh/gitkey"
         accept_hostkey: true
-      tags: git_checkout
-
-    - name: "git safe directory at /home/{{ manage_user_name }}/scripts"
-      shell: "git config --global --add safe.directory /home/{{ manage_user_name }}/infra"
       tags: git_checkout
 
     - name: Check if infra directory exists

@@ -58,49 +58,8 @@
     mode: 0600
     backup: true
 
-- name: set profile
-  copy:
-    src: "home/manage_user/.profile"
-    dest: "/home/{{ manage_user_name }}/.profile"
-    owner: "{{ manage_user_name }}"
-    group: "{{ manage_user_group }}"
-    mode: 0644
-    backup: true
-
-- name: set bashrc
-  copy:
-    src: "home/manage_user/.bashrc"
-    dest: "/home/{{ manage_user_name }}/.bashrc"
-    owner: "{{ manage_user_name }}"
-    group: "{{ manage_user_group }}"
-    mode: 0644
-    backup: true
-
-- name: set .bash_alias
-  copy:
-    src: home/manage_user/.bash_aliases.j2
-    dest: "/home/{{ manage_user_name }}/.bash_aliases"
-    owner: "{{ manage_user_name }}"
-    group: "{{ manage_user_group }}"
-    mode: 0644
-    backup: true
-
-- name: "create {{ manage_user_name }} .config/pip/ dicrectory"
-  file:
-    path: "/home/{{ manage_user_name }}/.config/pip"
-    state: directory
-    mode: 0700
-    owner: "{{ manage_user_name }}"
-    group: "{{ manage_user_group }}"
-
-- name: ".config/pip/pip.conf"
-  copy:
-    src: home/manage_user/.config/pip/pip.conf
-    dest: "/home/{{ manage_user_name }}/.config/pip/pip.conf"
-    owner: "{{ manage_user_name }}"
-    group: "{{ manage_user_group }}"
-    mode: 0600
-    backup: true
+# ホーム直下のシェル設定と pip の設定は develop-setting（develop_setting role）が唯一の管理元。
+# ここでは配置しない（両方が同じファイルを上書きして毎回差分が出るのを防ぐ）
 
 - name: set history
   copy:
@@ -204,25 +163,29 @@
   locale_gen:
     name: ja_JP.UTF-8
 
+# update-locale と同じ結果（/etc/default/locale の LANG）を冪等に書く
 - name: "set-locale"
-  shell: update-locale LANG=ja_JP.UTF-8
-  check_mode: no
+  ansible.builtin.lineinfile:
+    path: /etc/default/locale
+    regexp: '^LANG='
+    line: LANG=ja_JP.UTF-8
+    create: true
+    mode: '0644'
 
+# タイムゾーンのリンクが変わったときだけ tzdata を再設定する
 - name: Set timezone to Asia/Tokyo
   file:
     src: /usr/share/zoneinfo/Asia/Tokyo
     path: /etc/localtime
     state: link
     force: yes
+  notify: update timezone
 
-- name: update timezone
-  command: dpkg-reconfigure -f noninteractive tzdata
-  check_mode: no
-
+# chrony は起動と自動起動を保証する（毎回再起動しない）
 - name: set state chrony
   systemd:
     name: chrony
-    state: restarted
+    state: started
     enabled: yes
 
 # ipv6よりもipv4を優先する設定
