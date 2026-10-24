@@ -1,4 +1,8 @@
 ---
+- name: update timezone
+  ansible.builtin.command: dpkg-reconfigure -f noninteractive tzdata
+  changed_when: true
+
 - name: set state chronyd
   systemd:
     name: chronyd
