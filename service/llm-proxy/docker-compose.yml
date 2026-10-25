@@ -1,7 +1,8 @@
 services:
   # LiteLLM Proxy Server
   litellm:
-    image: ghcr.io/berriai/litellm:main-v1.83.14-stable
+    # 版を固定（旧: main-v1.83.14-stable）。v1.106.3 のタグは GHCR で実在を確認済み（2026-10-25）。反映前の手順は README の「LiteLLM 更新と OpenCode 向け運用手順」を参照
+    image: ghcr.io/berriai/litellm:v1.106.3
     restart: always
     expose:
       - "4000"

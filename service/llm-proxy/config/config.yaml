@@ -1,30 +1,38 @@
 model_list: 
   # Local Free Ollama Models
-  - model_name: rtx5070ti-qwen3-8b  # 任意の識別名
+  # OpenCode（tool call）向けに「ollama_chat/」（/api/chat）へ切り替え、function calling 対応を明示する。
+  # num_ctx は渡していない（LiteLLM v1.106.3 での挙動が未確認のため、実機確認後に決める）。
+  # ここの rtx5070ti-* の別名は、ansible_for_wsl の develop.yml（OpenCode のモデル一覧）と過不足なく一致させる。
+  - model_name: rtx5070ti-qwen3-8b  # 任意の識別名（軽量）
     litellm_params:
-      model: ollama/qwen3:8b    # 「ollama/モデル名」の形式
+      model: ollama_chat/qwen3:8b    # 「ollama_chat/モデル名」の形式
       api_base: http://toshi-gamepc.abe365.org:11434
       timeout: 300
-  - model_name: rtx5070ti-gemma3-12b  # 任意の識別名
+    model_info:
+      supports_function_calling: true
+  # 旧世代の Gemma は tools の表示がないため、gemma4 に置き換え
+  - model_name: rtx5070ti-gemma4-12b  # 任意の識別名
     litellm_params:
-      model: ollama/gemma3:12b   # 「ollama/モデル名」の形式
+      model: ollama_chat/gemma4:12b-it-q4_K_M   # 「ollama_chat/モデル名」の形式
       api_base: http://toshi-gamepc.abe365.org:11434
       timeout: 300
+    model_info:
+      supports_function_calling: true
   - model_name: rtx5070ti-deepseek-r1-8b  # 任意の識別名
     litellm_params:
-      model: ollama/deepseek-r1:8b   # 「ollama/モデル名」の形式
+      model: ollama_chat/deepseek-r1:8b   # 「ollama_chat/モデル名」の形式
       api_base: http://toshi-gamepc.abe365.org:11434
       timeout: 300
-  - model_name: rtx5070ti-qwen3-coder-30b  # 任意の識別名
+    model_info:
+      supports_function_calling: true
+  - model_name: rtx5070ti-qwen3-coder-30b  # 任意の識別名（主モデル。19GBでVRAM 16GBに全量は載らない見込み）
     litellm_params:
-      model: ollama/qwen3-coder:30b    # 「ollama/モデル名」の形式
+      model: ollama_chat/qwen3-coder:30b    # 「ollama_chat/モデル名」の形式
       api_base: http://toshi-gamepc.abe365.org:11434
       timeout: 300
-  - model_name: rtx5070ti-qwen3-coder-14b  # 16GB GPU向けの実運用コーディングモデル
-    litellm_params:
-      model: ollama/qwen3-coder:14b    # Claude/GitHub障害時のローカルfallback先
-      api_base: http://toshi-gamepc.abe365.org:11434
-      timeout: 300
+    model_info:
+      supports_function_calling: true
+  # 14B 版の qwen3-coder は Ollama に存在しないため、その別名は削除
 
   # AWS Bedrock Models
   ## 埋め込みモデル
@@ -74,9 +82,11 @@ model_list:
 
   - model_name: claude-code-local-fallback
     litellm_params:
-      model: ollama/qwen3-coder:14b
+      model: ollama_chat/qwen3-coder:30b  # 実在するモデルへ差し替え
       api_base: http://toshi-gamepc.abe365.org:11434
       timeout: 300
+    model_info:
+      supports_function_calling: true
 
   # GitHub Copilot向け: まずGitHub、上限到達時のみOllamaへ
   - model_name: github-copilot-coder
@@ -85,10 +95,12 @@ model_list:
 
   - model_name: github-copilot-local-fallback
     litellm_params:
-      model: ollama/qwen3-coder:14b
+      model: ollama_chat/qwen3-coder:30b  # 実在するモデルへ差し替え
       api_base: http://toshi-gamepc.abe365.org:11434
       timeout: 300
-   
+    model_info:
+      supports_function_calling: true
+
   # Google Cloud Vertex AI - Gemini Models
   - model_name: vertex-gemini-3-flash-preview
     litellm_params:
