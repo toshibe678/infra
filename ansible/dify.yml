@@ -51,6 +51,7 @@
         group: "{{ manage_user_group }}"
         mode: "0600"
         force: false # 既存の.envを上書きしない（差分上書きのみ後続タスクで行う）
+      no_log: true
 
     - name: Override required secrets in .env
       ansible.builtin.lineinfile:

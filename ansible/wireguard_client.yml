@@ -33,6 +33,7 @@
         mode: 0600
       vars:
         wireguard_client_preshared_key: "{{ crypt_wire_guard_client_preshared_key }}"
+      no_log: true
       tags: wireguard_client
 
     - name: enable Wireguard service

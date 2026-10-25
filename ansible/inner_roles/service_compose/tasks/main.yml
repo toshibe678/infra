@@ -25,6 +25,7 @@
     owner: "{{ manage_user_name }}"
     group: "{{ manage_user_group }}"
     mode: "0600"
+  no_log: true
 
 # 3. Ensure parent directories for secret files exist
 - name: Create parent directories for secret files

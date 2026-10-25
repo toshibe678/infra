@@ -36,6 +36,7 @@ all:
             siem.abe365.org: { service_name: siem }
             monitoring.abe365.org: { service_name: monitoring }
             vpn-proxy.abe365.org: { service_name: vpn-proxy }
+            vpn-dev.abe365.org: { service_name: wgdashboard }
             vpn.toshi.click: { service_name: wgdashboard }
         vpn_client:
           hosts:

@@ -18,6 +18,7 @@
   pre_tasks:
     - name: Load per-service definition
       ansible.builtin.include_vars: "{{ playbook_dir }}/vars/services/{{ service_name }}.yml"
+      no_log: true
 
   roles:
     - role: ./inner_roles/service_compose

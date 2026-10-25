@@ -13,6 +13,7 @@
   become_user: root
   gather_facts: yes
   ignore_unreachable: true
+  no_log: true
   vars:
     - github_account: toshibe678
     - runner_org: true
