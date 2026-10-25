@@ -1,0 +1,537 @@
+{
+  "annotations": {
+    "list": [
+      {
+        "builtIn": 1,
+        "datasource": "-- Grafana --",
+        "enable": true,
+        "hide": true,
+        "iconColor": "rgba(0, 211, 255, 1)",
+        "name": "Annotations & Alerts",
+        "type": "dashboard"
+      }
+    ]
+  },
+  "editable": true,
+  "gnetId": null,
+  "graphTooltip": 0,
+  "id": null,
+  "links": [],
+  "panels": [
+    {
+      "datasource": "Prometheus",
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "thresholds"
+          },
+          "mappings": [
+            {
+              "options": {
+                "1": {
+                  "text": "UP",
+                  "color": "green"
+                },
+                "2": {
+                  "text": "DOWN",
+                  "color": "red"
+                },
+                "3": {
+                  "text": "TESTING",
+                  "color": "yellow"
+                },
+                "4": {
+                  "text": "UNKNOWN",
+                  "color": "orange"
+                },
+                "5": {
+                  "text": "DORMANT",
+                  "color": "blue"
+                },
+                "6": {
+                  "text": "NOT_PRESENT",
+                  "color": "gray"
+                },
+                "7": {
+                  "text": "LOWER_LAYER_DOWN",
+                  "color": "purple"
+                }
+              },
+              "type": "value"
+            }
+          ],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": null
+              }
+            ]
+          }
+        }
+      },
+      "gridPos": {
+        "h": 8,
+        "w": 24,
+        "x": 0,
+        "y": 0
+      },
+      "id": 1,
+      "options": {
+        "orientation": "auto",
+        "reduceOptions": {
+          "values": false,
+          "calcs": ["lastNotNull"],
+          "fields": ""
+        },
+        "showThresholdLabels": false,
+        "showThresholdMarkers": true,
+        "text": {}
+      },
+      "pluginVersion": "9.0.0",
+      "targets": [
+        {
+          "expr": "ifOperStatus{job=\"switch\"} * on(instance) group_left(sysName) sysName{job=\"switch\"}",
+          "legendFormat": "{{sysName}} - {{ifDescr}}",
+          "refId": "A"
+        }
+      ],
+      "title": "インターフェイス稼働状態",
+      "description": "SNMP ifOperStatus の状態を表示します。1=UP(通信可能), 2=DOWN(停止), 3=TESTING(試験中), 4=UNKNOWN(不明), 5=DORMANT(待機), 6=NOT_PRESENT(未実装/未装着), 7=LOWER_LAYER_DOWN(下位層リンク断)。",
+      "type": "stat"
+    },
+    {
+      "datasource": "Prometheus",
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "palette-classic"
+          },
+          "custom": {
+            "axisLabel": "",
+            "axisPlacement": "auto",
+            "barAlignment": 0,
+            "drawStyle": "line",
+            "fillOpacity": 10,
+            "gradientMode": "none",
+            "hideFrom": {
+              "tooltip": false,
+              "viz": false,
+              "legend": false
+            },
+            "lineInterpolation": "linear",
+            "lineWidth": 1,
+            "pointSize": 5,
+            "scaleDistribution": {
+              "type": "linear"
+            },
+            "showPoints": "never",
+            "spanNulls": true
+          },
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": null
+              }
+            ]
+          },
+          "unit": "bps"
+        }
+      },
+      "gridPos": {
+        "h": 9,
+        "w": 12,
+        "x": 0,
+        "y": 8
+      },
+      "id": 2,
+      "options": {
+        "legend": {
+          "calcs": ["max", "mean", "last"],
+          "displayMode": "table",
+          "placement": "bottom",
+          "sortBy": "Last",
+          "sortDesc": true
+        },
+        "tooltip": {
+          "mode": "multi",
+          "sort": "desc"
+        }
+      },
+      "targets": [
+        {
+          "expr": "(rate(ifHCInOctets{job=\"switch\"}[5m]) * 8) * on(instance) group_left(sysName) sysName{job=\"switch\"}",
+          "legendFormat": "{{sysName}} - {{ifDescr}} (IN)",
+          "refId": "A"
+        },
+        {
+          "expr": "(rate(ifHCOutOctets{job=\"switch\"}[5m]) * 8) * on(instance) group_left(sysName) sysName{job=\"switch\"}",
+          "legendFormat": "{{sysName}} - {{ifDescr}} (OUT)",
+          "refId": "B"
+        }
+      ],
+      "title": "インターフェイストラフィック（ビット/秒）",
+      "type": "timeseries"
+    },
+    {
+      "datasource": "Prometheus",
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "palette-classic"
+          },
+          "custom": {
+            "axisLabel": "",
+            "axisPlacement": "auto",
+            "barAlignment": 0,
+            "drawStyle": "line",
+            "fillOpacity": 10,
+            "gradientMode": "none",
+            "hideFrom": {
+              "tooltip": false,
+              "viz": false,
+              "legend": false
+            },
+            "lineInterpolation": "linear",
+            "lineWidth": 1,
+            "pointSize": 5,
+            "scaleDistribution": {
+              "type": "linear"
+            },
+            "showPoints": "never",
+            "spanNulls": true
+          },
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": null
+              }
+            ]
+          },
+          "unit": "pps"
+        }
+      },
+      "gridPos": {
+        "h": 9,
+        "w": 12,
+        "x": 12,
+        "y": 8
+      },
+      "id": 3,
+      "options": {
+        "legend": {
+          "calcs": ["max", "mean", "last"],
+          "displayMode": "table",
+          "placement": "bottom",
+          "sortBy": "Last",
+          "sortDesc": true
+        },
+        "tooltip": {
+          "mode": "multi",
+          "sort": "desc"
+        }
+      },
+      "targets": [
+        {
+          "expr": "rate(ifHCInUcastPkts{job=\"switch\"}[5m]) * on(instance) group_left(sysName) sysName{job=\"switch\"}",
+          "legendFormat": "{{sysName}} - {{ifDescr}} (IN)",
+          "refId": "A"
+        },
+        {
+          "expr": "rate(ifHCOutUcastPkts{job=\"switch\"}[5m]) * on(instance) group_left(sysName) sysName{job=\"switch\"}",
+          "legendFormat": "{{sysName}} - {{ifDescr}} (OUT)",
+          "refId": "B"
+        }
+      ],
+      "title": "パケットレート（パケット/秒）",
+      "type": "timeseries"
+    },
+    {
+      "datasource": "Prometheus",
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "palette-classic"
+          },
+          "custom": {
+            "axisLabel": "",
+            "axisPlacement": "auto",
+            "barAlignment": 0,
+            "drawStyle": "line",
+            "fillOpacity": 10,
+            "gradientMode": "none",
+            "hideFrom": {
+              "tooltip": false,
+              "viz": false,
+              "legend": false
+            },
+            "lineInterpolation": "linear",
+            "lineWidth": 1,
+            "pointSize": 5,
+            "scaleDistribution": {
+              "type": "linear"
+            },
+            "showPoints": "never",
+            "spanNulls": true
+          },
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": null
+              },
+              {
+                "color": "red",
+                "value": 1
+              }
+            ]
+          },
+          "unit": "short"
+        }
+      },
+      "gridPos": {
+        "h": 9,
+        "w": 12,
+        "x": 0,
+        "y": 17
+      },
+      "id": 4,
+      "options": {
+        "legend": {
+          "calcs": ["max", "mean", "last"],
+          "displayMode": "table",
+          "placement": "bottom",
+          "sortBy": "Last",
+          "sortDesc": true
+        },
+        "tooltip": {
+          "mode": "multi",
+          "sort": "desc"
+        }
+      },
+      "targets": [
+        {
+          "expr": "rate(ifInErrors{job=\"switch\"}[5m]) * on(instance) group_left(sysName) sysName{job=\"switch\"}",
+          "legendFormat": "{{sysName}} - {{ifDescr}} (IN Errors)",
+          "refId": "A"
+        },
+        {
+          "expr": "rate(ifOutErrors{job=\"switch\"}[5m]) * on(instance) group_left(sysName) sysName{job=\"switch\"}",
+          "legendFormat": "{{sysName}} - {{ifDescr}} (OUT Errors)",
+          "refId": "B"
+        }
+      ],
+      "title": "インターフェイスエラー（エラー/秒）",
+      "type": "timeseries"
+    },
+    {
+      "datasource": "Prometheus",
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "palette-classic"
+          },
+          "custom": {
+            "axisLabel": "",
+            "axisPlacement": "auto",
+            "barAlignment": 0,
+            "drawStyle": "line",
+            "fillOpacity": 10,
+            "gradientMode": "none",
+            "hideFrom": {
+              "tooltip": false,
+              "viz": false,
+              "legend": false
+            },
+            "lineInterpolation": "linear",
+            "lineWidth": 1,
+            "pointSize": 5,
+            "scaleDistribution": {
+              "type": "linear"
+            },
+            "showPoints": "never",
+            "spanNulls": true
+          },
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": null
+              },
+              {
+                "color": "red",
+                "value": 1
+              }
+            ]
+          },
+          "unit": "short"
+        }
+      },
+      "gridPos": {
+        "h": 9,
+        "w": 12,
+        "x": 12,
+        "y": 17
+      },
+      "id": 5,
+      "options": {
+        "legend": {
+          "calcs": ["max", "mean", "last"],
+          "displayMode": "table",
+          "placement": "bottom",
+          "sortBy": "Last",
+          "sortDesc": true
+        },
+        "tooltip": {
+          "mode": "multi",
+          "sort": "desc"
+        }
+      },
+      "targets": [
+        {
+          "expr": "rate(ifInDiscards{job=\"switch\"}[5m]) * on(instance) group_left(sysName) sysName{job=\"switch\"}",
+          "legendFormat": "{{sysName}} - {{ifDescr}} (IN Discards)",
+          "refId": "A"
+        },
+        {
+          "expr": "rate(ifOutDiscards{job=\"switch\"}[5m]) * on(instance) group_left(sysName) sysName{job=\"switch\"}",
+          "legendFormat": "{{sysName}} - {{ifDescr}} (OUT Discards)",
+          "refId": "B"
+        }
+      ],
+      "title": "パケット破棄（破棄/秒）",
+      "type": "timeseries"
+    },
+    {
+      "datasource": "Prometheus",
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "thresholds"
+          },
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": null
+              }
+            ]
+          },
+          "unit": "percent"
+        }
+      },
+      "gridPos": {
+        "h": 8,
+        "w": 12,
+        "x": 0,
+        "y": 26
+      },
+      "id": 6,
+      "options": {
+        "orientation": "auto",
+        "reduceOptions": {
+          "values": false,
+          "calcs": ["lastNotNull"],
+          "fields": ""
+        },
+        "showThresholdLabels": false,
+        "showThresholdMarkers": true,
+        "text": {}
+      },
+      "pluginVersion": "9.0.0",
+      "targets": [
+        {
+          "expr": "topk(6, ((rate(ifHCInOctets{job=\"switch\"}[5m]) * 8 / ifHighSpeed{job=\"switch\"} / 1000000) * 100) * on(instance) group_left(sysName) sysName{job=\"switch\"})",
+          "legendFormat": "{{sysName}} - {{ifDescr}} (IN)",
+          "refId": "A"
+        },
+        {
+          "expr": "topk(6, ((rate(ifHCOutOctets{job=\"switch\"}[5m]) * 8 / ifHighSpeed{job=\"switch\"} / 1000000) * 100) * on(instance) group_left(sysName) sysName{job=\"switch\"})",
+          "legendFormat": "{{sysName}} - {{ifDescr}} (OUT)",
+          "refId": "B"
+        }
+      ],
+      "title": "帯域使用率 上位12（%）",
+      "description": "表示負荷と可読性のため、直近5分の使用率が高いインターフェイスのみ表示（IN上位6件 + OUT上位6件）。",
+      "type": "gauge"
+    },
+    {
+      "datasource": "Prometheus",
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "thresholds"
+          },
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": null
+              }
+            ]
+          },
+          "unit": "s"
+        }
+      },
+      "gridPos": {
+        "h": 8,
+        "w": 12,
+        "x": 12,
+        "y": 26
+      },
+      "id": 7,
+      "options": {
+        "orientation": "auto",
+        "reduceOptions": {
+          "values": false,
+          "calcs": ["lastNotNull"],
+          "fields": ""
+        },
+        "showThresholdLabels": false,
+        "showThresholdMarkers": true,
+        "text": {}
+      },
+      "pluginVersion": "9.0.0",
+      "targets": [
+        {
+          "expr": "(sysUpTime{job=\"switch\"} / 100) * on(instance) group_left(sysName) sysName{job=\"switch\"}",
+          "legendFormat": "{{sysName}}",
+          "refId": "A"
+        }
+      ],
+      "title": "システム稼働時間",
+      "type": "stat"
+    }
+  ],
+  "refresh": "30s",
+  "schemaVersion": 36,
+  "style": "dark",
+  "tags": ["network", "snmp"],
+  "templating": {
+    "list": []
+  },
+  "time": {
+    "from": "now-6h",
+    "to": "now"
+  },
+  "timepicker": {},
+  "timezone": "",
+  "title": "ネットワークデバイス監視（SNMP）",
+  "uid": "network-devices",
+  "version": 1
+}

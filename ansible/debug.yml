@@ -17,6 +17,8 @@
 
     - name: "Display all variables/facts known for a host"
       debug: var=hostvars[inventory_hostname]
+      no_log: true
 
     - name: "dump variables vars"
       debug: var=vars
+      no_log: true

@@ -1,0 +1,58 @@
+# Environment files
+.env
+.env.local
+.env.*.local
+
+# Logs
+logs/
+*.log
+
+# Data directories
+data/
+db_data/
+postgres_data/
+redis_data/
+
+# Workspace and repos
+workspace/
+repos/
+
+# Gateway application
+gateway/node_modules/
+gateway/dist/
+gateway/.next/
+gateway/build/
+
+# MCP servers
+mcp-servers/*/node_modules/
+mcp-servers/*/dist/
+
+# SSL certificates
+*.pem
+*.key
+*.crt
+
+# Backup files
+*.sql
+*.tar.gz
+*.zip
+
+# Temporary files
+tmp/
+temp/
+*.tmp
+*.swp
+*.swo
+*~
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# IDE files
+.vscode/
+.idea/
+*.sublime-*
+
+# Docker
+.dockerignore

@@ -2,6 +2,8 @@
 parseable: true
 quiet: false
 use_default_rules: true
+rulesdir:
+  - ./rules
 exclude_paths:
   - ./roles/
 skip_list:

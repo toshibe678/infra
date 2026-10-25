@@ -1,0 +1,104 @@
+groups:
+  - name: example_alerts
+    rules:
+      - alert: HighErrorRate
+        expr: rate(http_requests_total{status=~"5.."}[1m]) > 0.05
+        for: 2m
+        labels:
+          severity: critical
+        annotations:
+          summary: "High error rate detected ({{ $value }})"
+  - name: extended_alerts
+    rules:
+      - alert: HighCPUUtilization
+        expr: avg(node_cpu{mode="system"}) by (instance) > 80
+        for: 5m
+        labels:
+          severity: critical
+        annotations:
+          summary: "High CPU utilization on {{ $labels.instance }}"
+          description: "CPU usage has exceeded 80% for 5 minutes."  # :contentReference[oaicite:0]{index=0}
+
+      - alert: LowDiskSpace
+        expr: node_filesystem_free{fstype="ext4"} < 1e9
+        for: 5m
+        labels:
+          severity: critical
+        annotations:
+          summary: "Low disk space on {{ $labels.instance }}"
+          description: "Free disk space has dropped below 1 GiB."  # :contentReference[oaicite:1]{index=1}
+
+      - alert: HighRequestErrorRate
+        expr: (sum(rate(http_requests_total{status="500"}[5m])) /
+               sum(rate(http_requests_total[5m]))) > 0.05
+        for: 5m
+        labels:
+          severity: critical
+        annotations:
+          summary: "High request error rate"
+          description: "Error rate exceeded 5% for 5 minutes."  # :contentReference[oaicite:2]{index=2}
+
+      - alert: NodeDown
+        expr: up == 0
+        for: 5m
+        labels:
+          severity: critical
+        annotations:
+          summary: "Node {{ $labels.instance }} is down"
+          description: "Node has been down for 5 minutes."  # :contentReference[oaicite:3]{index=3}
+
+      - alert: HighMemoryUtilization
+        expr: (node_memory_MemTotal - node_memory_MemFree) < 0.8 * node_memory_MemTotal
+        for: 5m
+        labels:
+          severity: warning
+        annotations:
+          summary: "High memory utilization on {{ $labels.instance }}"
+          description: "Memory usage exceeded 80%."  # :contentReference[oaicite:4]{index=4}
+
+      - alert: HighNetworkTraffic
+        expr: node_network_receive_bytes > 100e6
+        for: 5m
+        labels:
+          severity: warning
+        annotations:
+          summary: "High inbound network traffic on {{ $labels.instance }}"
+          description: "Inbound network traffic exceeded 100 MB/s."  # :contentReference[oaicite:5]{index=5}
+
+      - alert: ContainerHighCpuUtilization
+        expr: (sum(rate(container_cpu_usage_seconds_total{container!=""}[5m])) by (pod, container)
+               / sum(container_spec_cpu_quota{container!=""}/container_spec_cpu_period{container!=""}) by (pod, container) * 100) > 80
+        for: 2m
+        labels:
+          severity: warning
+        annotations:
+          summary: "Container CPU > 80% on {{ $labels.instance }}"
+          description: "High CPU usage by container."  # :contentReference[oaicite:6]{index=6}
+
+      - alert: ContainerHighMemoryUsage
+        expr: (sum(container_memory_working_set_bytes{name!=""}) by (instance, name)
+               / sum(container_spec_memory_limit_bytes > 0) by (instance, name) * 100) > 80
+        for: 2m
+        labels:
+          severity: warning
+        annotations:
+          summary: "Container memory > 80% on {{ $labels.instance }}"
+          description: "High memory usage by container."  # :contentReference[oaicite:7]{index=7}
+
+      - alert: DiskSpaceWillRunOut
+        expr: predict_linear(node_filesystem_avail[24h], 7*24*3600) <= 0
+        for: 0m
+        labels:
+          severity: critical
+        annotations:
+          summary: "Disk space forecast says full"
+          description: "Filesystem likely full within 7 days."  # :contentReference[oaicite:8]{index=8}
+
+      - alert: MemoryWillBeFull
+        expr: predict_linear(node_memory_MemAvailable[2h], 3600) <= 0
+        for: 0m
+        labels:
+          severity: warning
+        annotations:
+          summary: "Memory forecast says full"
+          description: "Memory will run out within 1 hour based on trend."  # :contentReference[oaicite:9]{index=9}

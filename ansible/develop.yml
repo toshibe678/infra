@@ -1,0 +1,23 @@
+---
+# develop 関連の設定（開発言語・ツール・シェル設定など）は develop-setting（develop_setting role）が唯一の定義元。
+# 第1段階では本番(prod)を除く linux に適用する（hosts の指定で除外する。NFR5.8）。第2段階で prod を追加する（再度の承認が要る）。
+# roles: ではなく include_role（動的）で呼ぶ。roles: は読み込み時に解決されるため、
+# develop-setting を取得できないと、対象ホストが 0 件でもプレイブックの読み込みが失敗する
+- name: develop setting (server profile)
+  hosts: linux:!prod
+  become: true
+  become_user: root
+  gather_facts: yes
+  ignore_unreachable: true
+  vars:
+    develop_setting_profile: server
+    # SSHログインユーザーが manage_user_name でなければ、何も変更せずに失敗する
+    develop_setting_expected_user: "{{ manage_user_name }}"
+    # .gitconfig の safe.directory（git.yml の git config --add は使わない）
+    develop_setting_git_safe_directories:
+      - "/home/{{ manage_user_name }}/scripts"
+      - "/home/{{ manage_user_name }}/infra"
+  tasks:
+    - name: Apply the develop_setting role
+      ansible.builtin.include_role:
+        name: develop_setting

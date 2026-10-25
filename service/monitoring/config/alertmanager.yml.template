@@ -1,0 +1,22 @@
+route:
+  receiver: 'default'
+  group_by: ['alertname', 'cluster', 'service']
+  group_wait: 10s
+  group_interval: 10s
+  repeat_interval: 12h
+
+receivers:
+  - name: 'default'
+    # デフォルトではログに出力のみ
+    # Slack通知を有効にする場合は、下記のコメントを外して SLACK_WEBHOOK_URL を設定
+    # slack_configs:
+    #   - channel: '#alerts'
+    #     api_url: '${SLACK_WEBHOOK_URL}'
+    #     send_resolved: true
+
+inhibit_rules:
+  - source_match:
+      severity: 'critical'
+    target_match:
+      severity: 'warning'
+    equal: ['alertname', 'cluster', 'service']
