@@ -1,0 +1,59 @@
+{
+  "id": null,
+  "uid": "observability_stack",
+  "title": "Observability Overview",
+  "tags": ["observability", "metrics", "logs", "traces"],
+  "timezone": "browser",
+  "schemaVersion": 30,
+  "version": 1,
+  "panels": [
+    {
+      "type": "graph",
+      "title": "CPU Usage (%)",
+      "gridPos": {"x": 0, "y": 0, "w": 12, "h": 6},
+      "datasource": "Prometheus",
+      "targets": [
+        {
+          "expr": "100 * (1 - avg by(instance)(rate(node_cpu_seconds_total{mode=\"idle\"}[5m])))",
+          "legendFormat": "{{instance}}",
+          "refId": "A"
+        }
+      ],
+      "yAxes": [
+        {"format": "percent", "min": 0, "max": 100},
+        {"format": "short"}
+      ]
+    },
+    {
+      "type": "logs",
+      "title": "Recent Logs",
+      "gridPos": {"x": 0, "y": 6, "w": 12, "h": 6},
+      "datasource": "Loki",
+      "targets": [
+        {
+          "query": "{job=\"varlogs\"}",
+          "refId": "A"
+        }
+      ]
+    },
+    {
+      "type": "trace",
+      "title": "Recent Traces",
+      "gridPos": {"x": 12, "y": 0, "w": 12, "h": 12},
+      "datasource": "Tempo",
+      "targets": [
+        {
+          "refId": "A",
+          "expr": "service=\".*\""
+        }
+      ],
+      "spanName": "",
+      "showTraceId": true
+    }
+  ],
+  "time": {
+    "from": "now-1h",
+    "to": "now"
+  },
+  "refresh": "10s"
+}

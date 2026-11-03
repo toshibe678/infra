@@ -1,0 +1,38 @@
+---
+# Proxmox VM初期設定用インベントリ
+# 新しく作成したVMのホスト情報をここに追加
+
+all:
+  children:
+    proxmox_vms:
+      vars:
+        ansible_ssh_user: toshi
+        ansible_ssh_port: 22
+        ansible_python_interpreter: /usr/bin/python3
+        ansible_ssh_private_key_file: ~/.ssh/id_ed25519
+        # 初回はsudoパスワードが必要な場合があります
+        # ansible-playbook実行時に --ask-become-pass オプションを使用してください
+      hosts:
+        # 例: 新しいVMのホスト名またはIPアドレスを追加
+        target01:
+          ansible_host: 192.168.100.11
+        target02:
+          ansible_host: 192.168.100.12        
+        target03:
+          ansible_host: 192.168.100.13      
+        target04:
+          ansible_host: 192.168.100.51
+        target05:
+          ansible_host: 192.168.100.52
+        target06:
+          ansible_host: 192.168.100.53
+        target07:
+          ansible_host: 192.168.100.54
+        target08:
+          ansible_host: 192.168.100.55
+        target09:
+          ansible_host: 192.168.100.56
+        target10:
+          ansible_host: 192.168.100.57
+        target11:
+          ansible_host: 192.168.100.58

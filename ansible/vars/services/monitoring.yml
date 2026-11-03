@@ -1,0 +1,12 @@
+---
+# monitoring (Prometheus/Grafana/Alertmanager stack) サービス定義
+# 汎用 service-deploy.yml が include_vars で読み込む。秘密値は group_vars/all/service_vars.yml 経由。
+service_compose_name: monitoring
+service_compose_env:
+  SLACK_WEBHOOK_URL: "{{ monitoring_slack_webhook_url }}"
+  UID: "1000"
+  GID: "1000"
+  BASE_URL: "https://monitoring.abe365.org"
+  GRAFANA_ADMIN_USER: admin
+  GRAFANA_ADMIN_PASSWORD: "{{ monitoring_grafana_admin_password }}"
+service_compose_healthcheck: "docker compose exec -T nginx nginx -t"

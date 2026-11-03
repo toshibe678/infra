@@ -1,0 +1,9 @@
+---
+- name: proxmox setting
+  hosts: proxmox
+  become: true
+  become_user: root
+  gather_facts: yes
+  ignore_unreachable: true
+  # roles:
+  # tasks:

@@ -7,7 +7,6 @@ on:
       - "cloudflere/**"
       - ".github/workflows/cloudflere.yml"
     branches:
-      - main
       - develop
 
 jobs:
@@ -18,16 +17,16 @@ jobs:
       credentials:
         username: ${{ github.actor }}
         password: ${{ secrets.GITHUB_TOKEN }}
-    timeout-minutes: 10
+    timeout-minutes: 60
     permissions:
       id-token: write
       contents: read
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
       # - name: debug
       #   run: sleep 1000000
       # - name: configure AWS credentials
-      #   uses: aws-actions/configure-aws-credentials@v2
+      #   uses: aws-actions/configure-aws-credentials@v4
       #   with:
       #     aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
       #     aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
@@ -45,13 +44,13 @@ jobs:
           CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
       - name: Terraform Plan
         id: plan
-        run: terraform plan -no-color
+        run: terraform plan -no-color -parallelism=1
         working-directory: ./cloudflere
         env:
           CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
       - name: Terraform apply
         id: apply
-        run: terraform apply -no-color -auto-approve
+        run: terraform apply -no-color -auto-approve -parallelism=1
         working-directory: ./cloudflere
         env:
           CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}

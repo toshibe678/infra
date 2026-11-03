@@ -1,0 +1,51 @@
+name: Ansible Lint
+
+# playbook の静的検証（構文検査と ansible-lint）。デプロイ用の秘密値（TOSHI_KEY、VAULT_PASS、SLACK_WEBHOOK_URL）は使わない。
+# self-hosted runner で動かすため、フォークからの PR は実行しない（同一リポジトリのブランチからの PR だけ）。
+on:
+  pull_request:
+    branches:
+      - develop
+    paths:
+      - "ansible/**"
+      - ".github/workflows/ansible-lint.yml"
+  push:
+    branches:
+      - develop
+    paths:
+      - "ansible/**"
+      - ".github/workflows/ansible-lint.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  packages: read
+
+jobs:
+  ansible-lint:
+    name: Syntax check and ansible-lint
+    if: github.event_name != 'pull_request' || github.event.pull_request.head.repo.full_name == github.repository
+    runs-on: self-hosted
+    container:
+      image: ghcr.io/toshibe678/infra/ansible
+      credentials:
+        username: ${{ github.actor }}
+        password: ${{ secrets.GITHUB_TOKEN }}
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Install collections and roles
+        working-directory: ansible
+        run: |
+          ansible-galaxy collection install -r requirements.yml
+          ansible-galaxy install -r requirements.yml -p roles
+
+      - name: Syntax check
+        working-directory: ansible
+        run: ansible-playbook -i hosts_all.yml --syntax-check all.yml
+
+      - name: Ansible lint
+        working-directory: ansible
+        run: ansible-lint all.yml -c .ansible-lint

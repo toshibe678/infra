@@ -9,11 +9,7 @@ on:
       - "ansible/**"
       - ".github/workflows/ansible-vpn-deploy.yml"
     branches:
-      - main
-      - 'releases/**'
-  # 毎日22時に反映
-  schedule:
-    - cron: '3 22 * * *'
+      - develop
 
 jobs:
   ansible-vpn-deploy:
@@ -26,15 +22,31 @@ jobs:
 
     steps:
       - name: Checkout
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
 
       - name: Deploy ansible server
         env:
           TOSHI_KEY: ${{ secrets.TOSHI_KEY }}
           VAULT_PASS: ${{ secrets.VAULT_PASS }}
+          TARGET: vpn.toshi.click
         run: |
           cd ansible
           bash ./ci.sh
-          ansible-playbook -l vpn -i hosts_all.yml all.yml --vault-password-file ~/.ssh/.ansible_vault_pass
-          rm -f ~/.ssh/id_rsa
-          rm -f ~/.ssh/.ansible_vault_pass
+          ansible-playbook -l "$TARGET" -i hosts_all.yml all.yml --vault-password-file ~/.ssh/.ansible_vault_pass
+
+      # 失敗したときだけ Slack に通知する（Webhook URL は GitHub の secrets。値は env 経由で渡す）
+      - name: Notify failure to Slack
+        if: failure()
+        env:
+          SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
+          TARGET: vpn.toshi.click
+          RUN_URL: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}
+        run: |
+          [ -n "$SLACK_WEBHOOK_URL" ] || { echo "SLACK_WEBHOOK_URL が未設定のため通知しません"; exit 0; }
+          jq -n --arg t "${GITHUB_WORKFLOW} が失敗しました (${TARGET}): ${RUN_URL}" '{text:$t}' \
+            | curl --fail --silent --show-error -H 'Content-Type: application/json' -d @- "$SLACK_WEBHOOK_URL"
+
+      # 成否にかかわらず、秘密鍵と vault パスワードを必ず削除する
+      - name: Remove secrets from the runner
+        if: always()
+        run: rm -f ~/.ssh/id_ed25519 ~/.ssh/.ansible_vault_pass

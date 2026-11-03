@@ -12,7 +12,7 @@ concurrency:
 
 jobs:
   pr_agent_job:
-    if: ${{ github.event.sender.type != 'Bot' }}
+    if: ${{ github.event.sender.type != 'Bot' && github.event.sender.login != 'dependabot[bot]' }}
     runs-on: ubuntu-24.04
     timeout-minutes: 5
     name: Run pr agent on every pull request, respond to user comments
@@ -74,9 +74,9 @@ jobs:
           #config.model = "amazon.nova-pro-v1:0"
           #config.model_turbo = "amazon.nova-lite-v1:0"
           #config.fallback_models="amazon.nova-lite-v1:0"
-          config.model: bedrock/anthropic.claude-3-haiku-20240307-v1:0
-          config.model_turbo: bedrock/anthropic.claude-3-haiku-20240307-v1:0
-          config.fallback_models: bedrock/anthropic.claude-3-haiku-20240307-v1:0
+          config.model: bedrock/us.anthropic.claude-sonnet-4-20250514-v1:0:0
+          config.model_turbo: bedrock/us.anthropic.claude-sonnet-4-20250514-v1:0:0
+          config.fallback_models: bedrock/us.anthropic.claude-sonnet-4-20250514-v1:0:0
           github_action.auto_review: "true"
           github_action.auto_describe: "true"
           github_action.auto_improve: "true"

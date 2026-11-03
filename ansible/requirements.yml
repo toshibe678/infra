@@ -1,52 +1,14 @@
 ---
-#collections:
-#  - name: yamaha_network.rtx
+collections:
+ - name: prometheus.prometheus
+ - name: community.general
+ - name: ansible.posix
 
 # ansible-galaxy install -r requirements.yml -p roles --force
 roles:
   - name: monolithprojects.github_actions_runner
     src: https://github.com/MonolithProjects/ansible-github_actions_runner
-
-  - name: node_exporter
-    src: geerlingguy.node_exporter
-
-  - src: https://github.com/toshi-click/roles_common.git
-    name: common
-    scm: git
-    version: "master"
-
-  - src: https://github.com/toshi-click/roles_docker.git
-    name: docker
-    scm: git
-    version: "master"
-
-  - src: https://github.com/toshi-click/roles_firewall.git
-    name: firewall
-    scm: git
-    version: "master"
-
-#  - src: https://github.com/toshi-click/roles_monitoring
-#    name: monitoring
-#    scm: git
-#    version: "master"
-
-  - src: https://github.com/toshi-click/roles_sshd.git
-    name: sshd
-    scm: git
-    version: "master"
-
-  - src: https://github.com/toshi-click/roles_chrome.git
-    name: chrome
-    scm: git
-    version: "master"
-
-  - src: https://github.com/toshi-click/roles_kvm.git
-    name: kvm
-    scm: git
-    version: "master"
-
-  - src: https://github.com/toshi-click/roles_samba.git
-    name: samba
-    scm: git
-    version: "master"
-
+  # develop 関連の設定の唯一の定義元。バージョンは固定せず main の最新を取得する（受け入れ済みのリスク R1）。
+  # 取り込み前の確認は `make check-branch BRANCH=<作業ブランチ>`（README 参照）
+  - name: develop_setting
+    src: https://github.com/toshibe678/develop-setting.git

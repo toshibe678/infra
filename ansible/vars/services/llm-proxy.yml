@@ -1,0 +1,34 @@
+---
+# llm-proxy (LiteLLM Proxy) サービス定義
+# 汎用 service-deploy.yml が include_vars で読み込む。秘密値は group_vars/all/service_vars.yml 経由。
+service_compose_name: llm-proxy
+service_compose_secret_files:
+  - dest: config/gcp-credentials.json
+    content: "{{ llm_proxy_gcp_credentials }}"
+service_compose_env:
+  LITELLM_MASTER_KEY: "{{ llm_proxy_litellm_master_key }}"
+  LITELLM_LOG: INFO
+  STORE_MODEL_IN_DB: "True"
+  UI_USERNAME: "{{ llm_proxy_ui_username }}"
+  UI_PASSWORD: "{{ llm_proxy_ui_password }}"
+  DOCS_URL: "/docs"
+  ROOT_REDIRECT_URL: "/ui"
+  GITHUB_COPILOT_TOKEN_DIR: /app/data/github_copilot_auth
+  DB_PASSWORD: "{{ llm_proxy_db_password }}"
+  DATABASE_URL: "postgresql://llmproxy:{{ llm_proxy_db_password }}@db:5432/litellm"
+  REDIS_PASSWORD: "{{ llm_proxy_redis_password }}"
+  OPENAI_API_KEY: "{{ llm_proxy_openai_api_key }}"
+  ANTHROPIC_API_KEY: "{{ llm_proxy_anthropic_api_key }}"
+  AZURE_API_KEY: "{{ llm_proxy_azure_api_key }}"
+  AZURE_API_BASE: "{{ llm_proxy_azure_api_base }}"
+  AWS_ACCESS_KEY_ID: "{{ llm_proxy_aws_access_key_id }}"
+  AWS_SECRET_ACCESS_KEY: "{{ llm_proxy_aws_secret_access_key }}"
+  AWS_REGION_NAME: us-east-1
+  BEDROCK_NOVA2_LITE_ARN: "{{ llm_proxy_bedrock_nova2_lite_arn }}"
+  BEDROCK_CLAUDE_SONNET_ARN: "{{ llm_proxy_bedrock_claude_sonnet_arn }}"
+  GCP_PROJECT_ID: "{{ llm_proxy_gcp_project_id }}"
+  GCP_REGION: us-central1
+  VERTEX_LOCATION: us-central1
+  GOOGLE_APPLICATION_CREDENTIALS: /app/gcp-credentials.json
+  GOOGLE_APPLICATION_CREDENTIALS_JSON: /app/gcp-credentials.json
+service_compose_healthcheck: "docker compose exec -T nginx nginx -t"

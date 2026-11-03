@@ -1,0 +1,34 @@
+---
+# wgdashboard (WireGuard dashboard + AdGuard Home) サービス定義
+# 新規ホストを立てず既存 VPN ホストに同居させる（prod: vpn.toshi.click / dev: vpn-dev.abe365.org）。
+# 汎用 service-deploy.yml が include_vars で読み込む。秘密値は group_vars/all/service_vars.yml 経由。
+#
+# 証明書:
+#   prod(外部 VPS) … Let's Encrypt（HTTP-01）。初回発行は service_compose、更新は certbot コンテナ
+#   dev(内部)      … 自己署名（service_compose の任意 SSL 機能）
+wgdashboard_is_prod: "{{ inventory_hostname in groups['prod'] }}"
+
+service_compose_name: wgdashboard
+service_compose_env:
+  # nginx-<ENVIRONMENT>.conf の選択と、prod のみ certbot サービス(profile)を有効化
+  ENVIRONMENT: "{{ 'prod' if wgdashboard_is_prod | bool else 'dev' }}"
+  COMPOSE_PROFILES: "{{ 'prod' if wgdashboard_is_prod | bool else '' }}"
+  WGDASHBOARD_USERNAME: admin
+  WGDASHBOARD_PASSWORD: "{{ wgdashboard_password }}"
+  ENABLE_TOTP: "true"
+  TZ: Asia/Tokyo
+  # VPN ホスト同居のため node-exporter ポートを明示（9100競合時は変更）
+  WGDASHBOARD_NODE_EXPORTER_PORT: "9100"
+
+# dev: nginx-dev.conf が参照する ./nginx/ssl/{cert,key}.pem を初回のみ自己署名で生成する
+service_compose_ssl_enabled: "{{ not (wgdashboard_is_prod | bool) }}"
+service_compose_ssl_cn: "{{ inventory_hostname }}"
+service_compose_ssl_sans:
+  - "{{ inventory_hostname }}"
+
+# prod: nginx-prod.conf が参照する Let's Encrypt 証明書を、未取得のときだけ発行する
+service_compose_letsencrypt_enabled: "{{ wgdashboard_is_prod | bool }}"
+service_compose_letsencrypt_domains:
+  - "{{ inventory_hostname }}"
+
+service_compose_healthcheck: "docker compose exec -T nginx nginx -t"
