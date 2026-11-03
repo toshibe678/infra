@@ -34,6 +34,9 @@ AI エージェントがチームで作業するための運用ガイド。
   - **任意 SSL**: nginx で TLS 終端するサービス（vpn-proxy 等）は `service_compose_ssl_enabled: true` ＋
     `service_compose_ssl_cn` / `service_compose_ssl_sans` を vars に指定すると、role が初回のみ
     自己署名証明書を host 上に生成する（nginx の backend 設定自体は追跡済み静的ファイル）。
+  - **任意 Let's Encrypt**: インターネットから :80 に届くホスト（外部 VPS の wgdashboard prod 等）は
+    `service_compose_letsencrypt_enabled: true` ＋ `service_compose_letsencrypt_domains` を指定すると、
+    未取得時のみ role が certbot standalone で初回発行する。更新は compose 側の certbot コンテナが行う。
   - 全サービス一括: `ansible-playbook -i hosts_all.yml service-deploy.yml`
   - 個別: `ansible-playbook -i hosts_all.yml service-deploy.yml --limit <host>`
   - **例外**: `dify` のみ（公式サブモジュールの2段構成）個別 playbook `ansible/dify.yml` で管理する。

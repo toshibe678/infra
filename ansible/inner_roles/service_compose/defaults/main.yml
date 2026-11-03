@@ -34,3 +34,15 @@ service_compose_ssl_cn: ""
 service_compose_ssl_sans: []        # SAN に入れる DNS 名のリスト
 service_compose_ssl_days: 825
 service_compose_ssl_curve: secp384r1
+
+# Let's Encrypt 証明書の初回発行（任意機能）。インターネットから :80 に届くホスト(外部 VPS 等)で使う。
+# 証明書が未取得のときだけ、HTTP を受ける compose サービスを止めて certbot standalone で発行する。
+# 更新は compose 側の certbot コンテナ（certbot renew --webroot）が担う。
+service_compose_letsencrypt_enabled: false
+service_compose_letsencrypt_domains: []   # 先頭がファイル名(live/<先頭>/)になる
+service_compose_letsencrypt_email: ""     # 空なら --register-unsafely-without-email
+service_compose_letsencrypt_staging: false
+service_compose_letsencrypt_image: certbot/certbot
+service_compose_letsencrypt_conf_dir: "{{ service_compose_dir }}/data/certbot/conf"
+service_compose_letsencrypt_www_dir: "{{ service_compose_dir }}/data/certbot/www"
+service_compose_letsencrypt_http_service: nginx   # 発行中に :80 を空けるため止める compose サービス

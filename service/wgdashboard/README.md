@@ -1,6 +1,6 @@
 # WGDashboard - WireGuard Management Dashboard
 
-WireGuard VPNの管理ダッシュボード（環境別設定対応・開発/本番とも自己署名SSL）
+WireGuard VPNの管理ダッシュボード（環境別設定対応・開発は自己署名SSL、本番は Let's Encrypt）
 
 ## 概要
 
@@ -9,10 +9,10 @@ WGDashboardは、WireGuardの設定を視覚的に管理できるWebベースの
 
 **環境別対応**：
 - **開発環境** (`vpn-dev.abe365.org`): HTTPS通信（自己署名）、内部ネットワーク
-- **本番環境** (`vpn.toshi.click`): HTTPS通信（自己署名）
+- **本番環境** (`vpn.toshi.click`): HTTPS通信（Let's Encrypt）、外部 VPS
 
 **セキュリティ機能**：
-- 環境別のSSL設定（自己署名証明書）
+- 環境別のSSL設定（開発: 自己署名、本番: Let's Encrypt）
 - Basic認証による二段階認証
 - レート制限（DDoS対策）
 - セキュリティヘッダー（本番環境は厳格）
@@ -23,7 +23,7 @@ WGDashboardは、WireGuardの設定を視覚的に管理できるWebベースの
 | 環境 | ドメイン | SSL | アクセス |
 |------|---------|-----|--------|
 | 開発 | vpn-dev.abe365.org | 自己署名SSL | 内部ネットワーク |
-| 本番 | vpn.toshi.click | 自己署名SSL | 内部ネットワーク |
+| 本番 | vpn.toshi.click | Let's Encrypt | インターネット（外部 VPS） |
 
 **DNS管理**: Cloudflare (cloudflere/records.tf)
 
@@ -125,27 +125,21 @@ https://vpn-dev.abe365.org
 1. WGDashboard認証: `.env`で設定した`WGDASHBOARD_USERNAME`/`WGDASHBOARD_PASSWORD`
 2. OTP設定画面: QRコードをスキャンして認証器アプリに登録
 
-### 3. 本番環境セットアップ（HTTPS、自己署名）
+### 3. 本番環境セットアップ（HTTPS、Let's Encrypt）
+
+本番（外部 VPS）は Ansible でデプロイします（`ansible/vars/services/wgdashboard.yml`）。
+
+- `.env` は `service_compose` role が生成します（`ENVIRONMENT=prod`、`COMPOSE_PROFILES=prod`）。
+- 証明書が未取得なら、role が nginx を止めて certbot standalone（HTTP-01、:80）で初回発行します。
+  前提: `vpn.toshi.click` の A レコードが VPS を向き、:80 がインターネットから届くこと。
+- 更新は `certbot` コンテナ（prod profile）が 12 時間ごとに `certbot renew --webroot` で行い、
+  nginx は 6 時間ごとに reload して新しい証明書を読み込みます。
+- 証明書は `./data/certbot/conf/live/vpn.toshi.click/` に保存されます（gitignore 対象）。
 
 ```bash
-# .envで認証情報を設定
-# - ENVIRONMENT=prod
-# - WGDASHBOARD_USERNAME / WGDASHBOARD_PASSWORD
-# - ENABLE_TOTP=true（OTP有効化）
-
-# 自己署名証明書の作成
-mkdir -p nginx/ssl && cd nginx/ssl
-openssl req -x509 -nodes -newkey ec -pkeyopt ec_paramgen_curve:secp384r1 -days 825 \
-  -keyout ./key.pem \
-  -out ./cert.pem \
-  -subj "/CN=vpn.toshi.click" \
-  -addext "subjectAltName=DNS:vpn.toshi.click"
-
-# 全サービスを起動
-docker-compose up -d
-
-# ログ確認
-docker-compose logs -f
+# 差分確認 → 本適用
+ansible-playbook -i hosts_all.yml all.yml -l vpn.toshi.click --check -D
+ansible-playbook -i hosts_all.yml all.yml -l vpn.toshi.click -D
 ```
 
 **アクセス方法**:
@@ -191,7 +185,7 @@ https://vpn.toshi.click
 **環境の詳細**:
 - `dev`: 開発環境（HTTPS、自己署名）
   - nginxはHTTPSで動作
-- `prod`: 本番環境（HTTPS、自己署名）
+- `prod`: 本番環境（HTTPS、Let's Encrypt）
   - nginxはHTTPSで動作
 
 ## アクセス方法
@@ -276,13 +270,16 @@ docker-compose logs nginx
 sudo netstat -tlnp | grep :443
 ```
 
-**本番環境（HTTPS/自己署名）**:
+**本番環境（HTTPS/Let's Encrypt）**:
 ```bash
-# SSL証明書が配置されているか確認
-ls -la ./nginx/ssl/
+# 証明書が発行されているか確認
+sudo ls -la ./data/certbot/conf/live/vpn.toshi.click/
 
 # 証明書の有効期限確認
-openssl x509 -in ./nginx/ssl/cert.pem -noout -dates
+sudo openssl x509 -in ./data/certbot/conf/live/vpn.toshi.click/fullchain.pem -noout -dates
+
+# 更新処理のログ確認
+docker compose logs certbot
 ```
 
 ### WireGuard設定が表示されない
@@ -329,11 +326,11 @@ sudo systemctl restart wg-quick@wg0
 - **レート制限**: 通常10req/s、ログイン3req/分
 - **用途**: ローカルネットワーク内での開発・管理
 
-#### 本番環境（HTTPS/自己署名）
+#### 本番環境（HTTPS/Let's Encrypt）
 
 - **WGDashboard認証**: ユーザー名 + パスワード + OTP
-- **SSL/TLS**: 自己署名証明書
-- **セキュリティヘッダー**: 厳格（HSTS、CSP、OCSP Stapling等）
+- **SSL/TLS**: Let's Encrypt（自動更新）
+- **セキュリティヘッダー**: 厳格（HSTS、CSP等。Let's Encrypt は OCSP を廃止済みのため OCSP Stapling は無効）
 - **レート制限**: 通常10req/s、ログイン3req/分
 - **HTTP強制リダイレクト**: HTTPS強制（HSTS有効）
 
@@ -345,7 +342,7 @@ sudo systemctl restart wg-quick@wg0
 - タイムベース（TOTP）実装
 
 #### 2. **SSL/TLS暗号化**
-- 自己署名証明書
+- Let's Encrypt 証明書（本番）
 - TLS 1.2/1.3のみ許可
 - 強力な暗号スイート設定
 - OCSP Stapling有効化

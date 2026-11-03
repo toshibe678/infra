@@ -61,7 +61,7 @@
     owner: "{{ manage_user_name }}"
     group: "{{ manage_user_group }}"
     mode: "0750"
-  when: service_compose_ssl_enabled
+  when: service_compose_ssl_enabled | bool
 
 - name: Generate self-signed SSL certificate (EC + SAN, idempotent via creates)
   ansible.builtin.command:
@@ -77,7 +77,64 @@
     creates: "{{ service_compose_ssl_cert }}"
   become: true
   become_user: "{{ manage_user_name }}"
-  when: service_compose_ssl_enabled
+  when: service_compose_ssl_enabled | bool
+
+# 5b. (任意) Let's Encrypt 証明書を初回のみ発行（service_compose_letsencrypt_enabled のときのみ）
+- name: Create Let's Encrypt directories
+  ansible.builtin.file:
+    path: "{{ item }}"
+    state: directory
+    owner: "{{ manage_user_name }}"
+    group: "{{ manage_user_group }}"
+    mode: "0755"
+  loop:
+    - "{{ service_compose_letsencrypt_conf_dir }}"
+    - "{{ service_compose_letsencrypt_www_dir }}"
+  when: service_compose_letsencrypt_enabled | bool
+
+# 発行済みかを確認する（発行済みなら以降の発行タスクはスキップし、更新は certbot コンテナに任せる）
+- name: Check existing Let's Encrypt certificate
+  ansible.builtin.stat:
+    path: "{{ service_compose_letsencrypt_conf_dir }}/live/{{ service_compose_letsencrypt_domains | first }}/fullchain.pem"
+  register: service_compose_letsencrypt_cert
+  when: service_compose_letsencrypt_enabled | bool
+
+# standalone で :80 を使うため、HTTP を受けるサービスを止める（未起動でも失敗にしない）
+- name: Stop HTTP service to free port 80 for certbot standalone
+  ansible.builtin.command:
+    cmd: "docker compose stop {{ service_compose_letsencrypt_http_service }}"
+    chdir: "{{ service_compose_dir }}"
+  become: true
+  become_user: "{{ manage_user_name }}"
+  changed_when: true
+  failed_when: false
+  when:
+    - service_compose_letsencrypt_enabled | bool
+    - not service_compose_letsencrypt_cert.stat.exists
+
+# 証明書を発行する（失敗時は後続の compose up に進まず、ここで止めて原因を出す）
+- name: Issue Let's Encrypt certificate (certbot standalone, first time only)
+  ansible.builtin.command:
+    cmd: >-
+      docker run --rm -p 80:80
+      -v {{ service_compose_letsencrypt_conf_dir | quote }}:/etc/letsencrypt
+      -v {{ service_compose_letsencrypt_www_dir | quote }}:/var/www/certbot
+      {{ service_compose_letsencrypt_image | quote }}
+      certonly --standalone --non-interactive --agree-tos
+      --cert-name {{ service_compose_letsencrypt_domains | first | quote }}
+      {% if service_compose_letsencrypt_email | length > 0 %}--email {{ service_compose_letsencrypt_email | quote }}{% else %}--register-unsafely-without-email{% endif %}
+      {% if service_compose_letsencrypt_staging | bool %}--staging{% endif %}
+      {% for d in service_compose_letsencrypt_domains %} -d {{ d | quote }}{% endfor %}
+  become: true
+  become_user: "{{ manage_user_name }}"
+  register: service_compose_letsencrypt_issue
+  changed_when: service_compose_letsencrypt_issue.rc == 0
+  retries: 2
+  delay: 30
+  until: service_compose_letsencrypt_issue.rc == 0
+  when:
+    - service_compose_letsencrypt_enabled | bool
+    - not service_compose_letsencrypt_cert.stat.exists
 
 # 6. Start Docker Compose services (idempotent)
 - name: Start {{ service_compose_name }} Docker Compose services

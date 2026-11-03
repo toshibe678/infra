@@ -28,6 +28,7 @@ make check-branch BRANCH=<develop-setting の作業ブランチ> [LIMIT=<対象�
 CI は失敗時に Slack へ通知します（GitHub の secrets に `SLACK_WEBHOOK_URL` を登録）。鍵と vault パスワードは成否にかかわらず削除します。
 静的検証（構文検査と ansible-lint）は `.github/workflows/ansible-lint.yml` と `make lint` です。
 `ansible-lint` にはカスタムルール `CUSTOM001` を追加しており、`.env` / `/etc/wireguard/*.conf` / SSH 秘密鍵ファイル(`.ssh/id_*`, `.ssh/gitkey`)を書き換える task で `no_log: true` がない場合は失敗します。
+加えて `CUSTOM002` として `ansible.builtin.git` task（clone/update）にも `no_log: true` を必須化しています。
 
 ### test
 ```shell

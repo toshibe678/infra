@@ -37,6 +37,7 @@
         force: yes
         key_file: "/home/{{ manage_user_name }}/.ssh/gitkey"
         accept_hostkey: true
+      no_log: true
       tags: git_checkout
 
     - name: Check if infra directory exists
@@ -72,4 +73,5 @@
         track_submodules: no
         key_file: "/home/{{ manage_user_name }}/.ssh/gitkey"
         accept_hostkey: true
+      no_log: true
       tags: git_checkout

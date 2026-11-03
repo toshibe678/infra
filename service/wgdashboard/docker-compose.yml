@@ -43,9 +43,26 @@ services:
     volumes:
       - ./nginx/nginx-${ENVIRONMENT:-dev}.conf:/etc/nginx/nginx.conf:ro
       - ./nginx/ssl:/etc/nginx/ssl:ro
+      # prod: Let's Encrypt 証明書と HTTP-01 チャレンジ用 webroot（certbot と共有）
+      - ./data/certbot/conf:/etc/letsencrypt:ro
+      - ./data/certbot/www:/var/www/certbot:ro
     depends_on:
       - wgdashboard
     command: "/bin/sh -c 'while :; do sleep 6h & wait $${!}; nginx -s reload; done & nginx -g \"daemon off;\"'"
+
+  # Certbot - Let's Encrypt 証明書の自動更新（prod のみ。COMPOSE_PROFILES=prod で有効）
+  # 初回発行は Ansible(service_compose) が standalone で行う。更新は webroot を明示して
+  # nginx(:80) 稼働中でも通るようにする（renewal 設定の authenticator に依存しない）。
+  certbot:
+    image: certbot/certbot
+    restart: unless-stopped
+    volumes:
+      - ./data/certbot/conf:/etc/letsencrypt
+      - ./data/certbot/www:/var/www/certbot
+    entrypoint: "/bin/sh -c 'trap exit TERM; while :; do certbot renew --webroot -w /var/www/certbot --quiet; sleep 12h & wait $${!}; done;'"
+    network_mode: host
+    profiles:
+      - prod
 
   # Node Exporter for system metrics
   node-exporter:

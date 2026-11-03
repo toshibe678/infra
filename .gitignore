@@ -33,3 +33,6 @@ docker/n8n/data/**
 docker/n8n/db_data/**
 !docker/n8n/db_data/**/
 !docker/n8n/db_data/**/.gitkeep
+
+*.pyc
+__pycache__/
